@@ -1,5 +1,4 @@
 import { Link, NavLink } from "react-router-dom";
-import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart, Search, TentTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
