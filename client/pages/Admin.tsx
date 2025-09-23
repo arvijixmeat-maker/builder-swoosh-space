@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -178,7 +179,7 @@ export default function Admin() {
               </span>
             ))}
             {categories.length === 0 && (
-              <span className="text-sm text-muted-foreground">Одоогоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.</span>
+              <span className="text-sm text-muted-foreground">Од��огоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.</span>
             )}
           </div>
         </CardContent>
