@@ -14,6 +14,7 @@ const queryClient = new QueryClient();
 
 import Layout from "@/components/site/Layout";
 import Catalog from "./pages/Catalog";
+import Admin from "./pages/Admin";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
