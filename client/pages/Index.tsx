@@ -4,17 +4,23 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard, { type Product } from "@/components/site/ProductCard";
 import { products as featured } from "@/data/products";
+import { getCategories } from "@/data/store";
 
 export default function Index() {
+  const [cats, setCats] = useState<string[]>(getCategories());
 
-  const categories = [
-    "Электроник",
-    "Гэр ахуй",
-    "Гоо сайхан",
-    "Спорт",
-    "Хувцас",
-    "Хүүхдийн",
-  ];
+  useEffect(() => {
+    const update = () => setCats(getCategories());
+    window.addEventListener("storage", update);
+    window.addEventListener("categories-updated", update as EventListener);
+    return () => {
+      window.removeEventListener("storage", update);
+      window.removeEventListener("categories-updated", update as EventListener);
+    };
+  }, []);
+
+  const fallback = ["Электроник", "Гэр ахуй", "Гоо сайхан", "Спорт", "Хувцас", "Хүүхдийн"];
+  const categories = cats.length ? cats : fallback;
 
   return (
     <div>
