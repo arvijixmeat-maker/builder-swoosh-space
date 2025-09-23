@@ -124,7 +124,7 @@ export default function Admin() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">Хямд (<200k)</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">Хямд (&lt;200k)</CardTitle>
           </CardHeader>
           <CardContent className="text-2xl font-bold">{stats.lowPrice}</CardContent>
         </Card>
