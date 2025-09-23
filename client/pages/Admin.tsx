@@ -22,40 +22,41 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
-import { Plus, Pencil, Trash2, Download } from "lucide-react";
+import { Plus, Pencil, Trash2, Download, X } from "lucide-react";
+import { CATEGORIES_KEY, getCategories, setCategories, getProductsLS, setProductsLS } from "@/data/store";
 
 const STORAGE_KEY = "admin_products";
 
 export default function Admin() {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategoriesState] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
-  const [form, setForm] = useState<Product>({ id: "", name: "", price: 0, image: "", badge: "" });
+  const [form, setForm] = useState<Product>({ id: "", name: "", price: 0, image: "", category: "", badge: "" });
+  const [newCat, setNewCat] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        setProducts(JSON.parse(saved));
-      } catch {
-        setProducts([]);
-      }
-    }
+    setProducts(getProductsLS<Product>(STORAGE_KEY));
+    setCategoriesState(getCategories());
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+    setProductsLS(STORAGE_KEY, products);
   }, [products]);
+
+  useEffect(() => {
+    setCategories(categories);
+  }, [categories]);
 
   const stats = useMemo(() => ({
     totalProducts: products.length,
-    categories: new Set(products.map((p) => p.badge || ""))?.size || 0,
+    categories: categories.length,
     lowPrice: products.filter((p) => p.price < 200000).length,
     highPrice: products.filter((p) => p.price >= 200000).length,
-  }), [products]);
+  }), [products, categories]);
 
-  const resetForm = () => setForm({ id: "", name: "", price: 0, image: "", badge: "" });
+  const resetForm = () => setForm({ id: "", name: "", price: 0, image: "", category: "", badge: "" });
 
   const startCreate = () => {
     setEditing(null);
@@ -90,6 +91,23 @@ export default function Admin() {
   const remove = (id: string) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
     toast({ title: "Устгагдлаа" });
+  };
+
+  const addCategory = () => {
+    const name = newCat.trim();
+    if (!name) return;
+    if (categories.includes(name)) {
+      toast({ title: "Давхардсан ангилал" });
+      return;
+    }
+    const next = [name, ...categories];
+    setCategoriesState(next);
+    setNewCat("");
+  };
+
+  const removeCategory = (name: string) => {
+    const next = categories.filter((c) => c !== name);
+    setCategoriesState(next);
   };
 
   const exportJson = () => {
@@ -136,6 +154,36 @@ export default function Admin() {
         </Card>
       </div>
 
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Ангилал удирдах</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="flex-1 grid gap-2">
+              <Label htmlFor="newCat">Шинэ ангилал</Label>
+              <div className="flex gap-2">
+                <Input id="newCat" value={newCat} onChange={(e) => setNewCat(e.target.value)} placeholder="ж: Электроник" />
+                <Button onClick={addCategory}>Нэмэх</Button>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {categories.map((c) => (
+              <span key={c} className="inline-flex items-center gap-1 rounded-full border bg-card px-3 py-1 text-xs">
+                {c}
+                <button aria-label="Remove" onClick={() => removeCategory(c)} className="opacity-60 hover:opacity-100">
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+            {categories.length === 0 && (
+              <span className="text-sm text-muted-foreground">Одоогоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.</span>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Бүтээгдэхүүн удирдах</CardTitle>
@@ -161,8 +209,26 @@ export default function Admin() {
                     <Input id="price" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="image">Зургийн URL</Label>
-                    <Input id="image" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
+                    <Label htmlFor="category">Ангилал</Label>
+                    <select id="category" className="h-10 rounded-md border bg-background px-3 text-sm" value={form.category || ""} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+                      <option value="">Сонгоно уу</option>
+                      {categories.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                    {categories.length === 0 && (
+                      <span className="text-xs text-muted-foreground">Эхлээд "Ангилал" хэсгээс категори нэмнэ үү.</span>
+                    )}
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="image">Зураг (upload)</Label>
+                    <Input id="image" type="file" accept="image/*" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = () => setForm({ ...form, image: String(reader.result) });
+                      reader.readAsDataURL(file);
+                    }} />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="badge">Тэмдэглэгээ (сонголттой)</Label>
@@ -186,6 +252,7 @@ export default function Admin() {
                 <TableHead className="w-[64px]">Зураг</TableHead>
                 <TableHead>Нэр</TableHead>
                 <TableHead>Үнэ</TableHead>
+                <TableHead>Ангилал</TableHead>
                 <TableHead>Тэмдэглэгээ</TableHead>
                 <TableHead className="w-[120px] text-right">Үйлдэл</TableHead>
               </TableRow>
@@ -198,6 +265,7 @@ export default function Admin() {
                   </TableCell>
                   <TableCell className="font-medium">{p.name}</TableCell>
                   <TableCell>{new Intl.NumberFormat("mn-MN", { style: "currency", currency: "MNT", maximumFractionDigits: 0 }).format(p.price)}</TableCell>
+                  <TableCell>{p.category}</TableCell>
                   <TableCell>{p.badge}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
