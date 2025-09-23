@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
 import { useToast } from "@/hooks/use-toast";
@@ -80,7 +79,7 @@ export default function ProductDetail() {
           <AccordionItem value="specs">
             <AccordionTrigger>Үзүүлэлт</AccordionTrigger>
             <AccordionContent>
-              - М��териал: Пластик/Металл
+              - М��териал: Пластик/Мета��л
               <br />- Баталгаат хугацаа: 12 сар
               <br />- Хүргэлт: УБ хот дотор 24–48 цаг
             </AccordionContent>
