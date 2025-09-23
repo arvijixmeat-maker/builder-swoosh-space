@@ -2,11 +2,14 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function ProductDetail() {
   const { id } = useParams();
   const product = id ? getProduct(id) : undefined;
   const { toast } = useToast();
+  const [qty, setQty] = useState(1);
 
   if (!product) {
     return (
@@ -17,7 +20,11 @@ export default function ProductDetail() {
     );
   }
 
-  const addToCart = () => toast({ title: "Сагсанд нэмэгдлээ", description: product.name });
+  const addToCart = () => toast({ title: "Сагсанд нэмэгдлээ", description: `${product.name} × ${qty}` });
+  const buyNow = () => toast({ title: "Худалдан авах", description: `${product.name} × ${qty}` });
+
+  const dec = () => setQty((q) => Math.max(1, q - 1));
+  const inc = () => setQty((q) => Math.min(99, q + 1));
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -46,13 +53,44 @@ export default function ProductDetail() {
             {new Intl.NumberFormat("mn-MN", { style: "currency", currency: "MNT", maximumFractionDigits: 0 }).format(product.price)}
           </p>
           <p className="mt-4 text-muted-foreground">
-            Баталгаат чанар, хурдан хүргэлт. Энэхүү бүтээгдэхүүн нь манай борлуулалтын шилдгүүдийн нэг бөгөөд өдөр тутмын хэрэгцээнд төгс зохицоно.
+            Баталгаат чанар, хурдан хүргэлт. Энэхүү бүтээгдэхүүн нь манай борлуулалтын шилдгүүдийн нэг бөгөөд өдөр тутмын хэрэгцээнд төгс зохицно.
           </p>
-          <div className="mt-6 flex items-center gap-3">
-            <Button className="px-8" onClick={addToCart}>Сагсанд нэмэх</Button>
-            <Link to="/catalog" className="text-sm underline underline-offset-4">Илүү ихийг харах</Link>
+
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <div className="flex items-center rounded-md border bg-card">
+              <button aria-label="Хасах" className="px-3 py-2 text-lg" onClick={dec}>−</button>
+              <span className="min-w-10 text-center">{qty}</span>
+              <button aria-label="Нэмэх" className="px-3 py-2 text-lg" onClick={inc}>+</button>
+            </div>
+            <Button className="px-6" onClick={addToCart}>Сагсанд нэмэх</Button>
+            <Button variant="secondary" className="px-6" onClick={buyNow}>Одоо худалдаж авах</Button>
           </div>
         </div>
+      </div>
+
+      <div className="mt-10">
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="details">
+            <AccordionTrigger>Дэлгэрэнгүй тайлбар</AccordionTrigger>
+            <AccordionContent>
+              Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны сервисийн дэмжлэгтэй.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="specs">
+            <AccordionTrigger>Үзүүлэлт</AccordionTrigger>
+            <AccordionContent>
+              - Материал: Пластик/Металл
+              <br />- Баталгаат хугацаа: 12 сар
+              <br />- Хүргэлт: УБ хот дотор 24–48 цаг
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="shipping">
+            <AccordionTrigger>Хүргэлт ба буцаалт</AccordionTrigger>
+            <AccordionContent>
+              Хүргэлтийн нөхцөл, буцаалтын бодлого хэрэглэгчийг хамгаалсан найдвартай журмаар хэрэгжинэ.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );
