@@ -24,6 +24,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Нүүр</NavLink>
           <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Каталог</NavLink>
+          <NavLink to="/admin" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Админ</NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
