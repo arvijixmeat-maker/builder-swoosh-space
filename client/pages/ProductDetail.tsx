@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
 import { useToast } from "@/hooks/use-toast";
