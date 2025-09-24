@@ -180,3 +180,19 @@ export const updateOrderStatus = (id: string, status: Order["status"]) => {
   const next = orders.map((o) => (o.id === id ? { ...o, status } : o));
   setOrders(next);
 };
+
+export const seedDefaultAdmin = () => {
+  try {
+    const existing = getUsers();
+    if (existing.length > 0) return;
+    const admin: User = {
+      id: crypto.randomUUID(),
+      createdAt: Date.now(),
+      name: "Admin",
+      email: "admin@local",
+      phone: "0000000000",
+      password: "admin1234",
+    };
+    setUsers([admin, ...existing]);
+  } catch {}
+};
