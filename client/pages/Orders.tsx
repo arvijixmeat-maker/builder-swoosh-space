@@ -1,13 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { getOrders, setOrders, type Order } from "@/data/store";
-import { Link } from "react-router-dom";
+import { getOrders, setOrders, type Order, getCurrentUserId } from "@/data/store";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Orders() {
+  const navigate = useNavigate();
   const [orders, setLocal] = useState<Order[]>(getOrders());
 
   useEffect(() => {
+    const uid = getCurrentUserId();
+    if (!uid) {
+      navigate(`/login?redirect=${encodeURIComponent("/orders")}`);
+      return;
+    }
     const update = () => setLocal(getOrders());
     window.addEventListener("storage", update);
     window.addEventListener("orders-updated", update as EventListener);
@@ -15,7 +21,7 @@ export default function Orders() {
       window.removeEventListener("storage", update);
       window.removeEventListener("orders-updated", update as EventListener);
     };
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     setOrders(orders);
@@ -48,7 +54,7 @@ export default function Orders() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders.map((o) => (
+          {orders.filter((o) => !o.userId || o.userId === getCurrentUserId()).map((o) => (
             <TableRow key={o.id}>
               <TableCell>{formatDate(o.createdAt)}</TableCell>
               <TableCell className="font-mono text-xs">{o.id}</TableCell>
@@ -58,16 +64,16 @@ export default function Orders() {
             </TableRow>
           ))}
         </TableBody>
-        {orders.length === 0 && (
+        {orders.filter((o) => !o.userId || o.userId === getCurrentUserId()).length === 0 && (
           <TableCaption>Одоогоор захиалга алга. Дэлгүүрээс бараа сонгон захиалаарай.</TableCaption>
         )}
       </Table>
 
-      {orders.length > 0 && (
+      {orders.filter((o) => !o.userId || o.userId === getCurrentUserId()).length > 0 && (
         <div className="mt-6 text-sm text-muted-foreground">
-          <p>Захиалгын дэлгэрэнгүй:</p>
+          <p>Захиалгын дэлгэ��энгүй:</p>
           <ul className="mt-2 space-y-2">
-            {orders.map((o) => (
+            {orders.filter((o) => !o.userId || o.userId === getCurrentUserId()).map((o) => (
               <li key={o.id} className="rounded-md border bg-card p-3">
                 <div className="flex items-center justify-between text-sm">
                   <div className="font-medium">№ {o.id}</div>
