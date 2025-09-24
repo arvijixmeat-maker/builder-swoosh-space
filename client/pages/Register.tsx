@@ -14,6 +14,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const redirect = params.get("redirect") || "/mypage";
 
   useEffect(() => {
