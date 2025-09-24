@@ -98,12 +98,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           {user ? (
             <>
-              <Link
-                to="/cart"
-                className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"
-              >
-                <ShoppingCart className="h-5 w-5" /> Сагс
-              </Link>
+
               <Link
                 to="/mypage"
                 className="hidden md:inline text-sm text-foreground inline-flex items-center gap-1"
@@ -116,12 +111,7 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link
-                to="/cart"
-                className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"
-              >
-                <ShoppingCart className="h-5 w-5" /> Сагс
-              </Link>
+
               <Link
                 to="/login"
                 className="text-sm text-foreground/80 hover:text-foreground"
