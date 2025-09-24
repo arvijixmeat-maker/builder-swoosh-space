@@ -16,6 +16,7 @@ import Layout from "@/components/site/Layout";
 import Catalog from "./pages/Catalog";
 import Admin from "./pages/Admin";
 import ProductDetail from "./pages/ProductDetail";
+import Checkout from "./pages/Checkout";
 import Cart from "./pages/Cart";
 
 const App = () => (
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

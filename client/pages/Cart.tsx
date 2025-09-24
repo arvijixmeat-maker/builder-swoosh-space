@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getCart, setCart, type CartItem } from "@/data/store";
@@ -6,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Cart() {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [items, setItems] = useState<CartItem[]>(getCart());
 
   useEffect(() => {
@@ -85,9 +87,7 @@ export default function Cart() {
       </div>
 
       <div className="mt-4 flex justify-end">
-        <Button disabled={items.length === 0} onClick={() => toast({ title: "Тун удахгүй", description: "Төлбөрийн үйлдэл нэмэгдэнэ" })}>
-          Төлбөр төлөх
-        </Button>
+        <Button disabled={items.length === 0} onClick={() => navigate("/checkout")}>Төлбөр төлөх</Button>
       </div>
     </div>
   );
