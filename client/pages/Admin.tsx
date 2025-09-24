@@ -40,6 +40,12 @@ export default function Admin() {
   const [editCatValue, setEditCatValue] = useState("");
   const [orders, setOrdersState] = useState<Order[]>([]);
   const [users, setUsersState] = useState<User[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const u = getCurrentUser();
+    if (!u) navigate(`/login?redirect=${encodeURIComponent("/admin")}`);
+  }, [navigate]);
 
   useEffect(() => {
     setProducts(getProductsLS<Product>(STORAGE_KEY));
@@ -114,7 +120,7 @@ export default function Admin() {
   const addCategory = () => {
     const name = newCat.trim();
     if (!name) {
-      toast({ title: "Н��р хоосон байна" });
+      toast({ title: "Нэр хоосон байна" });
       return;
     }
     if (categories.includes(name)) {
