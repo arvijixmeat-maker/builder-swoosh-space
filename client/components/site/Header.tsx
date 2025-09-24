@@ -71,18 +71,7 @@ export default function Header() {
           >
             Ангилал
           </NavLink>
-          {user && (
-            <NavLink
-              to="/admin"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-primary"
-                  : "text-foreground/80 hover:text-foreground"
-              }
-            >
-              Админ
-            </NavLink>
-          )}
+
 
         </nav>
 
@@ -156,18 +145,7 @@ export default function Header() {
             >
               Ангилал
             </NavLink>
-            {user && (
-              <NavLink
-                to="/admin"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-primary"
-                    : "text-foreground/80 hover:text-foreground"
-                }
-              >
-                Админ
-              </NavLink>
-            )}
+  
   
             <NavLink
               to="/cart"
