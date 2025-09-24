@@ -72,15 +72,51 @@ export const setProductsLS = <T>(key: string, items: T[]) => {
 export const getCart = (): CartItem[] => {
   try {
     const raw = localStorage.getItem(CART_KEY);
-    return raw ? (JSON.parse(raw) as CartItem[]) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    // Support lightweight format [{id, qty}] as a fallback when full objects couldn't be saved
+    if (parsed.length > 0 && parsed[0] && typeof parsed[0] === "object") {
+      const first = parsed[0] as any;
+      if (!("name" in first) && ("id" in first) && ("qty" in first)) {
+        // Rehydrate from products list when possible
+        const prods = getProductsLS<any>(PRODUCTS_KEY);
+        return (parsed as Array<{ id: string; qty: number }>).map((p) => {
+          const prod = prods.find((x) => x.id === p.id);
+          return {
+            id: p.id,
+            name: prod?.name || "",
+            price: prod?.price || 0,
+            image: prod?.image || "",
+            qty: p.qty,
+          } as CartItem;
+        });
+      }
+    }
+    return parsed as CartItem[];
   } catch {
     return [];
   }
 };
 
 export const setCart = (items: CartItem[]) => {
-  localStorage.setItem(CART_KEY, JSON.stringify(items));
-  window.dispatchEvent(new Event("cart-updated"));
+  try {
+    localStorage.setItem(CART_KEY, JSON.stringify(items));
+    window.dispatchEvent(new Event("cart-updated"));
+  } catch (e) {
+    // Quota exceeded or other storage errors. Try to persist a lightweight version without images/names.
+    try {
+      const light = items.map((i) => ({ id: i.id, qty: i.qty }));
+      localStorage.setItem(CART_KEY, JSON.stringify(light));
+      window.dispatchEvent(new Event("cart-updated"));
+    } catch (err) {
+      // Final fallback: clear the cart key to avoid persistent quota errors
+      try {
+        localStorage.removeItem(CART_KEY);
+        window.dispatchEvent(new Event("cart-updated"));
+      } catch {}
+    }
+  }
 };
 
 export const getOrders = (): Order[] => {
