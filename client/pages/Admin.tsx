@@ -99,14 +99,19 @@ export default function Admin() {
 
   const addCategory = () => {
     const name = newCat.trim();
-    if (!name) return;
+    if (!name) {
+      toast({ title: "Нэр хоосон байна" });
+      return;
+    }
     if (categories.includes(name)) {
       toast({ title: "Давхардсан ангилал" });
       return;
     }
     const next = [name, ...categories];
     setCategoriesState(next);
+    setCategories(next);
     setNewCat("");
+    toast({ title: "Ангилал нэмэгдлээ" });
   };
 
   const removeCategory = (name: string) => {
