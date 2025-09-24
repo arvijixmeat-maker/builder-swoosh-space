@@ -283,7 +283,7 @@ export default function Admin() {
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
+      <Card id="orders" className="mb-6">
         <CardHeader>
           <CardTitle>Захиалгууд</CardTitle>
         </CardHeader>
