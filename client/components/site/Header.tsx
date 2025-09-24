@@ -48,7 +48,6 @@ export default function Header() {
         <div className="flex items-center gap-4">
           {user ? (
             <>
-              <Link to="/favorites" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><Heart className="h-5 w-5" /> Хадгалсан</Link>
               <Link to="/cart" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><ShoppingCart className="h-5 w-5" /> Сагс</Link>
               <Link to="/mypage" className="hidden md:inline text-sm text-foreground inline-flex items-center gap-1"><User className="h-5 w-5" /> {user.name.split(" ")[0]}</Link>
               <Button variant="ghost" size="sm" onClick={logout}>Гарах</Button>
