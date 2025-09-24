@@ -29,13 +29,14 @@ export default function Header() {
           <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Нүүр</NavLink>
           <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Каталог</NavLink>
           <NavLink to="/admin" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Админ</NavLink>
+          <NavLink to="/mypage" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Миний хуудас</NavLink>
           <NavLink to="/orders" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Захиалгууд</NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
           {user ? (
             <>
-              <span className="hidden md:inline text-sm text-muted-foreground">Сайн уу, {user.name.split(" ")[0]}</span>
+              <Link to="/mypage" className="hidden md:inline text-sm text-foreground hover:underline">Миний хуудас</Link>
               <Button variant="ghost" size="sm" onClick={logout}>Гарах</Button>
             </>
           ) : (
@@ -66,6 +67,7 @@ export default function Header() {
             <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Нүүр</NavLink>
             <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Каталог</NavLink>
             <NavLink to="/admin" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Админ</NavLink>
+            <NavLink to="/mypage" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Миний хуудас</NavLink>
             <NavLink to="/orders" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Захиалгууд</NavLink>
             <NavLink to="/cart" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Сагс</NavLink>
           </div>
