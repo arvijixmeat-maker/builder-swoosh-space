@@ -1,4 +1,5 @@
 import type { Product } from "@/components/site/ProductCard";
+import { getProductsLS, PRODUCTS_KEY } from "@/data/store";
 
 export const products: Product[] = [
   {
@@ -61,4 +62,7 @@ export const products: Product[] = [
   },
 ];
 
-export const getProduct = (id: string) => products.find((p) => p.id === id);
+export const getProduct = (id: string) => {
+  const local = getProductsLS<Product>(PRODUCTS_KEY);
+  return local.find((p) => p.id === id) || products.find((p) => p.id === id);
+};
