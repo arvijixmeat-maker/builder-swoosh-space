@@ -4,12 +4,14 @@ import { getProduct } from "@/data/products";
 import { getCart, setCart } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function ProductDetail() {
   const { id } = useParams();
   const product = id ? getProduct(id) : undefined;
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [imgIdx, setImgIdx] = useState(0);
 
@@ -34,7 +36,18 @@ export default function ProductDetail() {
     setCart(next);
     toast({ title: "Сагсанд нэмэгдлээ", description: `${product.name} × ${qty}` });
   };
-  const buyNow = () => toast({ title: "Худалдан авах", description: `${product.name} × ${qty}` });
+  const buyNow = () => {
+    const cart = getCart();
+    const existing = cart.find((i) => i.id === product.id);
+    let next;
+    if (existing) {
+      next = cart.map((i) => (i.id === product.id ? { ...i, qty: Math.min(99, i.qty + qty) } : i));
+    } else {
+      next = [{ id: product.id, name: product.name, price: product.price, image: product.image, qty }, ...cart];
+    }
+    setCart(next);
+    navigate("/checkout");
+  };
 
   const dec = () => setQty((q) => Math.max(1, q - 1));
   const inc = () => setQty((q) => Math.min(99, q + 1));
