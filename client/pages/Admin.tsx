@@ -120,7 +120,7 @@ export default function Admin() {
   const addCategory = () => {
     const name = newCat.trim();
     if (!name) {
-      toast({ title: "Нэр хоосон байна" });
+      toast({ title: "Нэр х��осон байна" });
       return;
     }
     if (categories.includes(name)) {
@@ -359,7 +359,7 @@ export default function Admin() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card id="products">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Бүтээгдэхүүн удирдах</CardTitle>
           <div className="flex items-center gap-2">
