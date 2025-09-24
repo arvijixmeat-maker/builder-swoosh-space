@@ -40,7 +40,7 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Нүүр</NavLink>
-          <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Каталог</NavLink>
+          <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Ангилал</NavLink>
           {user && (
             <NavLink to="/admin" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Админ</NavLink>
           )}
@@ -82,7 +82,7 @@ export default function Header() {
           </div>
           <div className="mt-2 flex items-center gap-4 text-sm">
             <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Нүүр</NavLink>
-            <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Каталог</NavLink>
+            <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Ангилал</NavLink>
             {user && (
             <NavLink to="/admin" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Админ</NavLink>
           )}
