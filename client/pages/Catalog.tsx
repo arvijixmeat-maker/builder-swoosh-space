@@ -2,12 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import ProductCard, { type Product } from "@/components/site/ProductCard";
 import { products as seed } from "@/data/products";
 import { getCategories, getProductsLS, PRODUCTS_KEY } from "@/data/store";
+import { useLocation } from "react-router-dom";
 
 export default function Catalog() {
   const [cats, setCats] = useState<string[]>(getCategories());
   const [prods, setProds] = useState<Product[]>(
     getProductsLS<Product>(PRODUCTS_KEY),
   );
+  const location = useLocation();
+  const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
     const updateCats = () => setCats(getCategories());
@@ -34,6 +37,19 @@ export default function Catalog() {
       );
     };
   }, []);
+
+  useEffect(() => {
+    const h = location.hash || "";
+    if (h.startsWith("#cat-")) {
+      try {
+        setSelected(decodeURIComponent(h.slice(5)) || null);
+      } catch {
+        setSelected(h.slice(5));
+      }
+    } else {
+      setSelected(null);
+    }
+  }, [location.hash]);
 
   const allProducts = prods.length ? prods : seed;
 
@@ -70,32 +86,48 @@ export default function Catalog() {
         )}
       </div>
 
-      {categories.map((c) => {
-        const list = allProducts.filter((p) => p.category === c);
-        if (list.length === 0) return null;
-        return (
-          <section
-            key={c}
-            id={`cat-${encodeURIComponent(c)}`}
-            className="mb-10 md:mb-14"
-          >
-            <div className="mb-4 md:mb-6 flex items-end justify-between">
-              <h2 className="text-xl md:text-2xl font-bold">{c}</h2>
-              <a
-                href="#top"
-                className="text-sm text-primary underline underline-offset-4"
-              >
-                Дээш очих
-              </a>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {list.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      {selected ? (
+        (() => {
+          const list = allProducts.filter((p) => p.category === selected);
+          return (
+            <section id={`cat-${encodeURIComponent(selected)}`} className="mb-10 md:mb-14">
+              <div className="mb-4 md:mb-6 flex items-end justify-between">
+                <h2 className="text-xl md:text-2xl font-bold">{selected}</h2>
+                <a href="#top" className="text-sm text-primary underline underline-offset-4">Дээш очих</a>
+              </div>
+              {list.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                  {list.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">Энэ ангилалд бараа алга.</div>
+              )}
+            </section>
+          );
+        })()
+      ) : (
+        <>
+          {categories.map((c) => {
+            const list = allProducts.filter((p) => p.category === c);
+            if (list.length === 0) return null;
+            return (
+              <section key={c} id={`cat-${encodeURIComponent(c)}`} className="mb-10 md:mb-14">
+                <div className="mb-4 md:mb-6 flex items-end justify-between">
+                  <h2 className="text-xl md:text-2xl font-bold">{c}</h2>
+                  <a href="#top" className="text-sm text-primary underline underline-offset-4">Дээш очих</a>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                  {list.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </>
+      )}
 
       {categories.length === 0 && (
         <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
