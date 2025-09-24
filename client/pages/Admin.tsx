@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
-import { Plus, Pencil, Trash2, Download, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Download, X, Check } from "lucide-react";
 import { CATEGORIES_KEY, getCategories, setCategories, getProductsLS, setProductsLS } from "@/data/store";
 
 const STORAGE_KEY = "admin_products";
@@ -35,6 +35,8 @@ export default function Admin() {
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState<Product>({ id: "", name: "", price: 0, image: "", category: "", badge: "" });
   const [newCat, setNewCat] = useState("");
+  const [editingCat, setEditingCat] = useState<string | null>(null);
+  const [editCatValue, setEditCatValue] = useState("");
 
   useEffect(() => {
     setProducts(getProductsLS<Product>(STORAGE_KEY));
@@ -108,6 +110,42 @@ export default function Admin() {
   const removeCategory = (name: string) => {
     const next = categories.filter((c) => c !== name);
     setCategoriesState(next);
+    setProducts((prev) => prev.map((p) => (p.category === name ? { ...p, category: "" } : p)));
+    if (editingCat === name) {
+      setEditingCat(null);
+      setEditCatValue("");
+    }
+    toast({ title: "Ангилал устгагдлаа" });
+  };
+
+  const startEditCategory = (name: string) => {
+    setEditingCat(name);
+    setEditCatValue(name);
+  };
+
+  const saveEditCategory = () => {
+    const from = editingCat;
+    const to = editCatValue.trim();
+    if (!from) return;
+    if (!to) {
+      toast({ title: "Нэр хоосон байна" });
+      return;
+    }
+    if (to !== from && categories.includes(to)) {
+      toast({ title: "Давхардсан ангилал" });
+      return;
+    }
+    const next = categories.map((c) => (c === from ? to : c));
+    setCategoriesState(next);
+    setProducts((prev) => prev.map((p) => (p.category === from ? { ...p, category: to } : p)));
+    setEditingCat(null);
+    setEditCatValue("");
+    toast({ title: "Ангилал шинэчлэгдлээ" });
+  };
+
+  const cancelEditCategory = () => {
+    setEditingCat(null);
+    setEditCatValue("");
   };
 
   const exportJson = () => {
@@ -163,22 +201,49 @@ export default function Admin() {
             <div className="flex-1 grid gap-2">
               <Label htmlFor="newCat">Шинэ ангилал</Label>
               <div className="flex gap-2">
-                <Input id="newCat" value={newCat} onChange={(e) => setNewCat(e.target.value)} placeholder="ж: Электроник" />
+                <Input id="newCat" value={newCat} onChange={(e) => setNewCat(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addCategory(); }} placeholder="ж: Электроник" />
                 <Button onClick={addCategory}>Нэмэх</Button>
               </div>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {categories.map((c) => (
-              <span key={c} className="inline-flex items-center gap-1 rounded-full border bg-card px-3 py-1 text-xs">
-                {c}
-                <button aria-label="Remove" onClick={() => removeCategory(c)} className="opacity-60 hover:opacity-100">
-                  <X className="h-3 w-3" />
-                </button>
+              <span key={c} className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs">
+                {editingCat === c ? (
+                  <>
+                    <input
+                      className="h-7 rounded border bg-background px-2 text-xs"
+                      value={editCatValue}
+                      onChange={(e) => setEditCatValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveEditCategory();
+                        if (e.key === "Escape") cancelEditCategory();
+                      }}
+                      aria-label="Ангилал нэр"
+                      autoFocus
+                    />
+                    <button aria-label="Save" onClick={saveEditCategory} className="opacity-80 hover:opacity-100">
+                      <Check className="h-3.5 w-3.5" />
+                    </button>
+                    <button aria-label="Cancel" onClick={cancelEditCategory} className="opacity-60 hover:opacity-100">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <span>{c}</span>
+                    <button aria-label="Edit" onClick={() => startEditCategory(c)} className="opacity-60 hover:opacity-100">
+                      <Pencil className="h-3 w-3" />
+                    </button>
+                    <button aria-label="Remove" onClick={() => removeCategory(c)} className="opacity-60 hover:opacity-100">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </>
+                )}
               </span>
             ))}
             {categories.length === 0 && (
-              <span className="text-sm text-muted-foreground">Од��огоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.</span>
+              <span className="text-sm text-muted-foreground">Одоогоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.</span>
             )}
           </div>
         </CardContent>
@@ -197,7 +262,7 @@ export default function Admin() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{editing ? "Бүтээгдэхүүн засах" : "Шинэ бүтээгдэхүүн"}</DialogTitle>
+                  <DialogTitle>{editing ? "Бүтээ��дэхүүн засах" : "Шинэ бүтээгдэхүүн"}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4">
                   <div className="grid gap-2">
