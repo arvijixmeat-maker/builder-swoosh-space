@@ -1,8 +1,12 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ShoppingCart, Search, TentTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser, logoutUser } from "@/data/store";
 
 export default function Header() {
+  const user = getCurrentUser();
+  const navigate = useNavigate();
+  const logout = () => { logoutUser(); navigate("/"); };
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between">
@@ -29,6 +33,17 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {user ? (
+            <>
+              <span className="hidden md:inline text-sm text-muted-foreground">Сайн уу, {user.name.split(" ")[0]}</span>
+              <Button variant="ghost" size="sm" onClick={logout}>Гарах</Button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="text-sm text-foreground/80 hover:text-foreground">Нэвтрэх</Link>
+              <Link to="/register" className="text-sm text-primary">Бүртгүүлэх</Link>
+            </>
+          )}
           <Button asChild variant="ghost" size="icon" aria-label="Сагс">
             <Link to="/cart">
               <ShoppingCart className="h-5 w-5" />
