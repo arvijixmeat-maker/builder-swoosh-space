@@ -24,7 +24,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
 import { Plus, Pencil, Trash2, Download, X, Check } from "lucide-react";
-import { CATEGORIES_KEY, getCategories, setCategories, getProductsLS, setProductsLS, getOrders, setOrders, type Order, updateOrderStatus, getUsers, type User } from "@/data/store";
+import { CATEGORIES_KEY, getCategories, setCategories, getProductsLS, setProductsLS, getOrders, setOrders, type Order, updateOrderStatus, getUsers, type User, getCurrentUser } from "@/data/store";
 
 const STORAGE_KEY = "admin_products";
 
@@ -114,7 +114,7 @@ export default function Admin() {
   const addCategory = () => {
     const name = newCat.trim();
     if (!name) {
-      toast({ title: "Нэр хоосон байна" });
+      toast({ title: "Н��р хоосон байна" });
       return;
     }
     if (categories.includes(name)) {
