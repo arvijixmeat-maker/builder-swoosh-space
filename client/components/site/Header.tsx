@@ -68,15 +68,6 @@ export default function Header() {
           </Button>
         </div>
       </div>
-      <div className="border-t bg-background/70">
-        <div className="container mx-auto flex items-center justify-between gap-3 py-2 px-4">
-          <div className="flex items-center gap-2 overflow-x-auto">
-            {categories.slice(0, 6).map((c) => (
-              <span key={c} className="inline-flex items-center rounded-full border bg-card px-3 py-1 text-xs whitespace-nowrap">{c}</span>
-            ))}
-          </div>
-        </div>
-      </div>
 
       <div className="md:hidden border-t">
         <div className="container mx-auto p-3">
