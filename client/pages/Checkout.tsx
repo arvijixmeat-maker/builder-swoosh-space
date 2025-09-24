@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getCart, setCart, type CartItem, addOrder } from "@/data/store";
+import { getCart, setCart, type CartItem, addOrder, getCurrentUser, getCurrentUserId } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,10 +10,21 @@ import { Label } from "@/components/ui/label";
 export default function Checkout() {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const [items, setItems] = useState<CartItem[]>(getCart());
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (!user) {
+      navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
+      return;
+    }
+    setName(user.name);
+    setPhone(user.phone);
+  }, [navigate]);
 
   useEffect(() => {
     const update = () => setItems(getCart());
@@ -45,6 +56,7 @@ export default function Checkout() {
       total: subtotal,
       customer: { name: name.trim(), phone: phone.trim(), address: address.trim() },
       status: "new" as const,
+      userId: getCurrentUserId() || undefined,
     };
     addOrder(order);
     setCart([]);
