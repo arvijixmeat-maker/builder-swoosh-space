@@ -34,15 +34,31 @@ export default function Login() {
       <div className="grid gap-3">
         <div className="grid gap-2">
           <Label htmlFor="email">И-мэйл</Label>
-          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Нууц үг</Label>
-          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <Button onClick={submit}>Нэвтрэх</Button>
         <div className="text-sm text-muted-foreground">
-          Бүртгэлгүй байна уу? <Link className="text-primary underline" to={`/register?redirect=${encodeURIComponent(redirect)}`}>Бүртгүүлэх</Link>
+          Бүртгэлгүй байна уу?{" "}
+          <Link
+            className="text-primary underline"
+            to={`/register?redirect=${encodeURIComponent(redirect)}`}
+          >
+            Бүртгүүлэх
+          </Link>
         </div>
       </div>
     </div>

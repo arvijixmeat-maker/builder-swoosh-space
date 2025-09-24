@@ -22,9 +22,20 @@ export default function ProductCard({ product }: { product: Product }) {
     const existing = cart.find((i) => i.id === product.id);
     let next;
     if (existing) {
-      next = cart.map((i) => (i.id === product.id ? { ...i, qty: Math.min(99, i.qty + 1) } : i));
+      next = cart.map((i) =>
+        i.id === product.id ? { ...i, qty: Math.min(99, i.qty + 1) } : i,
+      );
     } else {
-      next = [{ id: product.id, name: product.name, price: product.price, image: product.image, qty: 1 }, ...cart];
+      next = [
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          qty: 1,
+        },
+        ...cart,
+      ];
     }
     setCart(next);
     toast({ title: "Сагсанд нэмэгдлээ", description: product.name });
@@ -32,7 +43,10 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Card className="overflow-hidden group">
-      <Link to={`/product/${product.id}`} className="block aspect-square overflow-hidden bg-muted">
+      <Link
+        to={`/product/${product.id}`}
+        className="block aspect-square overflow-hidden bg-muted"
+      >
         <img
           src={product.image}
           alt={product.name}
@@ -47,10 +61,20 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.badge}
             </span>
           )}
-          <h3 className="text-sm font-medium leading-tight line-clamp-2">{product.name}</h3>
-          <p className="mt-1 font-semibold">{new Intl.NumberFormat("mn-MN", { style: "currency", currency: "MNT", maximumFractionDigits: 0 }).format(product.price)}</p>
+          <h3 className="text-sm font-medium leading-tight line-clamp-2">
+            {product.name}
+          </h3>
+          <p className="mt-1 font-semibold">
+            {new Intl.NumberFormat("mn-MN", {
+              style: "currency",
+              currency: "MNT",
+              maximumFractionDigits: 0,
+            }).format(product.price)}
+          </p>
         </Link>
-        <Button size="sm" onClick={addToCart}>Нэмэх</Button>
+        <Button size="sm" onClick={addToCart}>
+          Нэмэх
+        </Button>
       </CardContent>
     </Card>
   );

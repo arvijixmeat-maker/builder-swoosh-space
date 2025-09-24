@@ -22,11 +22,17 @@ export default function Register() {
 
   const submit = () => {
     try {
-      const u = addUser({ name: name.trim(), email: email.trim(), phone: phone.trim(), password });
+      const u = addUser({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        password,
+      });
       toast({ title: "Бүртгэл амжилттай" });
       navigate(redirect);
     } catch (e: any) {
-      if (e?.message === "EMAIL_TAKEN") toast({ title: "И-мэйл бүртгэлтэй байна" });
+      if (e?.message === "EMAIL_TAKEN")
+        toast({ title: "И-мэйл бүртгэлтэй байна" });
       else toast({ title: "Алдаа", description: "Дахин оролдож үзнэ үү" });
     }
   };
@@ -37,23 +43,48 @@ export default function Register() {
       <div className="grid gap-3">
         <div className="grid gap-2">
           <Label htmlFor="name">Нэр</Label>
-          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="email">И-мэйл</Label>
-          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="phone">Утас</Label>
-          <Input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <Input
+            id="phone"
+            inputMode="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Нууц үг</Label>
-          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <Button onClick={submit}>Бүртгүүлэх</Button>
         <div className="text-sm text-muted-foreground">
-          Аль хэдийн бүртгэлтэй юу? <Link className="text-primary underline" to={`/login?redirect=${encodeURIComponent(redirect)}`}>Нэвтрэх</Link>
+          Аль хэдийн бүртгэлтэй юу?{" "}
+          <Link
+            className="text-primary underline"
+            to={`/login?redirect=${encodeURIComponent(redirect)}`}
+          >
+            Нэвтрэх
+          </Link>
         </div>
       </div>
     </div>

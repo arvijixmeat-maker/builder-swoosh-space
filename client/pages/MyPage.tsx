@@ -4,8 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { getCurrentUser, updateCurrentUser, deleteCurrentUser, getOrders, getCart } from "@/data/store";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import {
+  getCurrentUser,
+  updateCurrentUser,
+  deleteCurrentUser,
+  getOrders,
+  getCart,
+} from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 
 export default function MyPage() {
@@ -17,17 +29,27 @@ export default function MyPage() {
 
   const [name, setName] = useState(user?.name || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
-  const [gender, setGender] = useState<"male" | "female" | "other" | "">((user?.gender as any) || "");
-  const [birthYear, setBirthYear] = useState<string>(user?.birthYear ? String(user.birthYear) : "");
-  const [birthMonth, setBirthMonth] = useState<string>(user?.birthMonth ? String(user.birthMonth) : "");
-  const [birthDay, setBirthDay] = useState<string>(user?.birthDay ? String(user.birthDay) : "");
+  const [gender, setGender] = useState<"male" | "female" | "other" | "">(
+    (user?.gender as any) || "",
+  );
+  const [birthYear, setBirthYear] = useState<string>(
+    user?.birthYear ? String(user.birthYear) : "",
+  );
+  const [birthMonth, setBirthMonth] = useState<string>(
+    user?.birthMonth ? String(user.birthMonth) : "",
+  );
+  const [birthDay, setBirthDay] = useState<string>(
+    user?.birthDay ? String(user.birthDay) : "",
+  );
 
   useEffect(() => {
     if (!user) {
       navigate(`/login?redirect=${encodeURIComponent("/mypage")}`);
       return;
     }
-    setOrdersCount(getOrders().filter((o) => !o.userId || o.userId === user.id).length);
+    setOrdersCount(
+      getOrders().filter((o) => !o.userId || o.userId === user.id).length,
+    );
     setCartCount(getCart().reduce((s, i) => s + i.qty, 0));
   }, [navigate, user]);
 
@@ -61,9 +83,18 @@ export default function MyPage() {
           <CardContent>
             <nav className="grid gap-2 text-sm">
               <span className="font-medium text-muted-foreground">Профайл</span>
-              <Link to="/orders" className="hover:underline">Миний захиалга ({ordersCount})</Link>
-              <Link to="/cart" className="hover:underline">Хүргэгдэх сагс ({cartCount})</Link>
-              <button onClick={logout} className="text-destructive text-left hover:underline">Системээс гарах</button>
+              <Link to="/orders" className="hover:underline">
+                Миний захиалга ({ordersCount})
+              </Link>
+              <Link to="/cart" className="hover:underline">
+                Хүргэгдэх сагс ({cartCount})
+              </Link>
+              <button
+                onClick={logout}
+                className="text-destructive text-left hover:underline"
+              >
+                Системээс гарах
+              </button>
             </nav>
           </CardContent>
         </Card>
@@ -84,16 +115,29 @@ export default function MyPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="firstName">Нэр</Label>
-                <Input id="firstName" value={name} onChange={(e) => setName(e.target.value)} />
+                <Input
+                  id="firstName"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="lastName">Овог</Label>
-                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                <Input
+                  id="lastName"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
               </div>
               <div className="grid gap-2">
                 <Label>Хүйс</Label>
-                <Select value={gender} onValueChange={(v) => setGender(v as any)}>
-                  <SelectTrigger className="w-full"><SelectValue placeholder="Сонгоно уу" /></SelectTrigger>
+                <Select
+                  value={gender}
+                  onValueChange={(v) => setGender(v as any)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Сонгоно уу" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="male">Эр</SelectItem>
                     <SelectItem value="female">Эм</SelectItem>
@@ -104,14 +148,34 @@ export default function MyPage() {
               <div className="grid gap-2">
                 <Label>Төрсөн огноо</Label>
                 <div className="grid grid-cols-3 gap-2">
-                  <Input placeholder="Жил" value={birthYear} onChange={(e) => setBirthYear(e.target.value)} inputMode="numeric" />
-                  <Input placeholder="Сар" value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} inputMode="numeric" />
-                  <Input placeholder="Өдөр" value={birthDay} onChange={(e) => setBirthDay(e.target.value)} inputMode="numeric" />
+                  <Input
+                    placeholder="Жил"
+                    value={birthYear}
+                    onChange={(e) => setBirthYear(e.target.value)}
+                    inputMode="numeric"
+                  />
+                  <Input
+                    placeholder="Сар"
+                    value={birthMonth}
+                    onChange={(e) => setBirthMonth(e.target.value)}
+                    inputMode="numeric"
+                  />
+                  <Input
+                    placeholder="Өдөр"
+                    value={birthDay}
+                    onChange={(e) => setBirthDay(e.target.value)}
+                    inputMode="numeric"
+                  />
                 </div>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between">
-              <button onClick={logout} className="text-sm text-destructive hover:underline">Бүртгэл устгах</button>
+              <button
+                onClick={logout}
+                className="text-sm text-destructive hover:underline"
+              >
+                Бүртгэл устгах
+              </button>
               <Button onClick={save}>Хадгалах</Button>
             </div>
           </CardContent>

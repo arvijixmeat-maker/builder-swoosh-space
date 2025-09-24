@@ -1,8 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getCart, setCart, type CartItem, addOrder, getCurrentUser, getCurrentUserId } from "@/data/store";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  getCart,
+  setCart,
+  type CartItem,
+  addOrder,
+  getCurrentUser,
+  getCurrentUserId,
+} from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,8 +50,16 @@ export default function Checkout() {
     };
   }, []);
 
-  const subtotal = useMemo(() => items.reduce((sum, i) => sum + i.price * i.qty, 0), [items]);
-  const format = (n: number) => new Intl.NumberFormat("mn-MN", { style: "currency", currency: "MNT", maximumFractionDigits: 0 }).format(n);
+  const subtotal = useMemo(
+    () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
+    [items],
+  );
+  const format = (n: number) =>
+    new Intl.NumberFormat("mn-MN", {
+      style: "currency",
+      currency: "MNT",
+      maximumFractionDigits: 0,
+    }).format(n);
 
   const placeOrder = () => {
     if (!getCurrentUser()) {
@@ -44,7 +67,10 @@ export default function Checkout() {
       return;
     }
     if (!name.trim() || !phone.trim() || !address.trim()) {
-      toast({ title: "Мэдээлэл дутуу", description: "Нэр, утас, хаяг бөглөнө үү" });
+      toast({
+        title: "Мэдээлэл дутуу",
+        description: "Нэр, утас, хаяг бөглөнө үү",
+      });
       return;
     }
     if (items.length === 0) {
@@ -57,13 +83,20 @@ export default function Checkout() {
       createdAt: Date.now(),
       items,
       total: subtotal,
-      customer: { name: name.trim(), phone: phone.trim(), address: address.trim() },
+      customer: {
+        name: name.trim(),
+        phone: phone.trim(),
+        address: address.trim(),
+      },
       status: "new" as const,
       userId: getCurrentUserId() || undefined,
     };
     addOrder(order);
     setCart([]);
-    toast({ title: "Захиалга амжилттай", description: "Захиалга тань бүртгэгдлээ" });
+    toast({
+      title: "Захиалга амжилттай",
+      description: "Захиалга тань бүртгэгдлээ",
+    });
     navigate("/orders");
   };
 
@@ -73,9 +106,16 @@ export default function Checkout() {
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Төлбөр</h1>
-            <p className="text-muted-foreground mt-1">Захиалгын мэдээллээ баталгаажуулна уу</p>
+            <p className="text-muted-foreground mt-1">
+              Захиалгын мэдээллээ баталгаажуулна уу
+            </p>
           </div>
-          <Link to="/cart" className="text-sm text-primary underline underline-offset-4">Сагс руу буцах</Link>
+          <Link
+            to="/cart"
+            className="text-sm text-primary underline underline-offset-4"
+          >
+            Сагс руу буцах
+          </Link>
         </div>
 
         <Table>
@@ -91,7 +131,11 @@ export default function Checkout() {
             {items.map((i) => (
               <TableRow key={i.id}>
                 <TableCell>
-                  <img src={i.image} alt={i.name} className="h-10 w-10 rounded object-cover" />
+                  <img
+                    src={i.image}
+                    alt={i.name}
+                    className="h-10 w-10 rounded object-cover"
+                  />
                 </TableCell>
                 <TableCell className="font-medium">{i.name}</TableCell>
                 <TableCell>{i.qty}</TableCell>
@@ -108,21 +152,40 @@ export default function Checkout() {
       <div className="space-y-4">
         <div className="grid gap-2">
           <Label htmlFor="name">Хүлээн авагчийн нэр</Label>
-          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="phone">Утас</Label>
-          <Input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <Input
+            id="phone"
+            inputMode="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="address">Хаяг</Label>
-          <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
+          <Input
+            id="address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
         </div>
         <div className="flex items-center justify-between pt-2">
           <div className="text-sm text-muted-foreground">Нийт</div>
           <div className="text-xl font-bold">{format(subtotal)}</div>
         </div>
-        <Button className="w-full" disabled={items.length === 0} onClick={placeOrder}>Захиалга баталгаажуулах</Button>
+        <Button
+          className="w-full"
+          disabled={items.length === 0}
+          onClick={placeOrder}
+        >
+          Захиалга баталгаажуулах
+        </Button>
       </div>
     </div>
   );

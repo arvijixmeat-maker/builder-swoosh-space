@@ -116,7 +116,9 @@ export const setUsers = (users: User[]) => {
   window.dispatchEvent(new Event("users-updated"));
 };
 
-export const addUser = (u: Omit<User, "id" | "createdAt"> & Partial<Pick<User, "id" | "createdAt">>) => {
+export const addUser = (
+  u: Omit<User, "id" | "createdAt"> & Partial<Pick<User, "id" | "createdAt">>,
+) => {
   const users = getUsers();
   if (users.some((x) => x.email.toLowerCase() === u.email.toLowerCase())) {
     throw new Error("EMAIL_TAKEN");
@@ -139,7 +141,8 @@ export const addUser = (u: Omit<User, "id" | "createdAt"> & Partial<Pick<User, "
   return user;
 };
 
-export const getCurrentUserId = (): string | null => localStorage.getItem(CURRENT_USER_KEY);
+export const getCurrentUserId = (): string | null =>
+  localStorage.getItem(CURRENT_USER_KEY);
 export const setCurrentUserId = (id: string | null) => {
   if (id) localStorage.setItem(CURRENT_USER_KEY, id);
   else localStorage.removeItem(CURRENT_USER_KEY);
@@ -152,7 +155,10 @@ export const getCurrentUser = (): User | null => {
 };
 export const loginUser = (email: string, password: string): User | null => {
   const users = getUsers();
-  const u = users.find((x) => x.email.toLowerCase() === email.toLowerCase() && x.password === password);
+  const u = users.find(
+    (x) =>
+      x.email.toLowerCase() === email.toLowerCase() && x.password === password,
+  );
   if (u) setCurrentUserId(u.id);
   return u || null;
 };
