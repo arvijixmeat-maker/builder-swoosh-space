@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getCart, setCart, type CartItem } from "@/data/store";
+import { getCart, setCart, type CartItem, getCurrentUser } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Cart() {
@@ -90,11 +90,8 @@ export default function Cart() {
         <Button
           disabled={items.length === 0}
           onClick={() => {
-            const { getCurrentUser } = require("@/data/store");
             const user = getCurrentUser();
             if (!user) {
-              const { useToast } = require("@/hooks/use-toast");
-              const { toast } = useToast();
               toast({ title: "Нэвтрэх шаардлагатай", description: "Захиалга хийхийн тулд нэвтэрнэ үү" });
               navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
               return;
