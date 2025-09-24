@@ -83,16 +83,7 @@ export default function Header() {
               Админ
             </NavLink>
           )}
-          <NavLink
-            to="/mypage"
-            className={({ isActive }) =>
-              isActive
-                ? "text-primary"
-                : "text-foreground/80 hover:text-foreground"
-            }
-          >
-            Миний хуудас
-          </NavLink>
+
         </nav>
 
         <div className="flex items-center gap-4">
@@ -177,16 +168,7 @@ export default function Header() {
                 Админ
               </NavLink>
             )}
-            <NavLink
-              to="/mypage"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-primary"
-                  : "text-foreground/80 hover:text-foreground"
-              }
-            >
-              Миний хуудас
-            </NavLink>
+  
             <NavLink
               to="/cart"
               className={({ isActive }) =>
