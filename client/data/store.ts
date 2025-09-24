@@ -28,4 +28,7 @@ export const getProductsLS = <T>(key: string): T[] => {
 
 export const setProductsLS = <T>(key: string, items: T[]) => {
   localStorage.setItem(key, JSON.stringify(items));
+  if (key === PRODUCTS_KEY) {
+    window.dispatchEvent(new Event("products-updated"));
+  }
 };
