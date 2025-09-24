@@ -10,6 +10,7 @@ export default function ProductDetail() {
   const product = id ? getProduct(id) : undefined;
   const { toast } = useToast();
   const [qty, setQty] = useState(1);
+  const [imgIdx, setImgIdx] = useState(0);
 
   if (!product) {
     return (
@@ -39,8 +40,22 @@ export default function ProductDetail() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <div className="overflow-hidden rounded-lg border bg-muted">
-            <img src={product.image} alt={product.name} className="w-full h-auto object-cover" />
+            <img src={(product.images && product.images[imgIdx]) || product.image} alt={product.name} className="w-full h-auto object-cover" />
           </div>
+          {product.images && product.images.length > 1 && (
+            <div className="mt-3 grid grid-cols-5 gap-2">
+              {product.images.map((src, i) => (
+                <button
+                  key={i}
+                  className={`overflow-hidden rounded-md border ${i === imgIdx ? "ring-2 ring-primary" : ""}`}
+                  onClick={() => setImgIdx(i)}
+                  aria-label={`Зураг ${i + 1}`}
+                >
+                  <img src={src} alt={`${product.name} ${i + 1}`} className="h-16 w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div>
           {product.badge && (
@@ -73,7 +88,7 @@ export default function ProductDetail() {
           <AccordionItem value="details">
             <AccordionTrigger>Дэлгэрэнгүй тайлбар</AccordionTrigger>
             <AccordionContent>
-              Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны сервисийн дэмжлэгтэй.
+              Энэхүү бүтээгдэхүүн ��ь өндөр чанарын материалаар хийгдсэн бөгөөд өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны сервисийн дэмжлэгтэй.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="specs">
