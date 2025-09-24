@@ -328,7 +328,7 @@ export default function Admin() {
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
+      <Card id="users" className="mb-6">
         <CardHeader>
           <CardTitle>Хэрэглэгчид</CardTitle>
         </CardHeader>
