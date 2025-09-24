@@ -94,16 +94,6 @@ export default function Index() {
                 Онцлох бүтээгдэхүүн
               </a>
             </div>
-            <div className="mt-8 flex flex-wrap items-center gap-2">
-              {categories.map((c) => (
-                <span
-                  key={c}
-                  className="rounded-full bg-secondary px-3 py-1 text-xs text-secondary-foreground"
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </section>
