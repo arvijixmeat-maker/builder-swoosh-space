@@ -22,6 +22,10 @@ export default function Register() {
   }, [navigate, redirect]);
 
   const submit = () => {
+    if (!password || password !== passwordConfirm) {
+      toast({ title: "Нууц үг таарахгүй байна", description: "Нууц үгээ дахин шалгана уу" });
+      return;
+    }
     try {
       const u = addUser({
         name: name.trim(),
@@ -70,12 +74,11 @@ export default function Register() {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Нууц үг</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="passwordConfirm">Нууц үг баталгаажуулах</Label>
+          <Input id="passwordConfirm" type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
         </div>
         <Button onClick={submit}>Бүртгүүлэх</Button>
         <div className="text-sm text-muted-foreground">
