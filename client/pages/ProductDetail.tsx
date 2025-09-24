@@ -21,7 +21,21 @@ export default function ProductDetail() {
     );
   }
 
-  const addToCart = () => toast({ title: "Сагсанд нэмэгдлээ", description: `${product.name} × ${qty}` });
+  const addToCart = () => {
+    try {
+      const { getCart, setCart } = require("@/data/store");
+      const cart = getCart();
+      const existing = cart.find((i: any) => i.id === product.id);
+      let next;
+      if (existing) {
+        next = cart.map((i: any) => (i.id === product.id ? { ...i, qty: Math.min(99, i.qty + qty) } : i));
+      } else {
+        next = [{ id: product.id, name: product.name, price: product.price, image: product.image, qty }, ...cart];
+      }
+      setCart(next);
+    } catch {}
+    toast({ title: "Сагсанд нэмэгдлээ", description: `${product.name} × ${qty}` });
+  };
   const buyNow = () => toast({ title: "Худалдан авах", description: `${product.name} × ${qty}` });
 
   const dec = () => setQty((q) => Math.max(1, q - 1));
@@ -88,7 +102,7 @@ export default function ProductDetail() {
           <AccordionItem value="details">
             <AccordionTrigger>Дэлгэрэнгүй тайлбар</AccordionTrigger>
             <AccordionContent>
-              Энэхүү бүтээгдэхүүн ��ь өндөр чанарын материалаар хийгдсэн бөгөөд өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны сервисийн дэмжлэгтэй.
+              Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны сервисийн дэмжлэгтэй.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="specs">
