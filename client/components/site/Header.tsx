@@ -1,12 +1,25 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { ShoppingCart, Search, TentTree } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ShoppingCart, Search, TentTree, Heart, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser, logoutUser } from "@/data/store";
+import { getCurrentUser, logoutUser, getCategories } from "@/data/store";
 
 export default function Header() {
   const user = getCurrentUser();
   const navigate = useNavigate();
   const logout = () => { logoutUser(); navigate("/"); };
+  const [cats, setCats] = useState<string[]>(getCategories());
+  useEffect(() => {
+    const update = () => setCats(getCategories());
+    window.addEventListener("storage", update);
+    window.addEventListener("categories-updated", update as EventListener);
+    return () => {
+      window.removeEventListener("storage", update);
+      window.removeEventListener("categories-updated", update as EventListener);
+    };
+  }, []);
+  const fallback = ["Гоо сайхан", "Спорт", "Технологи", "Аялал", "+18"];
+  const categories = cats.length ? cats : fallback;
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between">
@@ -19,7 +32,7 @@ export default function Header() {
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             className="w-full bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
-            placeholder="Бүтээгдэхүүн хайх..."
+            placeholder="Та юу хайж байна вэ?"
             aria-label="Хайх"
           />
           <Button size="sm" className="shrink-0">Хайх</Button>
@@ -33,14 +46,18 @@ export default function Header() {
           <NavLink to="/orders" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Захиалгууд</NavLink>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           {user ? (
             <>
-              <Link to="/mypage" className="hidden md:inline text-sm text-foreground hover:underline">Миний хуудас</Link>
+              <Link to="/favorites" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><Heart className="h-5 w-5" /> Хадгалсан</Link>
+              <Link to="/cart" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><ShoppingCart className="h-5 w-5" /> Сагс</Link>
+              <Link to="/mypage" className="hidden md:inline text-sm text-foreground inline-flex items-center gap-1"><User className="h-5 w-5" /> {user.name.split(" ")[0]}</Link>
               <Button variant="ghost" size="sm" onClick={logout}>Гарах</Button>
             </>
           ) : (
             <>
+              <Link to="/favorites" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><Heart className="h-5 w-5" /> Хадгалсан</Link>
+              <Link to="/cart" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><ShoppingCart className="h-5 w-5" /> Сагс</Link>
               <Link to="/login" className="text-sm text-foreground/80 hover:text-foreground">Нэвтрэх</Link>
               <Link to="/register" className="text-sm text-primary">Бүртгүүлэх</Link>
             </>
@@ -52,13 +69,30 @@ export default function Header() {
           </Button>
         </div>
       </div>
+      <div className="border-t bg-background/70">
+        <div className="container mx-auto flex items-center justify-between gap-3 py-2 px-4">
+          <div className="flex items-center gap-2 overflow-x-auto">
+            <Button variant="outline" size="sm" className="h-8 rounded-full"><Menu className="h-4 w-4 mr-2" />Ангилал</Button>
+            {categories.slice(0, 6).map((c) => (
+              <span key={c} className="inline-flex items-center rounded-full border bg-card px-3 py-1 text-xs whitespace-nowrap">{c}</span>
+            ))}
+          </div>
+          <div className="hidden md:flex items-center gap-5 text-sm text-foreground/80">
+            <Link to="/catalog" className="hover:text-foreground">Брэндүүд</Link>
+            <Link to="/catalog" className="hover:text-foreground">Хямдрал</Link>
+            <Link to="/catalog" className="hover:text-foreground">Шинэ</Link>
+            <Link to="/catalog" className="hover:text-foreground">Бестселлер</Link>
+          </div>
+        </div>
+      </div>
+
       <div className="md:hidden border-t">
         <div className="container mx-auto p-3">
           <div className="flex items-center gap-2 rounded-md border px-2 py-1.5 bg-card">
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
               className="w-full bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
-              placeholder="Бүтээгдэхүүн хайх..."
+              placeholder="Та юу хайж байна вэ?"
               aria-label="Хайх"
             />
             <Button size="sm" className="shrink-0">Хайх</Button>
