@@ -2,6 +2,8 @@ export const PRODUCTS_KEY = "admin_products";
 export const CATEGORIES_KEY = "admin_categories";
 export const CART_KEY = "cart_items";
 export const ORDERS_KEY = "orders";
+export const USERS_KEY = "users";
+export const CURRENT_USER_KEY = "current_user_id";
 
 export type Category = string;
 
@@ -20,6 +22,15 @@ export interface Order {
   total: number;
   customer: { name: string; phone: string; address: string };
   status: "new" | "processing" | "shipped" | "delivered" | "cancelled";
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  createdAt: number;
 }
 
 export const getCategories = (): Category[] => {
@@ -83,4 +94,61 @@ export const setOrders = (orders: Order[]) => {
 export const addOrder = (order: Order) => {
   const current = getOrders();
   setOrders([order, ...current]);
+};
+
+export const getUsers = (): User[] => {
+  try {
+    const raw = localStorage.getItem(USERS_KEY);
+    return raw ? (JSON.parse(raw) as User[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const setUsers = (users: User[]) => {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  window.dispatchEvent(new Event("users-updated"));
+};
+
+export const addUser = (u: Omit<User, "id" | "createdAt"> & Partial<Pick<User, "id" | "createdAt">>) => {
+  const users = getUsers();
+  if (users.some((x) => x.email.toLowerCase() === u.email.toLowerCase())) {
+    throw new Error("EMAIL_TAKEN");
+  }
+  const user: User = {
+    id: u.id || crypto.randomUUID(),
+    createdAt: u.createdAt || Date.now(),
+    name: u.name,
+    email: u.email,
+    phone: u.phone,
+    password: u.password,
+  };
+  setUsers([user, ...users]);
+  setCurrentUserId(user.id);
+  return user;
+};
+
+export const getCurrentUserId = (): string | null => localStorage.getItem(CURRENT_USER_KEY);
+export const setCurrentUserId = (id: string | null) => {
+  if (id) localStorage.setItem(CURRENT_USER_KEY, id);
+  else localStorage.removeItem(CURRENT_USER_KEY);
+  window.dispatchEvent(new Event("user-updated"));
+};
+export const getCurrentUser = (): User | null => {
+  const id = getCurrentUserId();
+  if (!id) return null;
+  return getUsers().find((u) => u.id === id) || null;
+};
+export const loginUser = (email: string, password: string): User | null => {
+  const users = getUsers();
+  const u = users.find((x) => x.email.toLowerCase() === email.toLowerCase() && x.password === password);
+  if (u) setCurrentUserId(u.id);
+  return u || null;
+};
+export const logoutUser = () => setCurrentUserId(null);
+
+export const updateOrderStatus = (id: string, status: Order["status"]) => {
+  const orders = getOrders();
+  const next = orders.map((o) => (o.id === id ? { ...o, status } : o));
+  setOrders(next);
 };
