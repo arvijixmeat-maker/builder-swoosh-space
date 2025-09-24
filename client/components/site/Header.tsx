@@ -32,7 +32,7 @@ export default function Header() {
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             className="w-full bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
-            placeholder="Та юу хайж байна вэ?"
+            placeholder="Та юу хайж байна в��?"
             aria-label="Хайх"
           />
           <Button size="sm" className="shrink-0">Хайх</Button>
@@ -75,12 +75,6 @@ export default function Header() {
             {categories.slice(0, 6).map((c) => (
               <span key={c} className="inline-flex items-center rounded-full border bg-card px-3 py-1 text-xs whitespace-nowrap">{c}</span>
             ))}
-          </div>
-          <div className="hidden md:flex items-center gap-5 text-sm text-foreground/80">
-            <Link to="/catalog" className="hover:text-foreground">Брэндүүд</Link>
-            <Link to="/catalog" className="hover:text-foreground">Хямдрал</Link>
-            <Link to="/catalog" className="hover:text-foreground">Шинэ</Link>
-            <Link to="/catalog" className="hover:text-foreground">Бестселлер</Link>
           </div>
         </div>
       </div>
