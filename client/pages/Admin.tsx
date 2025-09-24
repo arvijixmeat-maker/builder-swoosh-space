@@ -188,11 +188,18 @@ export default function Admin() {
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold">Админ хяналтын самбар</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Адми�� хяналтын самбар</h1>
         <p className="text-muted-foreground mt-1">Бүтээгдэхүүн, захиалга, ангиллыг удирдах</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="flex flex-wrap gap-2 mb-4">
+        <a href="#categories" className="rounded-full border bg-card px-3 py-1 text-xs">Ангилал</a>
+        <a href="#orders" className="rounded-full border bg-card px-3 py-1 text-xs">Захиалгууд</a>
+        <a href="#users" className="rounded-full border bg-card px-3 py-1 text-xs">Хэрэглэгчид</a>
+        <a href="#products" className="rounded-full border bg-card px-3 py-1 text-xs">Бүтээгдэхүүн</a>
+      </div>
+
+      <div id="stats" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm text-muted-foreground">Нийт бүтээгдэхүүн</CardTitle>
