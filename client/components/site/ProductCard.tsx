@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getCart, setCart } from "@/data/store";
 import { Link } from "react-router-dom";
 
 export interface Product {
@@ -17,6 +18,15 @@ export default function ProductCard({ product }: { product: Product }) {
   const { toast } = useToast();
 
   const addToCart = () => {
+    const cart = getCart();
+    const existing = cart.find((i) => i.id === product.id);
+    let next;
+    if (existing) {
+      next = cart.map((i) => (i.id === product.id ? { ...i, qty: Math.min(99, i.qty + 1) } : i));
+    } else {
+      next = [{ id: product.id, name: product.name, price: product.price, image: product.image, qty: 1 }, ...cart];
+    }
+    setCart(next);
     toast({ title: "Сагсанд нэмэгдлээ", description: product.name });
   };
 
