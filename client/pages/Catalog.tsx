@@ -39,7 +39,7 @@ export default function Catalog() {
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold">Каталог</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">А</h1>
         <p className="text-muted-foreground mt-1">Ангиллаар шүүлт хийж барааг үзнэ үү.</p>
         {categories.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
