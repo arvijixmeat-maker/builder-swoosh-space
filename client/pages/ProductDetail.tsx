@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
+import { getCart, setCart } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -22,18 +23,15 @@ export default function ProductDetail() {
   }
 
   const addToCart = () => {
-    try {
-      const { getCart, setCart } = require("@/data/store");
-      const cart = getCart();
-      const existing = cart.find((i: any) => i.id === product.id);
-      let next;
-      if (existing) {
-        next = cart.map((i: any) => (i.id === product.id ? { ...i, qty: Math.min(99, i.qty + qty) } : i));
-      } else {
-        next = [{ id: product.id, name: product.name, price: product.price, image: product.image, qty }, ...cart];
-      }
-      setCart(next);
-    } catch {}
+    const cart = getCart();
+    const existing = cart.find((i) => i.id === product.id);
+    let next;
+    if (existing) {
+      next = cart.map((i) => (i.id === product.id ? { ...i, qty: Math.min(99, i.qty + qty) } : i));
+    } else {
+      next = [{ id: product.id, name: product.name, price: product.price, image: product.image, qty }, ...cart];
+    }
+    setCart(next);
     toast({ title: "Сагсанд нэмэгдлээ", description: `${product.name} × ${qty}` });
   };
   const buyNow = () => toast({ title: "Худалдан авах", description: `${product.name} × ${qty}` });
