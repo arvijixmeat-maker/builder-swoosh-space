@@ -23,9 +23,6 @@ export default function Orders() {
     };
   }, [navigate]);
 
-  useEffect(() => {
-    setOrders(orders);
-  }, [orders]);
 
   const formatDate = (ts: number) => new Date(ts).toLocaleString();
   const format = (n: number) => new Intl.NumberFormat("mn-MN", { style: "currency", currency: "MNT", maximumFractionDigits: 0 }).format(n);
