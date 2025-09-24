@@ -1,6 +1,7 @@
 export const PRODUCTS_KEY = "admin_products";
 export const CATEGORIES_KEY = "admin_categories";
 export const CART_KEY = "cart_items";
+export const ORDERS_KEY = "orders";
 
 export type Category = string;
 
@@ -10,6 +11,15 @@ export interface CartItem {
   price: number;
   image: string;
   qty: number;
+}
+
+export interface Order {
+  id: string;
+  createdAt: number;
+  items: CartItem[];
+  total: number;
+  customer: { name: string; phone: string; address: string };
+  status: "new" | "processing" | "shipped" | "delivered" | "cancelled";
 }
 
 export const getCategories = (): Category[] => {
@@ -54,4 +64,23 @@ export const getCart = (): CartItem[] => {
 export const setCart = (items: CartItem[]) => {
   localStorage.setItem(CART_KEY, JSON.stringify(items));
   window.dispatchEvent(new Event("cart-updated"));
+};
+
+export const getOrders = (): Order[] => {
+  try {
+    const raw = localStorage.getItem(ORDERS_KEY);
+    return raw ? (JSON.parse(raw) as Order[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const setOrders = (orders: Order[]) => {
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  window.dispatchEvent(new Event("orders-updated"));
+};
+
+export const addOrder = (order: Order) => {
+  const current = getOrders();
+  setOrders([order, ...current]);
 };
