@@ -122,15 +122,72 @@ export const setCart = (items: CartItem[]) => {
 export const getOrders = (): Order[] => {
   try {
     const raw = localStorage.getItem(ORDERS_KEY);
-    return raw ? (JSON.parse(raw) as Order[]) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    // Support lightweight orders format where items are [{id, qty}] to save space
+    return (parsed as any[]).map((o) => {
+      const base = {
+        id: o.id,
+        createdAt: o.createdAt,
+        total: o.total,
+        customer: o.customer,
+        status: o.status,
+        userId: o.userId,
+      } as Order;
+      // if items are simple {id, qty}, rehydrate
+      if (Array.isArray(o.items) && o.items.length > 0) {
+        const first = o.items[0];
+        if (first && typeof first === "object" && !("name" in first) && ("id" in first) && ("qty" in first)) {
+          const prods = getProductsLS<any>(PRODUCTS_KEY);
+          base.items = o.items.map((it: { id: string; qty: number }) => {
+            const prod = prods.find((p) => p.id === it.id);
+            return {
+              id: it.id,
+              name: prod?.name || "",
+              price: prod?.price || 0,
+              image: prod?.image || "",
+              qty: it.qty,
+            } as CartItem;
+          });
+        } else {
+          base.items = o.items as CartItem[];
+        }
+      } else {
+        base.items = [];
+      }
+      return base;
+    });
   } catch {
     return [];
   }
 };
 
 export const setOrders = (orders: Order[]) => {
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  window.dispatchEvent(new Event("orders-updated"));
+  try {
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    window.dispatchEvent(new Event("orders-updated"));
+  } catch (e) {
+    try {
+      // save lightweight orders: keep order metadata and item ids+qty only
+      const light = orders.map((o) => ({
+        id: o.id,
+        createdAt: o.createdAt,
+        total: o.total,
+        customer: o.customer,
+        status: o.status,
+        userId: o.userId,
+        items: o.items.map((it) => ({ id: it.id, qty: it.qty })),
+      }));
+      localStorage.setItem(ORDERS_KEY, JSON.stringify(light));
+      window.dispatchEvent(new Event("orders-updated"));
+    } catch (err) {
+      try {
+        localStorage.removeItem(ORDERS_KEY);
+        window.dispatchEvent(new Event("orders-updated"));
+      } catch {}
+    }
+  }
 };
 
 export const addOrder = (order: Order) => {
