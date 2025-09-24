@@ -1,7 +1,16 @@
 export const PRODUCTS_KEY = "admin_products";
 export const CATEGORIES_KEY = "admin_categories";
+export const CART_KEY = "cart_items";
 
 export type Category = string;
+
+export interface CartItem {
+  id: string; // product id
+  name: string;
+  price: number;
+  image: string;
+  qty: number;
+}
 
 export const getCategories = (): Category[] => {
   try {
@@ -31,4 +40,18 @@ export const setProductsLS = <T>(key: string, items: T[]) => {
   if (key === PRODUCTS_KEY) {
     window.dispatchEvent(new Event("products-updated"));
   }
+};
+
+export const getCart = (): CartItem[] => {
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    return raw ? (JSON.parse(raw) as CartItem[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const setCart = (items: CartItem[]) => {
+  localStorage.setItem(CART_KEY, JSON.stringify(items));
+  window.dispatchEvent(new Event("cart-updated"));
 };
