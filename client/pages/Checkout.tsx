@@ -38,10 +38,18 @@ export default function Checkout() {
       navigate("/");
       return;
     }
-    // Simulate order success
+    const order = {
+      id: crypto.randomUUID(),
+      createdAt: Date.now(),
+      items,
+      total: subtotal,
+      customer: { name: name.trim(), phone: phone.trim(), address: address.trim() },
+      status: "new" as const,
+    };
+    addOrder(order);
     setCart([]);
-    toast({ title: "Захиалга амжилттай", description: "Тун удахгүй хүргэх болно" });
-    navigate("/");
+    toast({ title: "Захиалга амжилттай", description: "Захиалга тань бүртгэгдлээ" });
+    navigate("/orders");
   };
 
   return (
@@ -50,7 +58,7 @@ export default function Checkout() {
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Төлбөр</h1>
-            <p className="text-muted-foreground mt-1">Захиалгын мэдээллээ баталгаажуулна уу</p>
+            <p className="text-muted-foreground mt-1">Захиалгын мэдээ��лээ баталгаажуулна уу</p>
           </div>
           <Link to="/cart" className="text-sm text-primary underline underline-offset-4">Сагс руу буцах</Link>
         </div>
