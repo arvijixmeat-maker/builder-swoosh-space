@@ -28,8 +28,10 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" aria-label="Сагс">
-            <ShoppingCart className="h-5 w-5" />
+          <Button asChild variant="ghost" size="icon" aria-label="Сагс">
+            <Link to="/cart">
+              <ShoppingCart className="h-5 w-5" />
+            </Link>
           </Button>
         </div>
       </div>
@@ -48,6 +50,7 @@ export default function Header() {
             <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Нүүр</NavLink>
             <NavLink to="/catalog" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Каталог</NavLink>
             <NavLink to="/admin" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Админ</NavLink>
+            <NavLink to="/cart" className={({ isActive }) => isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"}>Сагс</NavLink>
           </div>
         </div>
       </div>
