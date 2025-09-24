@@ -188,7 +188,7 @@ export default function Admin() {
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold">Адми�� хяналтын самбар</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Админ хяналтын самбар</h1>
         <p className="text-muted-foreground mt-1">Бүтээгдэхүүн, захиалга, ангиллыг удирдах</p>
       </div>
 
@@ -226,7 +226,7 @@ export default function Admin() {
         </Card>
       </div>
 
-      <Card className="mb-6">
+      <Card id="categories" className="mb-6">
         <CardHeader>
           <CardTitle>Ангилал удирдах</CardTitle>
         </CardHeader>
