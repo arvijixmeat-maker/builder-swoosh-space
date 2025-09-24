@@ -68,7 +68,14 @@ export default function Admin() {
   }, [products]);
 
   useEffect(() => {
-    setCategories(categories);
+    try {
+      const current = getCategories();
+      if (JSON.stringify(current) !== JSON.stringify(categories)) {
+        setCategories(categories);
+      }
+    } catch {
+      setCategories(categories);
+    }
   }, [categories]);
 
   const stats = useMemo(() => ({
@@ -120,10 +127,10 @@ export default function Admin() {
   const addCategory = () => {
     const name = newCat.trim();
     if (!name) {
-      toast({ title: "Нэр х��осон байна" });
+      toast({ title: "Нэр хоосон байна" });
       return;
     }
-    if (categories.includes(name)) {
+    if (categories.some((c) => c.toLowerCase() === name.toLowerCase())) {
       toast({ title: "Давхардсан ангилал" });
       return;
     }
@@ -235,8 +242,8 @@ export default function Admin() {
             <div className="flex-1 grid gap-2">
               <Label htmlFor="newCat">Шинэ ангилал</Label>
               <div className="flex gap-2">
-                <Input id="newCat" value={newCat} onChange={(e) => setNewCat(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addCategory(); }} placeholder="ж: Электроник" />
-                <Button onClick={addCategory}>Нэмэх</Button>
+                <Input id="newCat" value={newCat} onChange={(e) => setNewCat(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCategory(); } }} placeholder="ж: Электроник" />
+                <Button type="button" onClick={addCategory}>Нэмэх</Button>
               </div>
             </div>
           </div>
