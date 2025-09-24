@@ -11,7 +11,17 @@ export default function Cart() {
   const [items, setItems] = useState<CartItem[]>(getCart());
 
   useEffect(() => {
-    const update = () => setItems(getCart());
+    const update = () => {
+      const next = getCart();
+      setItems((prev) => {
+        try {
+          if (JSON.stringify(prev) === JSON.stringify(next)) return prev;
+        } catch {
+          // fallthrough
+        }
+        return next;
+      });
+    };
     window.addEventListener("storage", update);
     window.addEventListener("cart-updated", update as EventListener);
     return () => {
@@ -21,6 +31,12 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
+    try {
+      const current = getCart();
+      if (JSON.stringify(current) === JSON.stringify(items)) return;
+    } catch {
+      // ignore
+    }
     setCart(items);
   }, [items]);
 
@@ -65,7 +81,7 @@ export default function Cart() {
               <TableCell>{format(i.price)}</TableCell>
               <TableCell>
                 <div className="inline-flex items-center rounded-md border bg-card">
-                  <button aria-label="Хасах" className="px-3 py-2" onClick={() => dec(i.id)}>−</button>
+                  <button aria-label="Ха��ах" className="px-3 py-2" onClick={() => dec(i.id)}>−</button>
                   <span className="min-w-10 text-center">{i.qty}</span>
                   <button aria-label="Нэмэх" className="px-3 py-2" onClick={() => inc(i.id)}>+</button>
                 </div>
