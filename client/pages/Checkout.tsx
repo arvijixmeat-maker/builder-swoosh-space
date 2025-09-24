@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getCart, setCart, type CartItem } from "@/data/store";
+import { getCart, setCart, type CartItem, addOrder } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -58,7 +58,7 @@ export default function Checkout() {
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Төлбөр</h1>
-            <p className="text-muted-foreground mt-1">Захиалгын мэдээ��лээ баталгаажуулна уу</p>
+            <p className="text-muted-foreground mt-1">Захиалгын мэдээллээ баталгаажуулна уу</p>
           </div>
           <Link to="/cart" className="text-sm text-primary underline underline-offset-4">Сагс руу буцах</Link>
         </div>
