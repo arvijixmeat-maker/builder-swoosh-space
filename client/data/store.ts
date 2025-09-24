@@ -22,6 +22,7 @@ export interface Order {
   total: number;
   customer: { name: string; phone: string; address: string };
   status: "new" | "processing" | "shipped" | "delivered" | "cancelled";
+  userId?: string;
 }
 
 export interface User {
