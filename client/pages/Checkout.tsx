@@ -39,8 +39,12 @@ export default function Checkout() {
   const format = (n: number) => new Intl.NumberFormat("mn-MN", { style: "currency", currency: "MNT", maximumFractionDigits: 0 }).format(n);
 
   const placeOrder = () => {
+    if (!getCurrentUser()) {
+      navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
+      return;
+    }
     if (!name.trim() || !phone.trim() || !address.trim()) {
-      toast({ title: "Мэдээлэ�� дутуу", description: "Нэр, утас, хаяг бөглөнө үү" });
+      toast({ title: "Мэдээлэл дутуу", description: "Нэр, утас, хаяг бөглөнө үү" });
       return;
     }
     if (items.length === 0) {
@@ -107,7 +111,7 @@ export default function Checkout() {
           <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="phone">Ута��</Label>
+          <Label htmlFor="phone">Утас</Label>
           <Input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
         </div>
         <div className="grid gap-2">
