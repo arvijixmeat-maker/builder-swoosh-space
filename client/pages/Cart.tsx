@@ -87,7 +87,23 @@ export default function Cart() {
       </div>
 
       <div className="mt-4 flex justify-end">
-        <Button disabled={items.length === 0} onClick={() => navigate("/checkout")}>Төлбөр төлөх</Button>
+        <Button
+          disabled={items.length === 0}
+          onClick={() => {
+            const { getCurrentUser } = require("@/data/store");
+            const user = getCurrentUser();
+            if (!user) {
+              const { useToast } = require("@/hooks/use-toast");
+              const { toast } = useToast();
+              toast({ title: "Нэвтрэх шаардлагатай", description: "Захиалга хийхийн тулд нэвтэрнэ үү" });
+              navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
+              return;
+            }
+            navigate("/checkout");
+          }}
+        >
+          Төлбөр төлөх
+        </Button>
       </div>
     </div>
   );
