@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 export default function Checkout() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [params] = useSearchParams();
   const [items, setItems] = useState<CartItem[]>(getCart());
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -41,7 +40,7 @@ export default function Checkout() {
 
   const placeOrder = () => {
     if (!name.trim() || !phone.trim() || !address.trim()) {
-      toast({ title: "Мэдээлэл дутуу", description: "Нэр, утас, хаяг бөглөнө үү" });
+      toast({ title: "Мэдээлэ�� дутуу", description: "Нэр, утас, хаяг бөглөнө үү" });
       return;
     }
     if (items.length === 0) {
@@ -108,7 +107,7 @@ export default function Checkout() {
           <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="phone">Утас</Label>
+          <Label htmlFor="phone">Ута��</Label>
           <Input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
         </div>
         <div className="grid gap-2">
