@@ -28,9 +28,14 @@ export interface Order {
 export interface User {
   id: string;
   name: string;
+  lastName?: string;
   email: string;
   phone: string;
   password: string;
+  gender?: "male" | "female" | "other";
+  birthYear?: number;
+  birthMonth?: number; // 1-12
+  birthDay?: number; // 1-31
   createdAt: number;
 }
 
@@ -120,9 +125,14 @@ export const addUser = (u: Omit<User, "id" | "createdAt"> & Partial<Pick<User, "
     id: u.id || crypto.randomUUID(),
     createdAt: u.createdAt || Date.now(),
     name: u.name,
+    lastName: u.lastName,
     email: u.email,
     phone: u.phone,
     password: u.password,
+    gender: u.gender,
+    birthYear: u.birthYear,
+    birthMonth: u.birthMonth,
+    birthDay: u.birthDay,
   };
   setUsers([user, ...users]);
   setCurrentUserId(user.id);
@@ -147,6 +157,23 @@ export const loginUser = (email: string, password: string): User | null => {
   return u || null;
 };
 export const logoutUser = () => setCurrentUserId(null);
+
+export const updateCurrentUser = (patch: Partial<User>) => {
+  const id = getCurrentUserId();
+  if (!id) return;
+  const users = getUsers();
+  const next = users.map((u) => (u.id === id ? { ...u, ...patch } : u));
+  setUsers(next);
+};
+
+export const deleteCurrentUser = () => {
+  const id = getCurrentUserId();
+  if (!id) return;
+  const users = getUsers();
+  const next = users.filter((u) => u.id !== id);
+  setUsers(next);
+  setCurrentUserId(null);
+};
 
 export const updateOrderStatus = (id: string, status: Order["status"]) => {
   const orders = getOrders();
