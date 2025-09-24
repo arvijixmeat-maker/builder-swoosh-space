@@ -23,7 +23,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
 import { Plus, Pencil, Trash2, Download, X, Check } from "lucide-react";
-import { CATEGORIES_KEY, getCategories, setCategories, getProductsLS, setProductsLS } from "@/data/store";
+import { CATEGORIES_KEY, getCategories, setCategories, getProductsLS, setProductsLS, getOrders, setOrders, type Order, updateOrderStatus, getUsers, type User } from "@/data/store";
 
 const STORAGE_KEY = "admin_products";
 
@@ -37,10 +37,23 @@ export default function Admin() {
   const [newCat, setNewCat] = useState("");
   const [editingCat, setEditingCat] = useState<string | null>(null);
   const [editCatValue, setEditCatValue] = useState("");
+  const [orders, setOrdersState] = useState<Order[]>([]);
+  const [users, setUsersState] = useState<User[]>([]);
 
   useEffect(() => {
     setProducts(getProductsLS<Product>(STORAGE_KEY));
     setCategoriesState(getCategories());
+    setOrdersState(getOrders());
+    setUsersState(getUsers());
+
+    const reloadOrders = () => setOrdersState(getOrders());
+    const reloadUsers = () => setUsersState(getUsers());
+    window.addEventListener("orders-updated", reloadOrders as EventListener);
+    window.addEventListener("users-updated", reloadUsers as EventListener);
+    return () => {
+      window.removeEventListener("orders-updated", reloadOrders as EventListener);
+      window.removeEventListener("users-updated", reloadUsers as EventListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -253,6 +266,82 @@ export default function Admin() {
               <span className="text-sm text-muted-foreground">Одоогоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.</span>
             )}
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Захиалгууд</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Огноо</TableHead>
+                <TableHead>Захиалга №</TableHead>
+                <TableHead>Тоо</TableHead>
+                <TableHead>Нийт</TableHead>
+                <TableHead>Төлөв</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.map((o) => (
+                <TableRow key={o.id}>
+                  <TableCell>{new Date(o.createdAt).toLocaleString()}</TableCell>
+                  <TableCell className="font-mono text-xs">{o.id}</TableCell>
+                  <TableCell>{o.items.reduce((s, i) => s + i.qty, 0)}</TableCell>
+                  <TableCell>{new Intl.NumberFormat("mn-MN", { style: "currency", currency: "MNT", maximumFractionDigits: 0 }).format(o.total)}</TableCell>
+                  <TableCell>
+                    <select
+                      className="h-9 rounded-md border bg-background px-2 text-sm"
+                      value={o.status}
+                      onChange={(e) => updateOrderStatus(o.id, e.target.value as Order["status"])}
+                    >
+                      <option value="new">Шинэ</option>
+                      <option value="processing">Боловсруулж байна</option>
+                      <option value="shipped">Хүргэгдэж байна</option>
+                      <option value="delivered">Хүргэгдсэн</option>
+                      <option value="cancelled">Цуцлагдсан</option>
+                    </select>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            {orders.length === 0 && (
+              <TableCaption>Одоогоор захиалга алга.</TableCaption>
+            )}
+          </Table>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Хэрэглэгчид</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Огноо</TableHead>
+                <TableHead>Нэр</TableHead>
+                <TableHead>И-мэйл</TableHead>
+                <TableHead>Утас</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map((u) => (
+                <TableRow key={u.id}>
+                  <TableCell>{new Date(u.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell>{u.name}</TableCell>
+                  <TableCell>{u.email}</TableCell>
+                  <TableCell>{u.phone}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            {users.length === 0 && (
+              <TableCaption>Одоогоор хэрэглэгч бүртгэлгүй.</TableCaption>
+            )}
+          </Table>
         </CardContent>
       </Card>
 
