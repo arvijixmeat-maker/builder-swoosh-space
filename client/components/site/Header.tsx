@@ -32,7 +32,7 @@ export default function Header() {
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             className="w-full bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
-            placeholder="Та юу хайж байна в��?"
+            placeholder="Та юу хайж байна вэ?"
             aria-label="Хайх"
           />
           <Button size="sm" className="shrink-0">Хайх</Button>
@@ -55,7 +55,6 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link to="/favorites" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><Heart className="h-5 w-5" /> Хадгалсан</Link>
               <Link to="/cart" className="hidden md:inline text-sm text-foreground/80 hover:text-foreground inline-flex items-center gap-1"><ShoppingCart className="h-5 w-5" /> Сагс</Link>
               <Link to="/login" className="text-sm text-foreground/80 hover:text-foreground">Нэвтрэх</Link>
               <Link to="/register" className="text-sm text-primary">Бүртгүүлэх</Link>
