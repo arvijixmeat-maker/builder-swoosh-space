@@ -30,8 +30,18 @@ export default function Index() {
     };
   }, []);
 
+  const allProducts = prods.length ? prods : seedProducts;
+
   const fallback = ["Электроник", "Гэр ахуй", "Гоо сайхан", "Спорт", "Хувцас", "Хүүхдийн"];
-  const categories = cats.length ? cats : fallback;
+  const categories = cats.length
+    ? Array.from(new Set([...
+        cats,
+        ...allProducts.map((p) => p.category).filter(Boolean) as string[],
+      ]))
+    : Array.from(new Set([...
+        fallback,
+        ...allProducts.map((p) => p.category).filter(Boolean) as string[],
+      ]));
 
   return (
     <div>
@@ -43,7 +53,7 @@ export default function Index() {
             <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-primary" /> Монгол хэл дээрх онлайн дэлгүүр
             </span>
-            <h1 className="mt-4 text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">
+            <h1 className="mt-4 text-3xl md:text-5xl font-extrabолд leading-tight tracking-tight">
               Талын Маркет — Монгол хэрэглэгчдэд зориулсан бүх төрлийн худалдаа
             </h1>
             <p className="mt-3 md:mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
@@ -53,7 +63,7 @@ export default function Index() {
               <Link to="/catalog" className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
                 Одоохон дэлгүүр хэсэх
               </Link>
-              <a href="#featured" className="inline-flex h-11 items-center justify-center rounded-md border px-6 text-sm font-medium">Онцлох бү��ээгдэхүүн</a>
+              <a href="#featured" className="inline-flex h-11 items-center justify-center rounded-md border px-6 text-sm font-medium">Онцлох бүтээгдэхүүн</a>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-2">
               {categories.map((c) => (
@@ -67,7 +77,7 @@ export default function Index() {
       </section>
 
       {/* Featured products */}
-      <section id="featured" className="container mx-auto px-4 pb-14 md:pb-20">
+      <section id="featured" className="container mx-auto px-4 pb-10 md:pb-14">
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
             <h2 className="text-xl md:text-2xl font-bold">Онцлох бүтээгдэхүүн</h2>
@@ -76,9 +86,32 @@ export default function Index() {
           <Link to="/catalog" className="text-sm text-primary underline underline-offset-4">Бүгдийг харах</Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {(prods.length ? prods : seedProducts).map((p) => (
+          {allProducts.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
+        </div>
+      </section>
+
+      {/* Categories sections */}
+      <section className="border-t">
+        <div className="container mx-auto px-4 py-10">
+          {categories.map((c) => {
+            const list = allProducts.filter((p) => p.category === c);
+            if (list.length === 0) return null;
+            return (
+              <div key={c} className="mb-10 md:mb-14">
+                <div className="mb-4 md:mb-6 flex items-end justify-between">
+                  <h2 className="text-xl md:text-2xl font-bold">{c}</h2>
+                  <Link to="/catalog" className="text-sm text-primary underline underline-offset-4">Бүгдийг харах</Link>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                  {list.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
