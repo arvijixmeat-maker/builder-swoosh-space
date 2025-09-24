@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
-import { getCart, setCart } from "@/data/store";
+import { getCart, setCart, getCurrentUser } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +37,12 @@ export default function ProductDetail() {
     toast({ title: "Сагсанд нэмэгдлээ", description: `${product.name} × ${qty}` });
   };
   const buyNow = () => {
+    const user = getCurrentUser();
+    if (!user) {
+      toast({ title: "Нэвтрэх шаардлагатай", description: "Захиалга хийхийн тулд нэвтэрнэ үү" });
+      navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
+      return;
+    }
     const cart = getCart();
     const existing = cart.find((i) => i.id === product.id);
     let next;
