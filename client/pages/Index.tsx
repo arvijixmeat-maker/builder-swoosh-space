@@ -3,19 +3,30 @@ import { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 import ProductCard, { type Product } from "@/components/site/ProductCard";
-import { products as featured } from "@/data/products";
-import { getCategories } from "@/data/store";
+import { products as seedProducts } from "@/data/products";
+import { getCategories, getProductsLS, PRODUCTS_KEY } from "@/data/store";
 
 export default function Index() {
   const [cats, setCats] = useState<string[]>(getCategories());
+  const [prods, setProds] = useState<Product[]>(getProductsLS<Product>(PRODUCTS_KEY));
 
   useEffect(() => {
-    const update = () => setCats(getCategories());
-    window.addEventListener("storage", update);
-    window.addEventListener("categories-updated", update as EventListener);
+    const updateCats = () => setCats(getCategories());
+    window.addEventListener("storage", updateCats);
+    window.addEventListener("categories-updated", updateCats as EventListener);
     return () => {
-      window.removeEventListener("storage", update);
-      window.removeEventListener("categories-updated", update as EventListener);
+      window.removeEventListener("storage", updateCats);
+      window.removeEventListener("categories-updated", updateCats as EventListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateProds = () => setProds(getProductsLS<Product>(PRODUCTS_KEY));
+    window.addEventListener("storage", updateProds);
+    window.addEventListener("products-updated", updateProds as EventListener);
+    return () => {
+      window.removeEventListener("storage", updateProds);
+      window.removeEventListener("products-updated", updateProds as EventListener);
     };
   }, []);
 
@@ -42,7 +53,7 @@ export default function Index() {
               <Link to="/catalog" className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
                 Одоохон дэлгүүр хэсэх
               </Link>
-              <a href="#featured" className="inline-flex h-11 items-center justify-center rounded-md border px-6 text-sm font-medium">Онцлох бүтээгдэхүүн</a>
+              <a href="#featured" className="inline-flex h-11 items-center justify-center rounded-md border px-6 text-sm font-medium">Онцлох бү��ээгдэхүүн</a>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-2">
               {categories.map((c) => (
@@ -65,7 +76,7 @@ export default function Index() {
           <Link to="/catalog" className="text-sm text-primary underline underline-offset-4">Бүгдийг харах</Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {featured.map((p) => (
+          {(prods.length ? prods : seedProducts).map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
