@@ -33,7 +33,7 @@ export default function Admin() {
   const [categories, setCategoriesState] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
-  const [form, setForm] = useState<Product>({ id: "", name: "", price: 0, image: "", category: "", badge: "" });
+  const [form, setForm] = useState<Product>({ id: "", name: "", price: 0, image: "", images: [], category: "", badge: "" });
   const [newCat, setNewCat] = useState("");
   const [editingCat, setEditingCat] = useState<string | null>(null);
   const [editCatValue, setEditCatValue] = useState("");
@@ -58,7 +58,7 @@ export default function Admin() {
     highPrice: products.filter((p) => p.price >= 200000).length,
   }), [products, categories]);
 
-  const resetForm = () => setForm({ id: "", name: "", price: 0, image: "", category: "", badge: "" });
+  const resetForm = () => setForm({ id: "", name: "", price: 0, image: "", images: [], category: "", badge: "" });
 
   const startCreate = () => {
     setEditing(null);
@@ -73,16 +73,18 @@ export default function Admin() {
   };
 
   const submit = () => {
-    if (!form.name || !form.image || !form.price) {
+    const finalImage = form.image || (form.images && form.images[0]) || "";
+    if (!form.name || !finalImage || !form.price) {
       toast({ title: "Талбар дутуу", description: "Нэр, зураг, үнэ шаардлагатай" });
       return;
     }
+    const payload: Product = { ...form, image: finalImage };
     if (editing) {
-      setProducts((prev) => prev.map((p) => (p.id === editing.id ? { ...form, id: editing.id } : p)));
+      setProducts((prev) => prev.map((p) => (p.id === editing.id ? { ...payload, id: editing.id } : p)));
       toast({ title: "Засвар хадгалагдлаа" });
     } else {
       const id = crypto.randomUUID();
-      setProducts((prev) => [{ ...form, id }, ...prev]);
+      setProducts((prev) => [{ ...payload, id }, ...prev]);
       toast({ title: "Шинэ бүтээгдэхүүн нэмлээ" });
     }
     setOpen(false);
@@ -286,20 +288,30 @@ export default function Admin() {
                     )}
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="image">Зураг (upload)</Label>
-                    <Input id="image" type="file" accept="image/*" onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = () => setForm({ ...form, image: String(reader.result) });
-                      reader.readAsDataURL(file);
+                    <Label htmlFor="image">Зураг (олон)</Label>
+                    <Input id="image" type="file" multiple accept="image/*" onChange={async (e) => {
+                      const files = Array.from(e.target.files || []);
+                      if (!files.length) return;
+                      const toDataURL = (file: File) => new Promise<string>((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(String(reader.result));
+                        reader.readAsDataURL(file);
+                      });
+                      const images = await Promise.all(files.map(toDataURL));
+                      setForm({ ...form, images, image: images[0] });
                     }} />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="badge">Тэмдэглэгээ (сонголттой)</Label>
                     <Input id="badge" value={form.badge || ""} onChange={(e) => setForm({ ...form, badge: e.target.value })} />
                   </div>
-                  {form.image ? (
+                  {(form.images && form.images.length > 0) ? (
+                    <div className="mt-2 grid grid-cols-3 gap-2">
+                      {form.images.map((src, idx) => (
+                        <img key={idx} src={src} alt={`preview-${idx}`} className="h-24 w-full object-cover rounded-md border" />
+                      ))}
+                    </div>
+                  ) : form.image ? (
                     <img src={form.image} alt="preview" className="mt-2 h-32 w-full object-cover rounded-md border" />
                   ) : null}
                 </div>
