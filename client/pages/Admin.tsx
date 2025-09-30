@@ -26,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
 import { Plus, Pencil, Trash2, Download, X, Check } from "lucide-react";
 import SettingsPanel from "./_AdminSettings";
+import AdminBanners from "./_AdminBanners";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import {
   CATEGORIES_KEY,
@@ -235,7 +236,7 @@ export default function Admin() {
     );
     setEditingCat(null);
     setEditCatValue("");
-    toast({ title: "Ангилал шинэчлэгд��ээ" });
+    toast({ title: "Ангилал шинэчлэгдлээ" });
   };
 
   const cancelEditCategory = () => {
