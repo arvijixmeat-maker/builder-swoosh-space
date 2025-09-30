@@ -88,10 +88,14 @@ export default function AdminBanners() {
         <CardTitle>Нүүр хуудасны баннер</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid md:grid-cols-4 gap-3 items-end">
+        <div className="grid md:grid-cols-5 gap-3 items-end">
           <div className="grid gap-2">
-            <Label htmlFor="bimg">Зураг</Label>
+            <Label htmlFor="bimg">Зураг (файл)</Label>
             <Input id="bimg" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="burl">Зураг URL (сонголттой)</Label>
+            <Input id="burl" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="btitle">Гарчиг</Label>
@@ -107,7 +111,7 @@ export default function AdminBanners() {
           </div>
         </div>
         <div className="mt-3">
-          <Button onClick={add}><Plus className="h-4 w-4 mr-2" />Нэмэх</Button>
+          <Button type="button" onClick={add}><Plus className="h-4 w-4 mr-2" />Нэмэх</Button>
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
