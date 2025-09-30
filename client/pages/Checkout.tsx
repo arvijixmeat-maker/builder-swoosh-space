@@ -17,6 +17,7 @@ import {
   addOrder,
   getCurrentUser,
   getCurrentUserId,
+  getSettings,
 } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
