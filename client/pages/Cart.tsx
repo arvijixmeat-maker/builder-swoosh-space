@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getCart, setCart, type CartItem, getCurrentUser } from "@/data/store";
+import { getCart, setCart, type CartItem, getCurrentUser, getSettings } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Cart() {
