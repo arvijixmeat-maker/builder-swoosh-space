@@ -30,26 +30,33 @@ export default function AdminBanners() {
     });
 
   const add = async () => {
-    if (!imageFile) {
-      toast({ title: "Зураг сонгоно уу" });
-      return;
+    try {
+      let img: string | null = null;
+      if (imageFile) img = await toDataURL(imageFile);
+      else if (imageUrl.trim()) img = imageUrl.trim();
+      if (!img) {
+        toast({ title: "Зураг сонгоно уу", description: "Файл эсв��л зураг URL" });
+        return;
+      }
+      const next: Banner = {
+        id: (crypto as any)?.randomUUID?.() || String(Date.now()),
+        image: img,
+        title: title.trim() || undefined,
+        subtitle: subtitle.trim() || undefined,
+        link: link.trim() || undefined,
+      };
+      const all = [next, ...items];
+      setBanners(all);
+      setItems(all);
+      setTitle("");
+      setSubtitle("");
+      setLink("");
+      setImageFile(null);
+      setImageUrl("");
+      toast({ title: "Баннер нэмэгдлээ" });
+    } catch (e) {
+      toast({ title: "Алдаа", description: "Зураг нэмэхэд алдаа гарлаа" });
     }
-    const image = await toDataURL(imageFile);
-    const next: Banner = {
-      id: crypto.randomUUID(),
-      image,
-      title: title.trim() || undefined,
-      subtitle: subtitle.trim() || undefined,
-      link: link.trim() || undefined,
-    };
-    const all = [next, ...items];
-    setBanners(all);
-    setItems(all);
-    setTitle("");
-    setSubtitle("");
-    setLink("");
-    setImageFile(null);
-    toast({ title: "Баннер нэмэгдлээ" });
   };
 
   const remove = (id: string) => {
