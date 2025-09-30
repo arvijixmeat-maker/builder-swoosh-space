@@ -12,6 +12,8 @@ export interface Product {
   images?: string[];
   category?: string;
   badge?: string;
+  colors?: string[]; // color names or hex
+  sizes?: string[];  // size labels like XS,S,M,L,XL
 }
 
 export default function ProductCard({ product }: { product: Product }) {
