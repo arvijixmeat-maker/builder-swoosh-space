@@ -32,11 +32,17 @@ export default function Index() {
     const updateProds = () => setProds(getProductsLS<Product>(PRODUCTS_KEY));
     window.addEventListener("storage", updateProds);
     window.addEventListener("products-updated", updateProds as EventListener);
+    const updateBanners = () => setBanners(getBanners());
+    window.addEventListener("banners-updated", updateBanners as EventListener);
     return () => {
       window.removeEventListener("storage", updateProds);
       window.removeEventListener(
         "products-updated",
         updateProds as EventListener,
+      );
+      window.removeEventListener(
+        "banners-updated",
+        updateBanners as EventListener,
       );
     };
   }, []);
