@@ -164,6 +164,19 @@ export const setSettings = (settings: Settings) => {
   }
 };
 
+export const getBanners = (): Banner[] => {
+  try {
+    const raw = localStorage.getItem(BANNERS_KEY);
+    return raw ? (JSON.parse(raw) as Banner[]) : [];
+  } catch {
+    return [];
+  }
+};
+export const setBanners = (banners: Banner[]) => {
+  localStorage.setItem(BANNERS_KEY, JSON.stringify(banners));
+  try { window.dispatchEvent(new Event("banners-updated")); } catch {}
+};
+
 export const getOrders = (): Order[] => {
   try {
     const raw = localStorage.getItem(ORDERS_KEY);
