@@ -416,7 +416,7 @@ export default function Admin() {
             <TableHeader>
               <TableRow>
                 <TableHead>Огноо</TableHead>
-                <TableHead>Захиалга №</TableHead>
+                <TableHead>Захиалга ��</TableHead>
                 <TableHead>Тоо</TableHead>
                 <TableHead>Нийт</TableHead>
                 <TableHead>Төлөв</TableHead>
@@ -774,6 +774,10 @@ export default function Admin() {
           </Table>
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="settings">
+          <SettingsPanel />
         </TabsContent>
       </Tabs>
     </div>
