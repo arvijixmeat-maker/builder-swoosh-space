@@ -76,9 +76,9 @@ export default function Cart() {
   const clear = () => setItems([]);
 
   const format = (n: number) =>
-    new Intl.NumberFormat("mn-MN", {
+    new Intl.NumberFormat("ko-KR", {
       style: "currency",
-      currency: "MNT",
+      currency: "KRW",
       maximumFractionDigits: 0,
     }).format(n);
 
@@ -91,7 +91,7 @@ export default function Cart() {
         </div>
         {items.length > 0 && (
           <Button variant="outline" onClick={clear}>
-            Сагс хоослох
+            Сагс хоосло��
           </Button>
         )}
       </div>
