@@ -82,7 +82,7 @@ export default function Checkout() {
     if (!name.trim() || !phone.trim() || !address.trim()) {
       toast({
         title: "Мэдээлэл дутуу",
-        description: "Нэр, утас, хаяг бөглөнө үү",
+        description: "Нэр, утас, хаяг б��глөнө үү",
       });
       return;
     }
@@ -101,7 +101,7 @@ export default function Checkout() {
         phone: phone.trim(),
         address: address.trim(),
       },
-      status: "new" as const,
+      status: "unpaid" as const,
       userId: getCurrentUserId() || undefined,
     };
     addOrder(order);
