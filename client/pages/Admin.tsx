@@ -661,32 +661,34 @@ export default function Admin() {
                     )}
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="sizes">Хэмжээ (`,`) таслалаар салгаж бичнэ</Label>
-                    <Input
-                      id="sizes"
-                      placeholder="XS, S, M, L, XL"
-                      value={(form.sizes && form.sizes.join(", ")) || ""}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          sizes: e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean),
-                        })
-                      }
-                    />
-                    {form.sizes && form.sizes.length > 0 && (
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        {form.sizes.map((s, i) => (
-                          <span
-                            key={i}
-                            className="inline-flex h-6 items-center justify-center rounded-full border bg-card px-2 text-xs"
+                    <Label>Хэмжээ (сонголт)</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {["XS","S","M","L","XL","XXL","35","36","37","38","39","40","41","42","43","44"].map((s) => {
+                        const selected = (form.sizes || []).includes(s);
+                        return (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => {
+                              const set = new Set(form.sizes || []);
+                              if (set.has(s)) set.delete(s);
+                              else set.add(s);
+                              setForm({ ...form, sizes: Array.from(set) });
+                            }}
+                            className={`h-8 rounded-md border bg-card px-2 text-xs transition ${
+                              selected ? "ring-2 ring-primary" : ""
+                            }`}
+                            aria-pressed={selected}
+                            aria-label={`Size ${s}`}
+                            title={s}
                           >
                             {s}
-                          </span>
-                        ))}
-                      </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {form.sizes && form.sizes.length === 0 && (
+                      <span className="text-xs text-muted-foreground">Сонголтгүй бол хэмжээ шүүлтгүй гэж үзнэ.</span>
                     )}
                   </div>
                   {form.images && form.images.length > 0 ? (
