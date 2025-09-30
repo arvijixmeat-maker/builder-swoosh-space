@@ -73,39 +73,75 @@ export default function Index() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
-        <div className="container mx-auto px-4 py-14 md:py-20">
-          <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-primary" /> Монгол хэл
-              дээрх онлайн дэлгүүр
-            </span>
-            <h1 className="mt-4 text-3xl md:text-5xl font-extrabолд leading-tight tracking-tight">
-              Талын Маркет — Монгол хэрэглэгчдэд зориулсан бүх төрлийн худалдаа
-            </h1>
-            <p className="mt-3 md:mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
-              Албан ёсны брэндүүд, баталгаат бараа, хурдан хүргэлт. Та хэрэгтэй
-              бүхнээ нэг газраас.
-            </p>
-            <div className="mt-6 flex items-center gap-3">
-              <Link
-                to="/catalog"
-                className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
-              >
-                Одоохон дэлгүүр хэсэх
-              </Link>
-              <a
-                href="#featured"
-                className="inline-flex h-11 items-center justify-center rounded-md border px-6 text-sm font-medium"
-              >
-                Онцлох бүтээгдэхүүн
-              </a>
+      {/* Hero / Banner Slider */}
+      {banners.length > 0 ? (
+        <section className="relative">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex">
+              {banners.map((b) => (
+                <div key={b.id} className="min-w-0 flex-[0_0_100%] relative">
+                  <div className="aspect-[16/7] w-full bg-muted">
+                    <img src={b.image} alt={b.title || "banner"} className="w-full h-full object-cover" />
+                  </div>
+                  {(b.title || b.subtitle || b.link) && (
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="container mx-auto px-4">
+                        <div className="max-w-2xl rounded-md bg-background/60 backdrop-blur p-4">
+                          {b.title && (
+                            <h2 className="text-2xl md:text-4xl font-extrabold leading-tight">{b.title}</h2>
+                          )}
+                          {b.subtitle && (
+                            <p className="mt-2 text-muted-foreground">{b.subtitle}</p>
+                          )}
+                          {b.link && (
+                            <Link to={b.link} className="mt-4 inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
+                              Дэлгэрэнгүй харах
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
+          <div className="container mx-auto px-4 py-14 md:py-20">
+            <div className="max-w-3xl">
+              <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
+                <span className="h-2 w-2 rounded-full bg-primary" /> Монгол хэл
+                дээрх онлайн дэлгүүр
+              </span>
+              <h1 className="mt-4 text-3xl md:text-5xl font-extrabолд leading-tight tracking-tight">
+                Талын Маркет — Монгол хэрэглэгчдэд зориулсан бүх төрлийн худалдаа
+              </h1>
+              <p className="mt-3 md:mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
+                Албан ёсны брэндүүд, баталгаат бараа, хурдан хүргэлт. Та хэрэгтэй
+                бүхнээ нэг газраас.
+              </p>
+              <div className="mt-6 flex items-center gap-3">
+                <Link
+                  to="/catalog"
+                  className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+                >
+                  Одоохон дэлгүүр хэсэх
+                </Link>
+                <a
+                  href="#featured"
+                  className="inline-flex h-11 items-center justify-center rounded-md border px-6 text-sm font-medium"
+                >
+                  Онцлох бүтээгдэхүүн
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Featured products */}
       <section id="featured" className="container mx-auto px-4 pb-10 md:pb-14">
