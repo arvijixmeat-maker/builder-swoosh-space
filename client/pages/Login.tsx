@@ -26,7 +26,8 @@ export default function Login() {
     const user = loginUser(email.trim(), password);
     if (user) {
       toast({ title: "Тавтай морил" });
-      navigate(redirect);
+      if (user.isAdmin) navigate("/admin");
+      else navigate(redirect);
     } else {
       toast({ title: "Алдаа", description: "И-мэйл эсвэл нууц үг буруу" });
     }
