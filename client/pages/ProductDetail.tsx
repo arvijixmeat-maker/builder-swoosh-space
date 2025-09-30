@@ -4,7 +4,7 @@ import { getProduct } from "@/data/products";
 import { getCart, setCart, getCurrentUser } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
@@ -34,7 +34,7 @@ export default function ProductDetail() {
           to="/"
           className="text-primary underline underline-offset-4 mt-2 inline-block"
         >
-          Нүүр хуудас руу буцах
+          Нүүр хуу��ас руу буцах
         </Link>
       </div>
     );
