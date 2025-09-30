@@ -110,7 +110,16 @@ export default function Cart() {
                   className="h-10 w-10 rounded object-cover"
                 />
               </TableCell>
-              <TableCell className="font-medium">{i.name}</TableCell>
+              <TableCell className="font-medium">
+                <div>{i.name}</div>
+                {(i.color || i.size) && (
+                  <div className="text-xs text-muted-foreground">
+                    {i.color ? `Өнгө: ${i.color}` : ""}
+                    {i.color && i.size ? ", " : ""}
+                    {i.size ? `Хэмжээ: ${i.size}` : ""}
+                  </div>
+                )}
+              </TableCell>
               <TableCell>{format(i.price)}</TableCell>
               <TableCell>
                 <div className="inline-flex items-center rounded-md border bg-card">
