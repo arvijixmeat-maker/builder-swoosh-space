@@ -171,12 +171,29 @@ export const getOrders = (): Order[] => {
     if (!Array.isArray(parsed)) return [];
     // Support lightweight orders format where items are [{id, qty}] to save space
     return (parsed as any[]).map((o) => {
+      const toNewStatus = (s: any): Order["status"] => {
+        switch (s) {
+          case "unpaid":
+          case "paid":
+          case "shipping":
+          case "delivered":
+            return s;
+          case "new":
+            return "unpaid";
+          case "processing":
+            return "paid";
+          case "shipped":
+            return "shipping";
+          default:
+            return "unpaid";
+        }
+      };
       const base = {
         id: o.id,
         createdAt: o.createdAt,
         total: o.total,
         customer: o.customer,
-        status: o.status,
+        status: toNewStatus(o.status),
         userId: o.userId,
       } as Order;
       // if items are simple {id, qty}, rehydrate
