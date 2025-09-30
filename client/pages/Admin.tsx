@@ -416,7 +416,7 @@ export default function Admin() {
             <TableHeader>
               <TableRow>
                 <TableHead>Огноо</TableHead>
-                <TableHead>Захиалга ��</TableHead>
+                <TableHead>Захиалга №</TableHead>
                 <TableHead>Тоо</TableHead>
                 <TableHead>Нийт</TableHead>
                 <TableHead>Төлөв</TableHead>
@@ -433,9 +433,9 @@ export default function Admin() {
                     {o.items.reduce((s, i) => s + i.qty, 0)}
                   </TableCell>
                   <TableCell>
-                    {new Intl.NumberFormat("mn-MN", {
+                    {new Intl.NumberFormat("ko-KR", {
                       style: "currency",
-                      currency: "MNT",
+                      currency: "KRW",
                       maximumFractionDigits: 0,
                     }).format(o.total)}
                   </TableCell>
@@ -536,7 +536,7 @@ export default function Admin() {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="price">Үнэ (MNT)</Label>
+                    <Label htmlFor="price">Үнэ (KRW)</Label>
                     <Input
                       id="price"
                       type="number"
@@ -737,9 +737,9 @@ export default function Admin() {
                   </TableCell>
                   <TableCell className="font-medium">{p.name}</TableCell>
                   <TableCell>
-                    {new Intl.NumberFormat("mn-MN", {
+                    {new Intl.NumberFormat("ko-KR", {
                       style: "currency",
-                      currency: "MNT",
+                      currency: "KRW",
                       maximumFractionDigits: 0,
                     }).format(p.price)}
                   </TableCell>
