@@ -264,6 +264,7 @@ export default function Admin() {
           <TabsTrigger value="orders">Захиалгууд</TabsTrigger>
           <TabsTrigger value="users">Хэрэглэгчид</TabsTrigger>
           <TabsTrigger value="categories">Ангилал</TabsTrigger>
+          <TabsTrigger value="settings">Тохиргоо</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard">
