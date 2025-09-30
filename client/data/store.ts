@@ -290,6 +290,7 @@ export const addUser = (
     birthYear: u.birthYear,
     birthMonth: u.birthMonth,
     birthDay: u.birthDay,
+    isAdmin: (u as any).isAdmin || false,
   };
   setUsers([user, ...users]);
   setCurrentUserId(user.id);
