@@ -30,6 +30,8 @@ export default function Checkout() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [shippingFee, setShippingFee] = useState<number>(getSettings().shippingFee);
+  const [accounts, setAccounts] = useState(getSettings().bankAccounts);
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -45,9 +47,17 @@ export default function Checkout() {
     const update = () => setItems(getCart());
     window.addEventListener("storage", update);
     window.addEventListener("cart-updated", update as EventListener);
+    const updateSettings = () => {
+      const s = getSettings();
+      setShippingFee(s.shippingFee);
+      setAccounts(s.bankAccounts);
+    };
+    window.addEventListener("settings-updated", updateSettings as EventListener);
+    updateSettings();
     return () => {
       window.removeEventListener("storage", update);
       window.removeEventListener("cart-updated", update as EventListener);
+      window.removeEventListener("settings-updated", updateSettings as EventListener);
     };
   }, []);
 
@@ -55,6 +65,8 @@ export default function Checkout() {
     () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
     [items],
   );
+  const shipping = useMemo(() => (items.length > 0 ? Math.max(0, shippingFee) : 0), [items, shippingFee]);
+  const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
   const format = (n: number) =>
     new Intl.NumberFormat("mn-MN", {
       style: "currency",
@@ -83,7 +95,7 @@ export default function Checkout() {
       id: crypto.randomUUID(),
       createdAt: Date.now(),
       items,
-      total: subtotal,
+      total: total,
       customer: {
         name: name.trim(),
         phone: phone.trim(),
@@ -186,11 +198,36 @@ export default function Checkout() {
           />
         </div>
         <div className="flex items-center justify-between pt-2">
-          <div className="text-sm text-muted-foreground">Нийт</div>
+          <div className="text-sm text-muted-foreground">Дэд дүн</div>
           <div className="text-xl font-bold">{format(subtotal)}</div>
         </div>
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">Хүргэлт</div>
+          <div className="text-base font-medium">{format(shipping)}</div>
+        </div>
+        <div className="flex items-center justify-between pt-1">
+          <div className="text-sm">Нийт</div>
+          <div className="text-2xl font-extrabold">{format(total)}</div>
+        </div>
+
+        {accounts.length > 0 && (
+          <div className="mt-4 rounded-md border bg-card p-3 text-sm">
+            <div className="font-medium mb-2">무통장입금 계좌</div>
+            <ul className="space-y-1">
+              {accounts.map((a, idx) => (
+                <li key={idx} className="flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground">
+                    {a.bankName} / {a.holder}
+                  </span>
+                  <span className="font-mono">{a.accountNumber}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <Button
-          className="w-full"
+          className="w-full mt-4"
           disabled={items.length === 0}
           onClick={placeOrder}
         >
