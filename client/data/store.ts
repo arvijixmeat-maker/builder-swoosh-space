@@ -25,7 +25,7 @@ export interface Order {
   items: CartItem[];
   total: number;
   customer: { name: string; phone: string; address: string };
-  status: "new" | "processing" | "shipped" | "delivered" | "cancelled";
+  status: "unpaid" | "paid" | "shipping" | "delivered";
   userId?: string;
 }
 
