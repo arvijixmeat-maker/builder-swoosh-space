@@ -13,6 +13,7 @@ export default function AdminBanners() {
   const [subtitle, setSubtitle] = useState("");
   const [link, setLink] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [items, setItems] = useState<Banner[]>(getBanners());
 
   useEffect(() => {
