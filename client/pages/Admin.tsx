@@ -25,6 +25,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
 import { Plus, Pencil, Trash2, Download, X, Check } from "lucide-react";
+import SettingsPanel from "./_AdminSettings";
 import {
   CATEGORIES_KEY,
   getCategories,
