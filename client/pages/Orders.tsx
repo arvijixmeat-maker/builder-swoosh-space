@@ -38,9 +38,9 @@ export default function Orders() {
 
   const formatDate = (ts: number) => new Date(ts).toLocaleString();
   const format = (n: number) =>
-    new Intl.NumberFormat("mn-MN", {
+    new Intl.NumberFormat("ko-KR", {
       style: "currency",
-      currency: "MNT",
+      currency: "KRW",
       maximumFractionDigits: 0,
     }).format(n);
   const itemsCount = (o: Order) => o.items.reduce((s, i) => s + i.qty, 0);
