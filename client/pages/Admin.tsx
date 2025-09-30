@@ -793,6 +793,10 @@ export default function Admin() {
       </Card>
         </TabsContent>
 
+        <TabsContent value="banners">
+          <AdminBanners />
+        </TabsContent>
+
         <TabsContent value="settings">
           <SettingsPanel />
         </TabsContent>
