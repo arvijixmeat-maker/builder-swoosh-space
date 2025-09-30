@@ -608,34 +608,56 @@ export default function Admin() {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="colors">Өнгө (`,`) таслалаар салгаж бичнэ</Label>
-                    <Input
-                      id="colors"
-                      placeholder="#000, white, red"
-                      value={(form.colors && form.colors.join(", ")) || ""}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          colors: e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean),
-                        })
-                      }
-                    />
-                    {form.colors && form.colors.length > 0 && (
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        {form.colors.map((c, i) => (
-                          <span
-                            key={i}
-                            className="inline-flex h-6 min-w-6 items-center justify-center rounded-full border px-2 text-xs"
-                            style={{ background: c, color: "#00000080" }}
+                    <Label>Өнгө (сонголт)</Label>
+                    <div className="grid grid-cols-8 gap-2">
+                      {[
+                        "#000000",
+                        "#FFFFFF",
+                        "#808080",
+                        "#FF0000",
+                        "#FFA500",
+                        "#FFFF00",
+                        "#008000",
+                        "#00FFFF",
+                        "#0000FF",
+                        "#4B0082",
+                        "#800080",
+                        "#FFC0CB",
+                        "#A0522D",
+                        "#F5DEB3",
+                        "#2F4F4F",
+                        "#FF69B4",
+                      ].map((c) => {
+                        const selected = (form.colors || []).includes(c);
+                        return (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => {
+                              const set = new Set(form.colors || []);
+                              if (set.has(c)) set.delete(c);
+                              else set.add(c);
+                              setForm({ ...form, colors: Array.from(set) });
+                            }}
+                            className={`relative h-8 w-8 rounded-full border transition ${
+                              selected ? "ring-2 ring-primary" : ""
+                            }`}
+                            style={{ background: c }}
+                            aria-pressed={selected}
+                            aria-label={`Color ${c}`}
                             title={c}
                           >
-
-                          </span>
-                        ))}
-                      </div>
+                            {selected && (
+                              <span className="absolute inset-0 flex items-center justify-center">
+                                <Check className="h-3 w-3 text-primary-foreground" />
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {form.colors && form.colors.length === 0 && (
+                      <span className="text-xs text-muted-foreground">Сонголтгүй бол өнгө шүүлтгүй гэж үзнэ.</span>
                     )}
                   </div>
                   <div className="grid gap-2">
