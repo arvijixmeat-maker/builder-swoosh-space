@@ -8,11 +8,14 @@ export const CURRENT_USER_KEY = "current_user_id";
 export type Category = string;
 
 export interface CartItem {
-  id: string; // product id
+  id: string; // line id (can include variant key)
   name: string;
   price: number;
   image: string;
   qty: number;
+  productId?: string; // original product id for reference
+  color?: string;
+  size?: string;
 }
 
 export interface Order {
