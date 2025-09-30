@@ -70,7 +70,14 @@ export default function Admin() {
 
   useEffect(() => {
     const u = getCurrentUser();
-    if (!u) navigate(`/login?redirect=${encodeURIComponent("/admin")}`);
+    if (!u) {
+      navigate(`/login?redirect=${encodeURIComponent("/admin")}`);
+      return;
+    }
+    if (!u.isAdmin) {
+      navigate("/");
+      return;
+    }
   }, [navigate]);
 
   useEffect(() => {
@@ -228,7 +235,7 @@ export default function Admin() {
     );
     setEditingCat(null);
     setEditCatValue("");
-    toast({ title: "Ангилал шинэчлэгдлээ" });
+    toast({ title: "Ангилал шинэчлэгд��ээ" });
   };
 
   const cancelEditCategory = () => {
