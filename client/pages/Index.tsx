@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard, { type Product } from "@/components/site/ProductCard";
 import { products as seedProducts } from "@/data/products";
-import { getCategories, getProductsLS, PRODUCTS_KEY } from "@/data/store";
+import { getCategories, getProductsLS, PRODUCTS_KEY, getBanners, type Banner } from "@/data/store";
+import useEmblaCarousel from "embla-carousel-react";
 
 export default function Index() {
   const [cats, setCats] = useState<string[]>(getCategories());
@@ -45,7 +46,7 @@ export default function Index() {
     "Гэр ахуй",
     "Гоо сайхан",
     "Спорт",
-    "Хувцас",
+    "Хувца��",
     "Хүүхдийн",
   ];
   const categories = cats.length
@@ -137,7 +138,7 @@ export default function Index() {
                     to="/catalog"
                     className="text-sm text-primary underline underline-offset-4"
                   >
-                    Бүгдийг харах
+                    ��үгдийг харах
                   </Link>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
