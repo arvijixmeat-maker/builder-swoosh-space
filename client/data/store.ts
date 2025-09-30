@@ -315,7 +315,17 @@ export const loginUser = (email: string, password: string): User | null => {
     (x) =>
       x.email.toLowerCase() === email.toLowerCase() && x.password === password,
   );
-  if (u) setCurrentUserId(u.id);
+  if (u) {
+    // auto-upgrade legacy admin user
+    if (!u.isAdmin && u.email.toLowerCase() === "admin@local") {
+      const next = users.map((x) =>
+        x.id === u.id ? { ...x, isAdmin: true } : x,
+      );
+      setUsers(next);
+      u.isAdmin = true;
+    }
+    setCurrentUserId(u.id);
+  }
   return u || null;
 };
 export const logoutUser = () => setCurrentUserId(null);
@@ -346,6 +356,16 @@ export const updateOrderStatus = (id: string, status: Order["status"]) => {
 export const seedDefaultAdmin = () => {
   try {
     const existing = getUsers();
+    const idx = existing.findIndex(
+      (u) => u.email?.toLowerCase?.() === "admin@local",
+    );
+    if (idx >= 0) {
+      if (!existing[idx].isAdmin) {
+        const next = existing.map((u, i) => (i === idx ? { ...u, isAdmin: true } : u));
+        setUsers(next);
+      }
+      return;
+    }
     if (existing.length > 0) return;
     const admin: User = {
       id: crypto.randomUUID(),
