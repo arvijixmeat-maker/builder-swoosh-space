@@ -15,7 +15,11 @@ export default function Login() {
   const redirect = params.get("redirect") || "/";
 
   useEffect(() => {
-    if (getCurrentUser()) navigate(redirect);
+    const u = getCurrentUser();
+    if (u) {
+      if (u.isAdmin) navigate("/admin");
+      else navigate(redirect);
+    }
   }, [navigate, redirect]);
 
   const submit = () => {
