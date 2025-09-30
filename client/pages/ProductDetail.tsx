@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
 import { getCart, setCart, getCurrentUser } from "@/data/store";
@@ -85,7 +85,7 @@ export default function ProductDetail() {
       .filter(Boolean)
       .join(", ");
     toast({
-      title: "Сагсанд нэмэгдлээ",
+      title: "Сагсанд нэмэ��длээ",
       description: `${product.name} × ${qty}${opt ? ` (${opt})` : ""}`,
     });
   };
