@@ -251,7 +251,7 @@ export default function Admin() {
     <div className="container mx-auto px-4 py-10">
       <div className="mb-6 md:mb-8">
         <h1 className="text-2xl md:text-3xl font-bold">
-          Админ хяналтын с��мбар
+          Админ хяналтын самбар
         </h1>
         <p className="text-muted-foreground mt-1">
           Бүтээгдэхүүн, захиалга, ангиллыг удирдах
@@ -440,21 +440,22 @@ export default function Admin() {
                     }).format(o.total)}
                   </TableCell>
                   <TableCell>
-                    <select
-                      className="h-9 rounded-md border bg-background px-2 text-sm"
+                    <Select
                       value={o.status}
-                      onChange={(e) =>
-                        updateOrderStatus(
-                          o.id,
-                          e.target.value as Order["status"],
-                        )
+                      onValueChange={(v) =>
+                        updateOrderStatus(o.id, v as Order["status"])
                       }
                     >
-                      <option value="unpaid">Төлбөр төлөгдөөгүй</option>
-                      <option value="paid">Төлбөр төлөгдсөн</option>
-                      <option value="shipping">Хүргэлт хийгдэж байна</option>
-                      <option value="delivered">Хүргэгдсэн</option>
-                    </select>
+                      <SelectTrigger className="h-9 w-[220px]">
+                        <SelectValue placeholder="Төлөв сонгох" />
+                      </SelectTrigger>
+                      <SelectContent align="end">
+                        <SelectItem value="unpaid">Төлбөр төлөгдөөгүй</SelectItem>
+                        <SelectItem value="paid">Төлбөр төлөгдсөн</SelectItem>
+                        <SelectItem value="shipping">Хүргэлт хийгдэж байна</SelectItem>
+                        <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                 </TableRow>
               ))}
