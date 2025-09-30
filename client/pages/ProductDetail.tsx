@@ -85,7 +85,7 @@ export default function ProductDetail() {
       .filter(Boolean)
       .join(", ");
     toast({
-      title: "Сагсанд нэмэ��длээ",
+      title: "Сагсанд нэмэгдлээ",
       description: `${product.name} × ${qty}${opt ? ` (${opt})` : ""}`,
     });
   };
@@ -182,9 +182,9 @@ export default function ProductDetail() {
             {product.name}
           </h1>
           <p className="mt-3 text-2xl font-extrabold">
-            {new Intl.NumberFormat("mn-MN", {
+            {new Intl.NumberFormat("ko-KR", {
               style: "currency",
-              currency: "MNT",
+              currency: "KRW",
               maximumFractionDigits: 0,
             }).format(product.price)}
           </p>
@@ -269,7 +269,7 @@ export default function ProductDetail() {
             <AccordionContent>
               Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд
               өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны
-              сервисийн дэмжлэгт��й.
+              сервисийн дэ��жлэгт��й.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="specs">
