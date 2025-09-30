@@ -69,7 +69,7 @@ export default function Orders() {
         <TableHeader>
           <TableRow>
             <TableHead>Огноо</TableHead>
-            <TableHead>Захиалга ���</TableHead>
+            <TableHead>Захиалга №</TableHead>
             <TableHead>Тоо</TableHead>
             <TableHead>Нийт</TableHead>
             <TableHead>Төлөв</TableHead>
@@ -84,7 +84,7 @@ export default function Orders() {
                 <TableCell className="font-mono text-xs">{o.id}</TableCell>
                 <TableCell>{itemsCount(o)}</TableCell>
                 <TableCell>{format(o.total)}</TableCell>
-                <TableCell className="capitalize">{o.status}</TableCell>
+                <TableCell>{statusLabel[o.status]}</TableCell>
               </TableRow>
             ))}
         </TableBody>
