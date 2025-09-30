@@ -50,14 +50,14 @@ export default function SettingsPanel() {
     setAccountNumber("");
     setHolder("");
     setNote("");
-    toast({ title: "계좌가 추가되었습니다" });
+    toast({ title: "Данс нэмэгдлээ" });
   };
 
   const removeAccount = (idx: number) => {
     const s = getSettings();
     const next: Settings = { ...s, bankAccounts: s.bankAccounts.filter((_, i) => i !== idx) };
     setSettings(next);
-    toast({ title: "계좌가 삭제되었습니다" });
+    toast({ title: "Данс устгагдлаа" });
   };
 
   return (
@@ -67,7 +67,7 @@ export default function SettingsPanel() {
           <CardTitle>Хүргэлтийн төлбөр</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 md:max-w-sm">
-          <Label htmlFor="shipFee">Төлбөр (MNT)</Label>
+          <Label htmlFor="shipFee">Төлбөр (KRW)</Label>
           <Input id="shipFee" type="number" value={shippingFee} onChange={(e) => setShippingFee(Number(e.target.value))} />
           <Button onClick={saveShipping}>Хадгалах</Button>
         </CardContent>
@@ -75,29 +75,29 @@ export default function SettingsPanel() {
 
       <Card>
         <CardHeader>
-          <CardTitle>무통장입금 계좌 관리</CardTitle>
+          <CardTitle>Банк шилжүүлгийн данс удирдах</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-4 gap-2">
             <div className="grid gap-1">
-              <Label htmlFor="bank">은행</Label>
-              <Input id="bank" value={bankName} onChange={(e) => setBankName(e.target.value)} placeholder="Kookmin" />
+              <Label htmlFor="bank">Банк</Label>
+              <Input id="bank" value={bankName} onChange={(e) => setBankName(e.target.value)} placeholder="ж: Kookmin" />
             </div>
             <div className="grid gap-1">
-              <Label htmlFor="acc">계좌번호</Label>
-              <Input id="acc" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} placeholder="123-456-7890" />
+              <Label htmlFor="acc">Дансны дугаар</Label>
+              <Input id="acc" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} placeholder="ж: 123-456-7890" />
             </div>
             <div className="grid gap-1">
-              <Label htmlFor="holder">예금주</Label>
-              <Input id="holder" value={holder} onChange={(e) => setHolder(e.target.value)} placeholder="Hong Gil-dong" />
+              <Label htmlFor="holder">Эзэмшигч</Label>
+              <Input id="holder" value={holder} onChange={(e) => setHolder(e.target.value)} placeholder="ж: Бат-Эрдэнэ" />
             </div>
             <div className="grid gap-1">
-              <Label htmlFor="note">비고(선택)</Label>
-              <Input id="note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="지점/메모" />
+              <Label htmlFor="note">Тэмдэглэл (сонголттой)</Label>
+              <Input id="note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="ж: салбар/мемо" />
             </div>
           </div>
           <div className="mt-2">
-            <Button onClick={addAccount}>계좌 추가</Button>
+            <Button onClick={addAccount}>Данс нэмэх</Button>
           </div>
 
           <div className="mt-4 grid gap-2">
@@ -110,12 +110,12 @@ export default function SettingsPanel() {
                 <div className="font-mono">{a.accountNumber}</div>
                 <div className="flex items-center gap-2">
                   {a.note ? <span className="text-xs text-muted-foreground">{a.note}</span> : null}
-                  <Button variant="destructive" size="sm" onClick={() => removeAccount(idx)}>삭제</Button>
+                  <Button variant="destructive" size="sm" onClick={() => removeAccount(idx)}>Устгах</Button>
                 </div>
               </div>
             ))}
             {accounts.length === 0 && (
-              <div className="text-sm text-muted-foreground">등록된 계좌가 없습니다.</div>
+              <div className="text-sm text-muted-foreground">Одоогоор бүртгэлтэй данс алга.</div>
             )}
           </div>
         </CardContent>
