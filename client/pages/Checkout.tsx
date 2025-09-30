@@ -68,9 +68,9 @@ export default function Checkout() {
   const shipping = useMemo(() => (items.length > 0 ? Math.max(0, shippingFee) : 0), [items, shippingFee]);
   const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
   const format = (n: number) =>
-    new Intl.NumberFormat("mn-MN", {
+    new Intl.NumberFormat("ko-KR", {
       style: "currency",
-      currency: "MNT",
+      currency: "KRW",
       maximumFractionDigits: 0,
     }).format(n);
 
@@ -212,7 +212,7 @@ export default function Checkout() {
 
         {accounts.length > 0 && (
           <div className="mt-4 rounded-md border bg-card p-3 text-sm">
-            <div className="font-medium mb-2">무통장입금 계좌</div>
+            <div className="font-medium mb-2">Банк шилжүүлгийн данс</div>
             <ul className="space-y-1">
               {accounts.map((a, idx) => (
                 <li key={idx} className="flex items-center justify-between gap-2">
