@@ -6,6 +6,8 @@ import ProductCard, { type Product } from "@/components/site/ProductCard";
 import { products as seedProducts } from "@/data/products";
 import { getCategories, getProductsLS, PRODUCTS_KEY, getBanners, type Banner } from "@/data/store";
 import useEmblaCarousel from "embla-carousel-react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Index() {
   const [cats, setCats] = useState<string[]>(getCategories());
@@ -13,7 +15,10 @@ export default function Index() {
     getProductsLS<Product>(PRODUCTS_KEY),
   );
   const [banners, setBanners] = useState<Banner[]>(getBanners());
-  const [emblaRef] = useEmblaCarousel({ loop: true, align: "start" });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
     const updateCats = () => setCats(getCategories());
@@ -47,6 +52,28 @@ export default function Index() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!emblaApi) return;
+    setScrollSnaps(emblaApi.scrollSnapList());
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    return () => {
+      try { emblaApi.off("select", onSelect); } catch {}
+    };
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi || !isPlaying) return;
+    const id = setInterval(() => {
+      try {
+        if (emblaApi.canScrollNext()) emblaApi.scrollNext();
+        else emblaApi.scrollTo(0);
+      } catch {}
+    }, 5000);
+    return () => clearInterval(id);
+  }, [emblaApi, isPlaying]);
+
   const allProducts = prods.length ? prods : seedProducts;
 
   const fallback = [
@@ -77,35 +104,91 @@ export default function Index() {
       {banners.length > 0 ? (
         <section className="relative">
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex">
-              {banners.map((b) => (
-                <div key={b.id} className="min-w-0 flex-[0_0_100%] relative">
-                  <div className="aspect-[16/7] w-full bg-muted">
-                    <img src={b.image} alt={b.title || "banner"} className="w-full h-full object-cover" />
-                  </div>
-                  {(b.title || b.subtitle || b.link) && (
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="container mx-auto px-4">
-                        <div className="max-w-2xl rounded-md bg-background/60 backdrop-blur p-4">
-                          {b.title && (
-                            <h2 className="text-2xl md:text-4xl font-extrabold leading-tight">{b.title}</h2>
-                          )}
-                          {b.subtitle && (
-                            <p className="mt-2 text-muted-foreground">{b.subtitle}</p>
-                          )}
-                          {b.link && (
-                            <Link to={b.link} className="mt-4 inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
-                              Дэлгэрэнгүй харах
-                            </Link>
-                          )}
-                        </div>
+
+          <div
+            className="group/embla relative"
+            onMouseEnter={() => setIsPlaying(false)}
+            onMouseLeave={() => setIsPlaying(true)}
+          >
+            <div className="overflow-hidden" ref={emblaRef}>
+              <div className="flex">
+                {banners.map((b) => (
+                  <div key={b.id} className="min-w-0 flex-[0_0_100%] relative">
+                    <div className="relative mx-4 my-4 overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5">
+                      <div className="relative aspect-[16/6] sm:aspect-[16/6] md:aspect-[16/5] bg-muted">
+                        <img
+                          src={b.image}
+                          alt={b.title || "banner"}
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[6000ms] group-hover/embla:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-black/0" />
+                        {(b.title || b.subtitle || b.link) && (
+                          <div className="absolute inset-0 flex items-center">
+                            <div className="container mx-auto px-6">
+                              <div className="max-w-xl md:max-w-2xl text-white">
+                                {b.title && (
+                                  <h2 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-sm">
+                                    {b.title}
+                                  </h2>
+                                )}
+                                {b.subtitle && (
+                                  <p className="mt-3 md:mt-4 text-sm md:text-lg text-white/85">
+                                    {b.subtitle}
+                                  </p>
+                                )}
+                                {b.link && (
+                                  <div className="mt-6">
+                                    <Button asChild size="lg" className="shadow">
+                                      <Link to={b.link}>Дэлгэрэнгүй харах</Link>
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* Controls */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 right-0 flex items-center justify-between px-2">
+              <button
+                type="button"
+                aria-label="Өмнөх"
+                onClick={() => emblaApi?.scrollPrev()}
+                className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-black/50"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Дараах"
+                onClick={() => emblaApi?.scrollNext()}
+                className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-black/50"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Dots */}
+            {scrollSnaps.length > 1 && (
+              <div className="absolute bottom-5 left-0 right-0 flex items-center justify-center gap-2">
+                {scrollSnaps.map((_, i) => (
+                  <button
+                    key={i}
+                    aria-label={`Slide ${i + 1}`}
+                    onClick={() => emblaApi?.scrollTo(i)}
+                    className={`h-2.5 w-2.5 rounded-full transition ${
+                      selectedIndex === i ? "bg-primary" : "bg-white/50 hover:bg-white/80"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       ) : (
