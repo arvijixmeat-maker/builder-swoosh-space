@@ -55,6 +55,8 @@ export default function Admin() {
     images: [],
     category: "",
     badge: "",
+    colors: [],
+    sizes: [],
   });
   const [newCat, setNewCat] = useState("");
   const [editingCat, setEditingCat] = useState<string | null>(null);
@@ -121,6 +123,8 @@ export default function Admin() {
       images: [],
       category: "",
       badge: "",
+      colors: [],
+      sizes: [],
     });
 
   const startCreate = () => {
@@ -602,6 +606,66 @@ export default function Admin() {
                         setForm({ ...form, badge: e.target.value })
                       }
                     />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="colors">Өнгө (`,`) таслалаар салгаж бичнэ</Label>
+                    <Input
+                      id="colors"
+                      placeholder="#000, white, red"
+                      value={(form.colors && form.colors.join(", ")) || ""}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          colors: e.target.value
+                            .split(",")
+                            .map((s) => s.trim())
+                            .filter(Boolean),
+                        })
+                      }
+                    />
+                    {form.colors && form.colors.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {form.colors.map((c, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex h-6 min-w-6 items-center justify-center rounded-full border px-2 text-xs"
+                            style={{ background: c, color: "#00000080" }}
+                            title={c}
+                          >
+
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="sizes">Хэмжээ (`,`) таслалаар салгаж бичнэ</Label>
+                    <Input
+                      id="sizes"
+                      placeholder="XS, S, M, L, XL"
+                      value={(form.sizes && form.sizes.join(", ")) || ""}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          sizes: e.target.value
+                            .split(",")
+                            .map((s) => s.trim())
+                            .filter(Boolean),
+                        })
+                      }
+                    />
+                    {form.sizes && form.sizes.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {form.sizes.map((s, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex h-6 items-center justify-center rounded-full border bg-card px-2 text-xs"
+                          >
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   {form.images && form.images.length > 0 ? (
                     <div className="mt-2 grid grid-cols-3 gap-2">
