@@ -19,6 +19,12 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [imgIdx, setImgIdx] = useState(0);
+  const [color, setColor] = useState<string | undefined>(() =>
+    product?.colors && product.colors.length > 0 ? product.colors[0] : undefined,
+  );
+  const [size, setSize] = useState<string | undefined>(() =>
+    product?.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined,
+  );
 
   if (!product) {
     return (
@@ -34,57 +40,86 @@ export default function ProductDetail() {
     );
   }
 
+  const ensureSelections = () => {
+    if (product.colors && product.colors.length > 0 && !color) {
+      toast({ title: "Өнгөө сонгоно уу" });
+      return false;
+    }
+    if (product.sizes && product.sizes.length > 0 && !size) {
+      toast({ title: "Хэмжээгээ сонгоно уу" });
+      return false;
+    }
+    return true;
+  };
+
+  const lineId = (pid: string) => `${pid}${color ? `-c:${color}` : ""}${
+    size ? `-s:${size}` : ""
+  }`;
+
   const addToCart = () => {
+    if (!ensureSelections()) return;
     const cart = getCart();
-    const existing = cart.find((i) => i.id === product.id);
+    const idKey = lineId(product.id);
+    const existing = cart.find((i) => i.id === idKey);
     let next;
     if (existing) {
       next = cart.map((i) =>
-        i.id === product.id ? { ...i, qty: Math.min(99, i.qty + qty) } : i,
+        i.id === idKey ? { ...i, qty: Math.min(99, i.qty + qty) } : i,
       );
     } else {
       next = [
         {
-          id: product.id,
+          id: idKey,
+          productId: product.id,
           name: product.name,
           price: product.price,
           image: product.image,
           qty,
+          color,
+          size,
         },
         ...cart,
       ];
     }
     setCart(next);
+    const opt = [color ? `ө��г: ${color}` : null, size ? `хэмжээ: ${size}` : null]
+      .filter(Boolean)
+      .join(", ");
     toast({
       title: "Сагсанд нэмэгдлээ",
-      description: `${product.name} × ${qty}`,
+      description: `${product.name} × ${qty}${opt ? ` (${opt})` : ""}`,
     });
   };
   const buyNow = () => {
+    if (!ensureSelections()) return;
     const user = getCurrentUser();
     if (!user) {
       toast({
-        title: "Нэвтрэх шаардлагатай",
+        title: "Нэвтрэх ��аардлагатай",
         description: "Захиалга хийхийн тулд нэвтэрнэ үү",
       });
       navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
       return;
     }
     const cart = getCart();
-    const existing = cart.find((i) => i.id === product.id);
+    const idKey = lineId(product.id);
+    const existing = cart.find((i) => i.id === idKey);
     let next;
     if (existing) {
       next = cart.map((i) =>
-        i.id === product.id ? { ...i, qty: Math.min(99, i.qty + qty) } : i,
+        i.id === idKey ? { ...i, qty: Math.min(99, i.qty + qty) } : i,
       );
     } else {
       next = [
         {
-          id: product.id,
+          id: idKey,
+          productId: product.id,
           name: product.name,
           price: product.price,
           image: product.image,
           qty,
+          color,
+          size,
         },
         ...cart,
       ];
@@ -160,6 +195,46 @@ export default function ProductDetail() {
             зохицно.
           </p>
 
+          {product.colors && product.colors.length > 0 && (
+            <div className="mt-5">
+              <div className="mb-2 text-sm font-medium">Өнгө</div>
+              <div className="flex flex-wrap gap-2">
+                {product.colors.map((c) => (
+                  <button
+                    key={c}
+                    aria-label={`Өнгө ${c}`}
+                    onClick={() => setColor(c)}
+                    className={`h-8 w-8 rounded-full border ${
+                      color === c ? "ring-2 ring-primary" : ""
+                    }`}
+                    style={{ background: c }}
+                    title={c}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.sizes && product.sizes.length > 0 && (
+            <div className="mt-4">
+              <div className="mb-2 text-sm font-medium">Хэмжээ</div>
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSize(s)}
+                    className={`h-8 min-w-8 rounded-md border bg-card px-2 text-xs ${
+                      size === s ? "ring-2 ring-primary" : ""
+                    }`}
+                    aria-pressed={size === s}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <div className="flex items-center rounded-md border bg-card">
               <button
@@ -195,7 +270,7 @@ export default function ProductDetail() {
             <AccordionContent>
               Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд
               өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны
-              сервисийн дэмжлэгтэй.
+              сервисийн дэмжлэгт��й.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="specs">
