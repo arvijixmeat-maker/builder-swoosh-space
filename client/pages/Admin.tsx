@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -256,33 +257,16 @@ export default function Admin() {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        <a
-          href="#categories"
-          className="rounded-full border bg-card px-3 py-1 text-xs"
-        >
-          Ангилал
-        </a>
-        <a
-          href="#orders"
-          className="rounded-full border bg-card px-3 py-1 text-xs"
-        >
-          Захиалгууд
-        </a>
-        <a
-          href="#users"
-          className="rounded-full border bg-card px-3 py-1 text-xs"
-        >
-          Хэрэглэгчид
-        </a>
-        <a
-          href="#products"
-          className="rounded-full border bg-card px-3 py-1 text-xs"
-        >
-          Бүтээгдэхүүн
-        </a>
-      </div>
+      <Tabs defaultValue="dashboard" className="mt-2">
+        <TabsList className="w-full justify-start gap-1 flex-wrap">
+          <TabsTrigger value="dashboard">Хяналт</TabsTrigger>
+          <TabsTrigger value="products">Бүтээгдэхүүн</TabsTrigger>
+          <TabsTrigger value="orders">Захиалгууд</TabsTrigger>
+          <TabsTrigger value="users">Хэрэглэгчид</TabsTrigger>
+          <TabsTrigger value="categories">Ангилал</TabsTrigger>
+        </TabsList>
 
+        <TabsContent value="dashboard">
       <div id="stats" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardHeader>
@@ -325,7 +309,9 @@ export default function Admin() {
           </CardContent>
         </Card>
       </div>
+        </TabsContent>
 
+        <TabsContent value="categories">
       <Card id="categories" className="mb-6">
         <CardHeader>
           <CardTitle>Ангилал удирдах</CardTitle>
@@ -416,7 +402,9 @@ export default function Admin() {
           </div>
         </CardContent>
       </Card>
+        </TabsContent>
 
+        <TabsContent value="orders">
       <Card id="orders" className="mb-6">
         <CardHeader>
           <CardTitle>Захиалгууд</CardTitle>
@@ -476,7 +464,9 @@ export default function Admin() {
           </Table>
         </CardContent>
       </Card>
+        </TabsContent>
 
+        <TabsContent value="users">
       <Card id="users" className="mb-6">
         <CardHeader>
           <CardTitle>Хэрэглэгчид</CardTitle>
@@ -509,7 +499,9 @@ export default function Admin() {
           </Table>
         </CardContent>
       </Card>
+        </TabsContent>
 
+        <TabsContent value="products">
       <Card id="products">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Бүтээгдэхүүн удирдах</CardTitle>
@@ -527,7 +519,7 @@ export default function Admin() {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>
-                    {editing ? "Бүтээ��дэхүүн засах" : "Шинэ бүтээгдэхүүн"}
+                    {editing ? "Бү��ээ��дэхүүн засах" : "Шинэ бүтээгдэхүүн"}
                   </DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4">
@@ -780,6 +772,8 @@ export default function Admin() {
           </Table>
         </CardContent>
       </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
