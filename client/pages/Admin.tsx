@@ -251,7 +251,7 @@ export default function Admin() {
     <div className="container mx-auto px-4 py-10">
       <div className="mb-6 md:mb-8">
         <h1 className="text-2xl md:text-3xl font-bold">
-          Админ хяналтын самбар
+          Админ хяналтын с��мбар
         </h1>
         <p className="text-muted-foreground mt-1">
           Бүтээгдэхүүн, захиалга, ангиллыг удирдах
@@ -450,11 +450,10 @@ export default function Admin() {
                         )
                       }
                     >
-                      <option value="new">Шинэ</option>
-                      <option value="processing">Боловсруулж байна</option>
-                      <option value="shipped">Хүргэгдэж байна</option>
+                      <option value="unpaid">Төлбөр төлөгдөөгүй</option>
+                      <option value="paid">Төлбөр төлөгдсөн</option>
+                      <option value="shipping">Хүргэлт хийгдэж байна</option>
                       <option value="delivered">Хүргэгдсэн</option>
-                      <option value="cancelled">Цуцлагдсан</option>
                     </select>
                   </TableCell>
                 </TableRow>
