@@ -9,7 +9,7 @@ import {
   Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser, logoutUser, getCategories } from "@/data/store";
+import { getCurrentUser, logoutUser, getCategories, getCart } from "@/data/store";
 
 export default function Header() {
   const user = getCurrentUser();
@@ -19,13 +19,33 @@ export default function Header() {
     navigate("/");
   };
   const [cats, setCats] = useState<string[]>(getCategories());
+  const [cartCount, setCartCount] = useState<number>(() => {
+    try {
+      const items = getCart();
+      return items.reduce((sum, it) => sum + (it.qty || 0), 0);
+    } catch {
+      return 0;
+    }
+  });
   useEffect(() => {
-    const update = () => setCats(getCategories());
-    window.addEventListener("storage", update);
-    window.addEventListener("categories-updated", update as EventListener);
+    const updateCats = () => setCats(getCategories());
+    const updateCart = () => {
+      try {
+        const items = getCart();
+        setCartCount(items.reduce((sum, it) => sum + (it.qty || 0), 0));
+      } catch {
+        setCartCount(0);
+      }
+    };
+    window.addEventListener("storage", updateCats);
+    window.addEventListener("categories-updated", updateCats as EventListener);
+    window.addEventListener("storage", updateCart);
+    window.addEventListener("cart-updated", updateCart as EventListener);
     return () => {
-      window.removeEventListener("storage", update);
-      window.removeEventListener("categories-updated", update as EventListener);
+      window.removeEventListener("storage", updateCats);
+      window.removeEventListener("categories-updated", updateCats as EventListener);
+      window.removeEventListener("storage", updateCart);
+      window.removeEventListener("cart-updated", updateCart as EventListener);
     };
   }, []);
   const fallback = ["Гоо сайхан", "Спорт", "Технологи", "Аялал", "+18"];
@@ -104,8 +124,16 @@ export default function Header() {
             </>
           )}
           <Button asChild variant="ghost" size="icon" aria-label="Сагс">
-            <Link to="/cart">
+            <Link to="/cart" className="relative">
               <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span
+                  aria-label={`Сагсанд ${cartCount} бүтээгдэхүүн байна`}
+                  className="absolute -top-1 -right-1 min-w-4 h-4 rounded-full bg-primary px-1 text-[10px] leading-4 text-primary-foreground text-center"
+                >
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </Button>
         </div>
@@ -145,8 +173,8 @@ export default function Header() {
             >
               Ангилал
             </NavLink>
-  
-  
+
+
             <NavLink
               to="/cart"
               className={({ isActive }) =>
