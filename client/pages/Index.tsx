@@ -12,6 +12,8 @@ export default function Index() {
   const [prods, setProds] = useState<Product[]>(
     getProductsLS<Product>(PRODUCTS_KEY),
   );
+  const [banners, setBanners] = useState<Banner[]>(getBanners());
+  const [emblaRef] = useEmblaCarousel({ loop: true, align: "start" });
 
   useEffect(() => {
     const updateCats = () => setCats(getCategories());
@@ -46,7 +48,7 @@ export default function Index() {
     "Гэр ахуй",
     "Гоо сайхан",
     "Спорт",
-    "Хувца��",
+    "Хувцас",
     "Хүүхдийн",
   ];
   const categories = cats.length
@@ -138,7 +140,7 @@ export default function Index() {
                     to="/catalog"
                     className="text-sm text-primary underline underline-offset-4"
                   >
-                    ��үгдийг харах
+                    Бүгдийг харах
                   </Link>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
