@@ -51,6 +51,7 @@ export interface User {
   birthYear?: number;
   birthMonth?: number; // 1-12
   birthDay?: number; // 1-31
+  isAdmin?: boolean;
   createdAt: number;
 }
 
