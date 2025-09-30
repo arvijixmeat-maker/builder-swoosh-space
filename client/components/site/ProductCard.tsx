@@ -67,9 +67,9 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
           <p className="mt-1 font-semibold">
-            {new Intl.NumberFormat("mn-MN", {
+            {new Intl.NumberFormat("ko-KR", {
               style: "currency",
-              currency: "MNT",
+              currency: "KRW",
               maximumFractionDigits: 0,
             }).format(product.price)}
           </p>
