@@ -4,6 +4,7 @@ export const CART_KEY = "cart_items";
 export const ORDERS_KEY = "orders";
 export const USERS_KEY = "users";
 export const CURRENT_USER_KEY = "current_user_id";
+export const SETTINGS_KEY = "shop_settings";
 
 export type Category = string;
 
@@ -26,6 +27,17 @@ export interface Order {
   customer: { name: string; phone: string; address: string };
   status: "new" | "processing" | "shipped" | "delivered" | "cancelled";
   userId?: string;
+}
+
+export interface BankAccount {
+  bankName: string;
+  accountNumber: string;
+  holder: string;
+  note?: string;
+}
+export interface Settings {
+  shippingFee: number; // flat fee
+  bankAccounts: BankAccount[];
 }
 
 export interface User {
@@ -119,6 +131,35 @@ export const setCart = (items: CartItem[]) => {
         window.dispatchEvent(new Event("cart-updated"));
       } catch {}
     }
+  }
+};
+
+export const getSettings = (): Settings => {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return { shippingFee: 0, bankAccounts: [] };
+    const parsed = JSON.parse(raw);
+    const fee = typeof parsed.shippingFee === "number" ? parsed.shippingFee : Number(parsed.shippingFee) || 0;
+    const accounts = Array.isArray(parsed.bankAccounts) ? parsed.bankAccounts : [];
+    return { shippingFee: Math.max(0, fee), bankAccounts: accounts } as Settings;
+  } catch {
+    return { shippingFee: 0, bankAccounts: [] };
+  }
+};
+export const setSettings = (settings: Settings) => {
+  try {
+    const payload: Settings = {
+      shippingFee: Math.max(0, Number(settings.shippingFee) || 0),
+      bankAccounts: (settings.bankAccounts || []).map((a) => ({
+        bankName: a.bankName?.trim() || "",
+        accountNumber: a.accountNumber?.trim() || "",
+        holder: a.holder?.trim() || "",
+        note: a.note?.trim() || undefined,
+      })),
+    };
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(payload));
+  } finally {
+    try { window.dispatchEvent(new Event("settings-updated")); } catch {}
   }
 };
 
