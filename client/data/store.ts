@@ -5,6 +5,7 @@ export const ORDERS_KEY = "orders";
 export const USERS_KEY = "users";
 export const CURRENT_USER_KEY = "current_user_id";
 export const SETTINGS_KEY = "shop_settings";
+export const BANNERS_KEY = "home_banners";
 
 export type Category = string;
 
@@ -38,6 +39,14 @@ export interface BankAccount {
 export interface Settings {
   shippingFee: number; // flat fee
   bankAccounts: BankAccount[];
+}
+
+export interface Banner {
+  id: string;
+  image: string;
+  title?: string;
+  subtitle?: string;
+  link?: string;
 }
 
 export interface User {
