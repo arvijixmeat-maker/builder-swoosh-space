@@ -17,6 +17,7 @@ export default function Cart() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [items, setItems] = useState<CartItem[]>(getCart());
+  const [shippingFee, setShippingFee] = useState<number>(getSettings().shippingFee);
 
   useEffect(() => {
     const update = () => {
@@ -32,9 +33,12 @@ export default function Cart() {
     };
     window.addEventListener("storage", update);
     window.addEventListener("cart-updated", update as EventListener);
+    const updateSettings = () => setShippingFee(getSettings().shippingFee);
+    window.addEventListener("settings-updated", updateSettings as EventListener);
     return () => {
       window.removeEventListener("storage", update);
       window.removeEventListener("cart-updated", update as EventListener);
+      window.removeEventListener("settings-updated", updateSettings as EventListener);
     };
   }, []);
 
@@ -52,6 +56,8 @@ export default function Cart() {
     () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
     [items],
   );
+  const shipping = useMemo(() => (items.length > 0 ? Math.max(0, shippingFee) : 0), [items, shippingFee]);
+  const grand = useMemo(() => subtotal + shipping, [subtotal, shipping]);
 
   const inc = (id: string) =>
     setItems((prev) =>
@@ -155,9 +161,19 @@ export default function Cart() {
         {items.length === 0 && <TableCaption>Сагс хоосон байна.</TableCaption>}
       </Table>
 
-      <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">Нийт төлөх дүн</div>
-        <div className="text-xl font-bold">{format(subtotal)}</div>
+      <div className="mt-6 space-y-1">
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">Дэд дүн</div>
+          <div className="text-xl font-bold">{format(subtotal)}</div>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">Хүргэлт</div>
+          <div className="text-base font-medium">{format(shipping)}</div>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="text-sm">Нийт</div>
+          <div className="text-2xl font-extrabold">{format(grand)}</div>
+        </div>
       </div>
 
       <div className="mt-4 flex justify-end">
