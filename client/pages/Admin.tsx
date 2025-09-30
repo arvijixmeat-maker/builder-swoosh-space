@@ -263,7 +263,14 @@ export default function Admin() {
         <TabsList className="w-full justify-start gap-1 flex-wrap">
           <TabsTrigger value="dashboard">Хяналт</TabsTrigger>
           <TabsTrigger value="products">Бүтээгдэхүүн</TabsTrigger>
-          <TabsTrigger value="orders">Захиалгууд</TabsTrigger>
+          <TabsTrigger value="orders" className="relative">
+            Захиалгууд
+            {orders.filter((o) => o.status === "unpaid").length > 0 && (
+              <span className="ml-2 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] leading-5 text-white">
+                {orders.filter((o) => o.status === "unpaid").length}
+              </span>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="users">Хэрэглэгчид</TabsTrigger>
           <TabsTrigger value="categories">Ангилал</TabsTrigger>
           <TabsTrigger value="settings">Т��хиргоо</TabsTrigger>
