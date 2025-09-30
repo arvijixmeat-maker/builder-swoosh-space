@@ -354,6 +354,7 @@ export const seedDefaultAdmin = () => {
       email: "admin@local",
       phone: "0000000000",
       password: "admin1234",
+      isAdmin: true,
     };
     setUsers([admin, ...existing]);
   } catch {}
