@@ -44,6 +44,12 @@ export default function Orders() {
       maximumFractionDigits: 0,
     }).format(n);
   const itemsCount = (o: Order) => o.items.reduce((s, i) => s + i.qty, 0);
+  const statusLabel: Record<Order["status"], string> = {
+    unpaid: "Төлбөр төлөгдөөгүй",
+    paid: "Төлбөр төлөгдсөн",
+    shipping: "Хүргэлт хийгдэж байна",
+    delivered: "Хүргэгдсэн",
+  };
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -63,7 +69,7 @@ export default function Orders() {
         <TableHeader>
           <TableRow>
             <TableHead>Огноо</TableHead>
-            <TableHead>Захиалга №</TableHead>
+            <TableHead>Захиалга ���</TableHead>
             <TableHead>Тоо</TableHead>
             <TableHead>Нийт</TableHead>
             <TableHead>Төлөв</TableHead>
