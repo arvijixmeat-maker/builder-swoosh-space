@@ -26,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
 import { Plus, Pencil, Trash2, Download, X, Check } from "lucide-react";
 import SettingsPanel from "./_AdminSettings";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import {
   CATEGORIES_KEY,
   getCategories,
@@ -265,7 +266,7 @@ export default function Admin() {
           <TabsTrigger value="orders">Захиалгууд</TabsTrigger>
           <TabsTrigger value="users">Хэрэглэгчид</TabsTrigger>
           <TabsTrigger value="categories">Ангилал</TabsTrigger>
-          <TabsTrigger value="settings">Тохиргоо</TabsTrigger>
+          <TabsTrigger value="settings">Т��хиргоо</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard">
