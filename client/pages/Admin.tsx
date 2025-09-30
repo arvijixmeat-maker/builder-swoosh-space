@@ -281,7 +281,8 @@ export default function Admin() {
           </TabsTrigger>
           <TabsTrigger value="users">Хэрэглэгчид</TabsTrigger>
           <TabsTrigger value="categories">Ангилал</TabsTrigger>
-          <TabsTrigger value="settings">Т��хиргоо</TabsTrigger>
+          <TabsTrigger value="banners">Баннер</TabsTrigger>
+          <TabsTrigger value="settings">Тохиргоо</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard">
