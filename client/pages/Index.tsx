@@ -198,7 +198,7 @@ export default function Index() {
             <div className="max-w-3xl">
               <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
                 <span className="h-2 w-2 rounded-full bg-primary" /> Монгол хэл
-                дээрх о��лайн дэлгүүр
+                дээрх онлайн дэлгүүр
               </span>
               <h1 className="mt-4 text-3xl md:text-5xl font-extrabолд leading-tight tracking-tight">
                 Талын Маркет — Монгол хэрэглэгчдэд зориулсан бүх төрлийн худалдаа
@@ -231,7 +231,7 @@ export default function Index() {
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
             <h2 className="text-xl md:text-2xl font-bold">
-              Онцлох бүтээгдэхүүн
+              Онцлох ��үтээгдэхүүн
             </h2>
             <p className="text-muted-foreground text-sm md:text-base">
               Шинээр нэмэгдсэн ба хамгийн их зарагддаг бараанууд
@@ -244,20 +244,14 @@ export default function Index() {
             Бүгдийг харах
           </Link>
         </div>
-        {/* Mobile: horizontal 3-up snap carousel */}
-        <div className="md:hidden -mx-4 px-4 overflow-x-auto">
-          <div className="flex gap-3 snap-x snap-mandatory">
-            {allProducts.map((p) => (
-              <div key={p.id} className="shrink-0 basis-1/3 snap-start">
-                <ProductCard product={p} />
-              </div>
-            ))}
-            <Link to="/catalog" className="shrink-0 basis-1/3 snap-start">
-              <div className="h-full rounded-xl border bg-card grid place-items-center p-3 text-center text-sm font-medium">
-                Бүгдийг харах →
-              </div>
-            </Link>
-          </div>
+        {/* Mobile: vertical grid (2 cols), no horizontal scroll */}
+        <div className="md:hidden grid grid-cols-2 gap-3">
+          {allProducts.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+          <Link to="/catalog" className="rounded-xl border bg-card grid place-items-center p-3 text-center text-sm font-medium">
+            Бүгдийг харах →
+          </Link>
         </div>
 
         {/* Desktop+ grid */}
