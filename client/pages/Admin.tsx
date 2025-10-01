@@ -596,14 +596,10 @@ export default function Admin() {
                       onChange={async (e) => {
                         const files = Array.from(e.target.files || []);
                         if (!files.length) return;
-                        const toDataURL = (file: File) =>
-                          new Promise<string>((resolve) => {
-                            const reader = new FileReader();
-                            reader.onload = () =>
-                              resolve(String(reader.result));
-                            reader.readAsDataURL(file);
-                          });
-                        const images = await Promise.all(files.map(toDataURL));
+                        const { convertImageFileToWebpDataUrl } = await import("@/lib/image");
+                        const images = await Promise.all(
+                          files.map((f) => convertImageFileToWebpDataUrl(f, 0.9))
+                        );
                         setForm({ ...form, images, image: images[0] });
                       }}
                     />
