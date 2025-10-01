@@ -230,7 +230,7 @@ export default function Index() {
       <section id="featured" className="container mx-auto px-4 pb-10 md:pb-14">
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold">Онцлох бүтээгдэхүү��</h2>
+            <h2 className="text-xl md:text-2xl font-bold">Онцлох бүтээгдэхүүн</h2>
             <p className="text-muted-foreground text-sm md:text-base">Шинээр нэмэгдсэн ба хамгийн их зарагддаг бараанууд</p>
           </div>
           <div className="flex items-center gap-2">
@@ -242,11 +242,16 @@ export default function Index() {
             </Link>
           </div>
         </div>
-        {/* Mobile: simple vertical grid (PC-style cards), no horizontal scroll */}
-        <div className="md:hidden grid grid-cols-2 gap-3">
-          {allProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
+        {/* Mobile: 3 columns, 2 rows (show 6), vertical scroll; compact cards */}
+        <div className="md:hidden grid grid-cols-3 gap-3">
+          {allProducts.slice(0, 6).map((p) => (
+            <ProductCard key={p.id} product={p} compact />
           ))}
+        </div>
+        <div className="md:hidden mt-4 flex justify-center">
+          <Link to="/catalog" className="inline-flex items-center justify-center rounded-full border px-5 py-2 text-sm">
+            더보기
+          </Link>
         </div>
 
         {/* Desktop+ grid */}
@@ -291,7 +296,7 @@ export default function Index() {
           <div className="rounded-lg border bg-card p-6">
             <h3 className="font-semibold">Хурдан хүргэлт</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Улаанбаатар хото�� 24-48 цагийн дотор
+              Улаанбаатар хотод 24-48 цагийн дотор
             </p>
           </div>
           <div className="rounded-lg border bg-card p-6">
