@@ -18,7 +18,7 @@ export interface Product {
   sizes?: string[];  // size labels like XS,S,M,L,XL
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, compact = false }: { product: Product; compact?: boolean }) {
   const { toast } = useToast();
   const [fav, setFav] = useState(false);
 
@@ -65,11 +65,11 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <Card className="overflow-hidden group h-full flex flex-col">
+    <Card className={`overflow-hidden group h-full flex flex-col ${compact ? 'rounded-xl' : ''}`}>
       <div className="relative">
         <Link
           to={`/product/${product.id}`}
-          className="block aspect-[4/5] md:aspect-square overflow-hidden bg-muted"
+          className={`block overflow-hidden bg-muted ${compact ? 'aspect-square' : 'aspect-[4/5] md:aspect-square'}`}
         >
           <img
             src={product.image}
@@ -87,17 +87,17 @@ export default function ProductCard({ product }: { product: Product }) {
           <Heart className={`h-4 w-4 ${fav ? "fill-current text-primary" : ""}`} />
         </button>
       </div>
-      <CardContent className="p-3 md:p-4 flex flex-col gap-2 text-center flex-1">
+      <CardContent className={`${compact ? 'p-2' : 'p-3 md:p-4'} flex flex-col gap-2 text-center flex-1`}>
         <Link to={`/product/${product.id}`} className="min-w-0">
-          {product.badge && (
+          {product.badge && !compact && (
             <span className="inline-block mb-1 rounded-full bg-accent/20 text-accent-foreground border border-accent/40 px-2 py-0.5 text-[10px] uppercase tracking-wide">
               {product.badge}
             </span>
           )}
-          <h3 className="text-xs md:text-sm font-medium leading-snug line-clamp-2 min-h-[2.5rem]">
+          <h3 className={`${compact ? 'text-[11px] min-h-[2.2rem]' : 'text-xs md:text-sm min-h-[2.5rem]'} font-medium leading-snug line-clamp-2`}>
             {product.name}
           </h3>
-          <p className="mt-1 font-semibold text-sm md:text-base">
+          <p className={`${compact ? 'text-xs' : 'text-sm md:text-base'} mt-1 font-semibold`}>
             {new Intl.NumberFormat("ko-KR", {
               style: "currency",
               currency: "KRW",
@@ -105,7 +105,7 @@ export default function ProductCard({ product }: { product: Product }) {
             }).format(product.price)}
           </p>
         </Link>
-        <Button size="sm" className="mt-auto w-full md:w-auto mx-auto h-9" onClick={addToCart}>
+        <Button size="sm" className={`mt-auto ${compact ? 'h-8 text-[11px]' : 'h-9'} w-full md:w-auto mx-auto`} onClick={addToCart}>
           Нэмэх
         </Button>
       </CardContent>
