@@ -21,13 +21,17 @@ export default function MobileBottomBar() {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `relative flex flex-1 flex-col items-center justify-center gap-1 text-xs ${
-          isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"
+        `mx-1 my-1 inline-flex flex-1 flex-col items-center justify-center rounded-2xl px-3 py-2 text-xs transition-colors ${
+          isActive
+            ? "bg-gradient-to-tr from-primary to-purple-500 text-white shadow"
+            : "text-foreground/80 hover:text-foreground"
         }`
       }
     >
-      {icon}
-      <span>{label}</span>
+      <span className="grid place-items-center">
+        {icon}
+      </span>
+      <span className="mt-1 leading-none">{label}</span>
     </NavLink>
   );
 
@@ -37,7 +41,7 @@ export default function MobileBottomBar() {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="Доод навигаци"
     >
-      <div className="mx-auto grid h-16 max-w-screen-sm grid-cols-4 items-stretch">
+      <div className="mx-auto grid h-20 max-w-screen-sm grid-cols-4 items-stretch px-2">
         <Item to="/" icon={<Home className="h-5 w-5" />} label="Нүүр" />
         <Item to="/catalog" icon={<Grid2x2 className="h-5 w-5" />} label="Ангилал" />
         <NavLink
