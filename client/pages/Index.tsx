@@ -244,7 +244,36 @@ export default function Index() {
             Бүгдийг харах
           </Link>
         </div>
-        <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
+        {/* Mobile: media list cards */}
+        <div className="md:hidden grid gap-3">
+          {allProducts.map((p) => (
+            <Link
+              key={p.id}
+              to={`/product/${p.id}`}
+              className="flex items-center gap-3 rounded-xl border bg-card p-3 shadow-sm"
+            >
+              <div className="relative shrink-0">
+                <div className="h-24 w-24 overflow-hidden rounded-xl bg-muted">
+                  <img src={p.image} alt={p.name} className="h-full w-full object-cover" loading="lazy" />
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                {p.category && (
+                  <div className="text-[11px] text-muted-foreground">{p.category}</div>
+                )}
+                <div className="mt-0.5 text-base font-semibold leading-tight line-clamp-2">
+                  {p.name}
+                </div>
+                <div className="mt-1 text-sm font-semibold text-primary">
+                  {new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(p.price)}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop+ grid */}
+        <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-6">
           {allProducts.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
