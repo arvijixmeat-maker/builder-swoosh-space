@@ -22,6 +22,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Copy } from "lucide-react";
 
 export default function Checkout() {
   const { toast } = useToast();
@@ -199,7 +200,7 @@ export default function Checkout() {
         </div>
         <div className="flex items-center justify-between pt-2">
           <div className="text-sm text-muted-foreground">
-            Ү��дсэн үнэ
+            Үндсэн үнэ
             <br />
           </div>
           <div className="text-xl font-bold">{format(subtotal)}</div>
@@ -215,14 +216,34 @@ export default function Checkout() {
 
         {accounts.length > 0 && (
           <div className="mt-4 rounded-md border bg-card p-3 text-sm">
-            <div className="font-medium mb-2">Банк шилжүүлгийн данс</div>
-            <ul className="space-y-1">
+            <div className="font-medium mb-2">무통입금 계좌</div>
+            <ul className="space-y-2">
               {accounts.map((a, idx) => (
-                <li key={idx} className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground">
-                    {a.bankName} / {a.holder}
-                  </span>
-                  <span className="font-mono">{a.accountNumber}</span>
+                <li key={idx} className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-muted-foreground">
+                      {a.bankName} / {a.holder}
+                    </div>
+                    {a.note ? (
+                      <div className="text-xs text-muted-foreground mt-0.5">{a.note}</div>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono whitespace-nowrap">{a.accountNumber}</span>
+                    <button
+                      type="button"
+                      aria-label="계좌번호 복사"
+                      className="inline-flex h-7 items-center gap-1 rounded border px-2 text-xs hover:bg-accent"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(a.accountNumber);
+                          toast({ title: "복사됨", description: "계좌번호가 복사되었습니다" });
+                        } catch {}
+                      }}
+                    >
+                      <Copy className="h-3.5 w-3.5" /> 복사
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
