@@ -256,7 +256,7 @@ export default function Index() {
 
         {/* Desktop+ grid */}
         <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {allProducts.map((p) => (
+          {allProducts.slice(0, 6).map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
