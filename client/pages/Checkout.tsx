@@ -198,7 +198,10 @@ export default function Checkout() {
           />
         </div>
         <div className="flex items-center justify-between pt-2">
-          <div className="text-sm text-muted-foreground">Дэд дүн</div>
+          <div className="text-sm text-muted-foreground">
+            Ү��дсэн үнэ
+            <br />
+          </div>
           <div className="text-xl font-bold">{format(subtotal)}</div>
         </div>
         <div className="flex items-center justify-between">
