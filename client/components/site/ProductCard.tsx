@@ -44,10 +44,10 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <Card className="overflow-hidden group">
+    <Card className="overflow-hidden group h-full flex flex-col">
       <Link
         to={`/product/${product.id}`}
-        className="block aspect-square overflow-hidden bg-muted"
+        className="block aspect-[4/5] md:aspect-square overflow-hidden bg-muted"
       >
         <img
           src={product.image}
@@ -56,17 +56,17 @@ export default function ProductCard({ product }: { product: Product }) {
           loading="lazy"
         />
       </Link>
-      <CardContent className="p-4 flex items-start justify-between gap-3">
+      <CardContent className="p-3 md:p-4 flex flex-col gap-2 text-center flex-1">
         <Link to={`/product/${product.id}`} className="min-w-0">
           {product.badge && (
             <span className="inline-block mb-1 rounded-full bg-accent/20 text-accent-foreground border border-accent/40 px-2 py-0.5 text-[10px] uppercase tracking-wide">
               {product.badge}
             </span>
           )}
-          <h3 className="text-sm font-medium leading-tight line-clamp-2">
+          <h3 className="text-xs md:text-sm font-medium leading-snug line-clamp-2 min-h-[2.5rem]">
             {product.name}
           </h3>
-          <p className="mt-1 font-semibold">
+          <p className="mt-1 font-semibold text-sm md:text-base">
             {new Intl.NumberFormat("ko-KR", {
               style: "currency",
               currency: "KRW",
@@ -74,7 +74,7 @@ export default function ProductCard({ product }: { product: Product }) {
             }).format(product.price)}
           </p>
         </Link>
-        <Button size="sm" onClick={addToCart}>
+        <Button size="sm" className="mt-auto w-full md:w-auto mx-auto" onClick={addToCart}>
           Нэмэх
         </Button>
       </CardContent>
