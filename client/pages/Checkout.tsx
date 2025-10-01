@@ -121,7 +121,7 @@ export default function Checkout() {
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Төлбөр</h1>
             <p className="text-muted-foreground mt-1">
-              Захиалгын мэдээллээ баталгаажуулна уу
+              Захиалгын мэдээллээ баталгаажуул��а уу
             </p>
           </div>
           <Link
@@ -215,11 +215,11 @@ export default function Checkout() {
         </div>
 
         {accounts.length > 0 && (
-          <div className="mt-4 rounded-md border bg-card p-3 text-sm">
+          <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm">
             <div className="font-medium mb-2">무통입금 계좌</div>
             <ul className="space-y-2">
               {accounts.map((a, idx) => (
-                <li key={idx} className="flex items-start justify-between gap-3">
+                <li key={idx} className="flex items-start justify-between gap-3 rounded-md border border-red-200 bg-red-50 p-2">
                   <div className="min-w-0">
                     <div className="text-muted-foreground">
                       {a.bankName} / {a.holder}
@@ -233,15 +233,15 @@ export default function Checkout() {
                     <button
                       type="button"
                       aria-label="계좌번호 복사"
-                      className="inline-flex h-7 items-center gap-1 rounded border px-2 text-xs hover:bg-accent"
+                      className="inline-flex h-7 items-center gap-1 rounded border border-red-300 bg-white px-2 text-xs text-red-700 hover:bg-red-100"
                       onClick={async () => {
                         try {
                           await navigator.clipboard.writeText(a.accountNumber);
-                          toast({ title: "복사됨", description: "계좌번호가 복사되었습니다" });
+                          toast({ title: "Хууллаа", description: "Дансны дугаар хууллаа" });
                         } catch {}
                       }}
                     >
-                      <Copy className="h-3.5 w-3.5" /> 복사
+                      <Copy className="h-3.5 w-3.5" /> Хуулах
                     </button>
                   </div>
                 </li>
