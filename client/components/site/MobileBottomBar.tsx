@@ -33,28 +33,30 @@ export default function MobileBottomBar() {
 
   return (
     <nav
-      className="md:hidden fixed inset-x-0 bottom-0 z-40 border-t bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="Доод навигаци"
     >
-      <div className="mx-auto flex h-16 max-w-screen-sm items-stretch">
+      <div className="mx-auto grid h-16 max-w-screen-sm grid-cols-4 items-stretch">
         <Item to="/" icon={<Home className="h-5 w-5" />} label="Нүүр" />
         <Item to="/catalog" icon={<Grid2x2 className="h-5 w-5" />} label="Ангилал" />
-        <div className="relative flex flex-1 items-stretch justify-center">
-          <Link
-            to="/cart"
-            className="relative flex flex-1 flex-col items-center justify-center gap-1 text-xs text-foreground/80 hover:text-foreground"
-            aria-label="Сагс"
-          >
-            <ShoppingCart className="h-5 w-5" />
-            <span>Сагс</span>
-            {cartCount > 0 && (
-              <span className="absolute left-1/2 top-1 -translate-x-1/2 min-w-4 h-4 rounded-full bg-primary px-1 text-[10px] leading-4 text-primary-foreground text-center">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-        </div>
+        <NavLink
+          to="/cart"
+          className={({ isActive }) =>
+            `relative flex flex-1 flex-col items-center justify-center gap-1 text-xs ${
+              isActive ? "text-primary" : "text-foreground/80 hover:text-foreground"
+            }`
+          }
+          aria-label="Сагс"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          <span>Сагс</span>
+          {cartCount > 0 && (
+            <span className="absolute left-1/2 top-1 -translate-x-1/2 min-w-4 h-4 rounded-full bg-primary px-1 text-[10px] leading-4 text-primary-foreground text-center">
+              {cartCount}
+            </span>
+          )}
+        </NavLink>
         <Item to={user ? "/mypage" : "/login"} icon={<User className="h-5 w-5" />} label={user ? "Миний" : "Нэвтрэх"} />
       </div>
     </nav>
