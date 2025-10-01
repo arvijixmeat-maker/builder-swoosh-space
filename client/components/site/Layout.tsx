@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Footer />
       <MobileBottomBar />
       {!getCurrentUser() && (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="hidden md:block fixed bottom-4 right-4 z-50">
           <Button asChild size="sm" variant="secondary" className="shadow-lg">
             <Link to="/login?redirect=/admin">АДМИН НЭВТРЭХ</Link>
           </Button>
