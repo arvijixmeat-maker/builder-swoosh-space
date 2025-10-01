@@ -216,7 +216,7 @@ export default function Checkout() {
 
         {accounts.length > 0 && (
           <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm">
-            <div className="font-medium mb-2">Бан��ны мэдээлэл</div>
+            <div className="font-medium mb-2">Банкны мэдээлэл</div>
             <ul className="space-y-2">
               {accounts.map((a, idx) => (
                 <li key={idx} className="flex items-start justify-between gap-3 rounded-md border border-red-200 bg-red-50 p-2">
