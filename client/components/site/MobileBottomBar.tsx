@@ -33,7 +33,7 @@ export default function MobileBottomBar() {
 
   return (
     <nav
-      className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="md:hidden fixed left-0 right-0 bottom-0 z-[100] border-t bg-background/90 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] backdrop-blur supports-[backdrop-filter]:bg-background/60"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="Доод навигаци"
     >
