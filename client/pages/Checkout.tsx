@@ -109,7 +109,7 @@ export default function Checkout() {
     setCart([]);
     toast({
       title: "Захиалга амжилттай",
-      description: "Захиалга тань бүртгэгдлээ",
+      description: "Захиалга тан�� бүртгэгдлээ",
     });
     navigate("/orders");
   };
@@ -121,7 +121,7 @@ export default function Checkout() {
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Төлбөр</h1>
             <p className="text-muted-foreground mt-1">
-              Захиалгын мэдээллээ баталгаажуул��а уу
+              Захиалгын мэдээллээ баталгаажуулна уу
             </p>
           </div>
           <Link
@@ -216,7 +216,7 @@ export default function Checkout() {
 
         {accounts.length > 0 && (
           <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm">
-            <div className="font-medium mb-2">무통입금 계좌</div>
+            <div className="font-medium mb-2">Бан��ны мэдээлэл</div>
             <ul className="space-y-2">
               {accounts.map((a, idx) => (
                 <li key={idx} className="flex items-start justify-between gap-3 rounded-md border border-red-200 bg-red-50 p-2">
