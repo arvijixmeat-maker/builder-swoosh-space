@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { getBanners, setBanners, type Banner } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, ArrowUp, ArrowDown, Plus } from "lucide-react";
+import { convertImageFileToWebpDataUrl } from "@/lib/image";
 
 export default function AdminBanners() {
   const { toast } = useToast();
@@ -22,17 +23,11 @@ export default function AdminBanners() {
     return () => window.removeEventListener("banners-updated", reload as EventListener);
   }, []);
 
-  const toDataURL = (file: File) =>
-    new Promise<string>((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result));
-      reader.readAsDataURL(file);
-    });
 
   const add = async () => {
     try {
       let img: string | null = null;
-      if (imageFile) img = await toDataURL(imageFile);
+      if (imageFile) img = await convertImageFileToWebpDataUrl(imageFile, 0.9);
       else if (imageUrl.trim()) img = imageUrl.trim();
       if (!img) {
         toast({ title: "Зураг сонгоно уу", description: "Файл эсв��л зураг URL" });
