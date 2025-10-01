@@ -230,7 +230,7 @@ export default function Index() {
       <section id="featured" className="container mx-auto px-4 pb-10 md:pb-14">
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold">Онцлох бүтээгдэхүүн</h2>
+            <h2 className="text-xl md:text-2xl font-bold">Онцлох бүтээгдэхүү��</h2>
             <p className="text-muted-foreground text-sm md:text-base">Шинээр нэмэгдсэн ба хамгийн их зарагддаг бараанууд</p>
           </div>
           <div className="flex items-center gap-2">
@@ -242,20 +242,11 @@ export default function Index() {
             </Link>
           </div>
         </div>
-        {/* Mobile: 3x3 grid per viewport with horizontal scroll */}
-        <div className="md:hidden -mx-4 px-4 overflow-x-auto">
-          <div className="grid grid-rows-3 grid-flow-col auto-cols-[33.333%] gap-3 snap-x">
-            {allProducts.map((p) => (
-              <div key={p.id} className="snap-start">
-                <ProductCard product={p} />
-              </div>
-            ))}
-            <Link to="/catalog" className="snap-start">
-              <div className="h-full rounded-xl border bg-card grid place-items-center p-3 text-center text-sm font-medium">
-                Бүгдийг харах →
-              </div>
-            </Link>
-          </div>
+        {/* Mobile: simple vertical grid (PC-style cards), no horizontal scroll */}
+        <div className="md:hidden grid grid-cols-2 gap-3">
+          {allProducts.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
         </div>
 
         {/* Desktop+ grid */}
@@ -300,7 +291,7 @@ export default function Index() {
           <div className="rounded-lg border bg-card p-6">
             <h3 className="font-semibold">Хурдан хүргэлт</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Улаанбаатар хотод 24-48 цагийн дотор
+              Улаанбаатар хото�� 24-48 цагийн дотор
             </p>
           </div>
           <div className="rounded-lg border bg-card p-6">
