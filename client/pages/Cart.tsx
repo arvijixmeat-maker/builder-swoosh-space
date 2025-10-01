@@ -204,7 +204,7 @@ export default function Cart() {
 
       <div className="mt-6 space-y-1">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">Дэд дүн</div>
+          <div className="text-sm text-muted-foreground">Үндсэн үнэ</div>
           <div className="text-xl font-bold">{format(subtotal)}</div>
         </div>
         <div className="flex items-center justify-between">
