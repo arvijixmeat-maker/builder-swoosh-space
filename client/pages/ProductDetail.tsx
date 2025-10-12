@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
 import { getCart, setCart, getCurrentUser, getSettings } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +24,7 @@ export default function ProductDetail() {
   const [size, setSize] = useState<string | undefined>(() =>
     product?.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined,
   );
+  const [settings, setSettingsState] = useState(getSettings());
 
   if (!product) {
     return (
@@ -129,6 +130,16 @@ export default function ProductDetail() {
 
   const dec = () => setQty((q) => Math.max(1, q - 1));
   const inc = () => setQty((q) => Math.min(99, q + 1));
+
+  useEffect(() => {
+    const reload = () => setSettingsState(getSettings());
+    window.addEventListener("settings-updated", reload as EventListener);
+    window.addEventListener("storage", reload);
+    return () => {
+      window.removeEventListener("settings-updated", reload as EventListener);
+      window.removeEventListener("storage", reload);
+    };
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -267,24 +278,39 @@ export default function ProductDetail() {
           <AccordionItem value="details">
             <AccordionTrigger>Дэлгэрэнгүй тайлбар</AccordionTrigger>
             <AccordionContent>
-              Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд
-              өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны
-              сервисийн дэ��жлэгт��й.
+              {settings.productDetailsText && settings.productDetailsText.trim().length > 0 ? (
+                <div className="whitespace-pre-line">{settings.productDetailsText}</div>
+              ) : (
+                <>
+                  Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд
+                  өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны
+                  сервисийн дэмжлэгтэй.
+                </>
+              )}
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="specs">
             <AccordionTrigger>Үзүүлэлт</AccordionTrigger>
             <AccordionContent>
-              - М��териал: Пластик/Мета��л
-              <br />- Баталгаат хугацаа: 12 сар
-              <br />- Хүргэлт: УБ хот дотор 24–48 цаг
+              {settings.productSpecsText && settings.productSpecsText.trim().length > 0 ? (
+                <div className="whitespace-pre-line">{settings.productSpecsText}</div>
+              ) : (
+                <>
+                  - Материал: Пластик/Металл
+                  <br />- Баталгаат хугацаа: 12 сар
+                  <br />- Хүргэлт: УБ хот дотор 24–48 цаг
+                </>
+              )}
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="shipping">
             <AccordionTrigger>Хүргэлт ба буцаалт</AccordionTrigger>
             <AccordionContent>
-              Хүргэлтийн нөхцөл, буцаалтын бодлого хэрэглэгчийг хамгаалсан
-              найдвартай журмаар хэрэгжинэ.
+              {settings.shippingReturnText && settings.shippingReturnText.trim().length > 0 ? (
+                <div className="whitespace-pre-line">{settings.shippingReturnText}</div>
+              ) : (
+                <>Хүргэлтийн нөхцөл, буцаалтын бодлого хэрэглэгчийг хамгаалсан на��двартай журмаар хэрэгжинэ.</>
+              )}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
