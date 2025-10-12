@@ -2,6 +2,14 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ShoppingCart, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { getCurrentUser, logoutUser, getCategories, getCart } from "@/data/store";
 
 export default function Header() {
@@ -92,34 +100,43 @@ export default function Header() {
 
         </nav>
 
-        <div className="flex items-center gap-4">
-          {user ? (
-            <>
-
-              <Link
-                to="/mypage"
-                className="hidden md:inline text-sm text-foreground inline-flex items-center gap-1"
-              >
-                <User className="h-5 w-5" /> {user.name.split(" ")[0]}
-              </Link>
-              <Button variant="ghost" size="sm" onClick={logout}>
-                Гарах
+        <div className="flex items-center gap-2 md:gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Хэрэглэгч">
+                <User className="h-5 w-5" />
               </Button>
-            </>
-          ) : (
-            <>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              {user ? (
+                <>
+                  <DropdownMenuLabel>{user.name.split(" ")[0]}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/mypage" className="w-full">
+                      Миний хуудас
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout}>Гарах</DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link to="/login" className="w-full">
+                      Нэвтрэх
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/register" className="w-full">
+                      Бүртгүүлэх
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-              <Link
-                to="/login"
-                className="text-sm text-foreground/80 hover:text-foreground"
-              >
-                Нэвтрэх
-              </Link>
-              <Link to="/register" className="text-sm text-primary">
-                Бүртгүүлэх
-              </Link>
-            </>
-          )}
           <Button asChild variant="ghost" size="icon" aria-label="Сагс">
             <Link to="/cart" className="relative">
               <ShoppingCart className="h-5 w-5" />
