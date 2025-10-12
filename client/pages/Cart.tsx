@@ -87,7 +87,11 @@ export default function Cart() {
       <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Сагс</h1>
-          <p className="text-muted-foreground mt-1">Таны сонгосон бараанууд</p>
+          <div className="text-muted-foreground mt-1 hidden md:block">
+            <h1>Таны сонгосон бар��анууд</h1>
+            <h5></h5>
+            <h3></h3>
+          </div>
         </div>
         {items.length > 0 && (
           <Button variant="outline" onClick={clear}>
