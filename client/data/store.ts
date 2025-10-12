@@ -39,6 +39,9 @@ export interface BankAccount {
 export interface Settings {
   shippingFee: number; // flat fee
   bankAccounts: BankAccount[];
+  productDetailsText?: string; // default product details (accordion 1)
+  productSpecsText?: string; // default specs (accordion 2)
+  shippingReturnText?: string; // shipping/return policy (accordion 3)
 }
 
 export interface Banner {
@@ -147,13 +150,31 @@ export const setCart = (items: CartItem[]) => {
 export const getSettings = (): Settings => {
   try {
     const raw = localStorage.getItem(SETTINGS_KEY);
-    if (!raw) return { shippingFee: 0, bankAccounts: [] };
+    if (!raw)
+      return {
+        shippingFee: 0,
+        bankAccounts: [],
+        productDetailsText: "",
+        productSpecsText: "",
+        shippingReturnText: "",
+      };
     const parsed = JSON.parse(raw);
-    const fee = typeof parsed.shippingFee === "number" ? parsed.shippingFee : Number(parsed.shippingFee) || 0;
-    const accounts = Array.isArray(parsed.bankAccounts) ? parsed.bankAccounts : [];
-    return { shippingFee: Math.max(0, fee), bankAccounts: accounts } as Settings;
+    const fee =
+      typeof parsed.shippingFee === "number"
+        ? parsed.shippingFee
+        : Number(parsed.shippingFee) || 0;
+    const accounts = Array.isArray(parsed.bankAccounts)
+      ? parsed.bankAccounts
+      : [];
+    return {
+      shippingFee: Math.max(0, fee),
+      bankAccounts: accounts,
+      productDetailsText: typeof parsed.productDetailsText === "string" ? parsed.productDetailsText : "",
+      productSpecsText: typeof parsed.productSpecsText === "string" ? parsed.productSpecsText : "",
+      shippingReturnText: typeof parsed.shippingReturnText === "string" ? parsed.shippingReturnText : "",
+    } as Settings;
   } catch {
-    return { shippingFee: 0, bankAccounts: [] };
+    return { shippingFee: 0, bankAccounts: [], productDetailsText: "", productSpecsText: "", shippingReturnText: "" };
   }
 };
 export const setSettings = (settings: Settings) => {
@@ -166,10 +187,15 @@ export const setSettings = (settings: Settings) => {
         holder: a.holder?.trim() || "",
         note: a.note?.trim() || undefined,
       })),
+      productDetailsText: (settings.productDetailsText ?? "").toString(),
+      productSpecsText: (settings.productSpecsText ?? "").toString(),
+      shippingReturnText: (settings.shippingReturnText ?? "").toString(),
     };
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(payload));
   } finally {
-    try { window.dispatchEvent(new Event("settings-updated")); } catch {}
+    try {
+      window.dispatchEvent(new Event("settings-updated"));
+    } catch {}
   }
 };
 
