@@ -55,6 +55,8 @@ export default function Admin() {
     id: "",
     name: "",
     price: 0,
+    compareAtPrice: undefined,
+    couponPrice: undefined,
     image: "",
     images: [],
     category: "",
@@ -563,6 +565,30 @@ export default function Admin() {
                       }
                     />
                   </div>
+                  <div className="grid gap-2 md:grid-cols-2">
+                    <div className="grid gap-2">
+                      <Label htmlFor="compareAt">Хуучин үнэ (сонголттой)</Label>
+                      <Input
+                        id="compareAt"
+                        type="number"
+                        value={form.compareAtPrice ?? ""}
+                        onChange={(e) =>
+                          setForm({ ...form, compareAtPrice: e.target.value === "" ? undefined : Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="couponPrice">Купон үнэ (сонголттой)</Label>
+                      <Input
+                        id="couponPrice"
+                        type="number"
+                        value={form.couponPrice ?? ""}
+                        onChange={(e) =>
+                          setForm({ ...form, couponPrice: e.target.value === "" ? undefined : Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                  </div>
                   <div className="grid gap-2">
                     <Label htmlFor="category">Ангилал</Label>
                     <select
@@ -582,7 +608,7 @@ export default function Admin() {
                     </select>
                     {categories.length === 0 && (
                       <span className="text-xs text-muted-foreground">
-                        Эхлээд "Ангилал" хэсгээс категори нэмнэ үү.
+                        Эхлээд "Ангилал" хэсгээс категори нэмнэ ��ү.
                       </span>
                     )}
                   </div>
@@ -668,7 +694,7 @@ export default function Admin() {
                     )}
                   </div>
                   <div className="grid gap-2">
-                    <Label>Хэмжээ (сонголт)</Label>
+                    <Label>��эмжээ (сонголт)</Label>
                     <div className="flex flex-wrap gap-2">
                       {["XS","S","M","L","XL","XXL","35","36","37","38","39","40","41","42","43","44"].map((s) => {
                         const selected = (form.sizes || []).includes(s);
