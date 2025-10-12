@@ -106,7 +106,7 @@ export const getCart = (): CartItem[] => {
     // Support lightweight format [{id, qty}] as a fallback when full objects couldn't be saved
     if (parsed.length > 0 && parsed[0] && typeof parsed[0] === "object") {
       const first = parsed[0] as any;
-      if (!("name" in first) && ("id" in first) && ("qty" in first)) {
+      if (!("name" in first) && "id" in first && "qty" in first) {
         // Rehydrate from products list when possible
         const prods = getProductsLS<any>(PRODUCTS_KEY);
         return (parsed as Array<{ id: string; qty: number }>).map((p) => {
@@ -169,12 +169,27 @@ export const getSettings = (): Settings => {
     return {
       shippingFee: Math.max(0, fee),
       bankAccounts: accounts,
-      productDetailsText: typeof parsed.productDetailsText === "string" ? parsed.productDetailsText : "",
-      productSpecsText: typeof parsed.productSpecsText === "string" ? parsed.productSpecsText : "",
-      shippingReturnText: typeof parsed.shippingReturnText === "string" ? parsed.shippingReturnText : "",
+      productDetailsText:
+        typeof parsed.productDetailsText === "string"
+          ? parsed.productDetailsText
+          : "",
+      productSpecsText:
+        typeof parsed.productSpecsText === "string"
+          ? parsed.productSpecsText
+          : "",
+      shippingReturnText:
+        typeof parsed.shippingReturnText === "string"
+          ? parsed.shippingReturnText
+          : "",
     } as Settings;
   } catch {
-    return { shippingFee: 0, bankAccounts: [], productDetailsText: "", productSpecsText: "", shippingReturnText: "" };
+    return {
+      shippingFee: 0,
+      bankAccounts: [],
+      productDetailsText: "",
+      productSpecsText: "",
+      shippingReturnText: "",
+    };
   }
 };
 export const setSettings = (settings: Settings) => {
@@ -209,7 +224,9 @@ export const getBanners = (): Banner[] => {
 };
 export const setBanners = (banners: Banner[]) => {
   localStorage.setItem(BANNERS_KEY, JSON.stringify(banners));
-  try { window.dispatchEvent(new Event("banners-updated")); } catch {}
+  try {
+    window.dispatchEvent(new Event("banners-updated"));
+  } catch {}
 };
 
 export const getOrders = (): Order[] => {
@@ -248,7 +265,13 @@ export const getOrders = (): Order[] => {
       // if items are simple {id, qty}, rehydrate
       if (Array.isArray(o.items) && o.items.length > 0) {
         const first = o.items[0];
-        if (first && typeof first === "object" && !("name" in first) && ("id" in first) && ("qty" in first)) {
+        if (
+          first &&
+          typeof first === "object" &&
+          !("name" in first) &&
+          "id" in first &&
+          "qty" in first
+        ) {
           const prods = getProductsLS<any>(PRODUCTS_KEY);
           base.items = o.items.map((it: { id: string; qty: number }) => {
             const prod = prods.find((p) => p.id === it.id);
@@ -409,7 +432,9 @@ export const seedDefaultAdmin = () => {
     );
     if (idx >= 0) {
       if (!existing[idx].isAdmin) {
-        const next = existing.map((u, i) => (i === idx ? { ...u, isAdmin: true } : u));
+        const next = existing.map((u, i) =>
+          i === idx ? { ...u, isAdmin: true } : u,
+        );
         setUsers(next);
       }
       return;

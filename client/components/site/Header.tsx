@@ -10,7 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getCurrentUser, logoutUser, getCategories, getCart } from "@/data/store";
+import {
+  getCurrentUser,
+  logoutUser,
+  getCategories,
+  getCart,
+} from "@/data/store";
 
 export default function Header() {
   const user = getCurrentUser();
@@ -44,7 +49,10 @@ export default function Header() {
     window.addEventListener("cart-updated", updateCart as EventListener);
     return () => {
       window.removeEventListener("storage", updateCats);
-      window.removeEventListener("categories-updated", updateCats as EventListener);
+      window.removeEventListener(
+        "categories-updated",
+        updateCats as EventListener,
+      );
       window.removeEventListener("storage", updateCart);
       window.removeEventListener("cart-updated", updateCart as EventListener);
     };
@@ -96,8 +104,6 @@ export default function Header() {
           >
             Ангилал
           </NavLink>
-
-
         </nav>
 
         <div className="flex items-center gap-2 md:gap-4">
@@ -110,7 +116,9 @@ export default function Header() {
             <DropdownMenuContent align="end" className="w-44">
               {user ? (
                 <>
-                  <DropdownMenuLabel>{user.name.split(" ")[0]}</DropdownMenuLabel>
+                  <DropdownMenuLabel>
+                    {user.name.split(" ")[0]}
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/mypage" className="w-full">
@@ -187,7 +195,6 @@ export default function Header() {
             >
               Ангилал
             </NavLink>
-
 
             <NavLink
               to="/cart"

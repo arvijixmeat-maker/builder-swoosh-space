@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard, { type Product } from "@/components/site/ProductCard";
 import { products as seedProducts } from "@/data/products";
-import { getCategories, getProductsLS, PRODUCTS_KEY, getBanners, type Banner } from "@/data/store";
+import {
+  getCategories,
+  getProductsLS,
+  PRODUCTS_KEY,
+  getBanners,
+  type Banner,
+} from "@/data/store";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -59,7 +65,9 @@ export default function Index() {
     const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
     emblaApi.on("select", onSelect);
     return () => {
-      try { emblaApi.off("select", onSelect); } catch {}
+      try {
+        emblaApi.off("select", onSelect);
+      } catch {}
     };
   }, [emblaApi]);
 
@@ -138,7 +146,11 @@ export default function Index() {
                                 )}
                                 {b.link && (
                                   <div className="mt-6">
-                                    <Button asChild size="lg" className="shadow">
+                                    <Button
+                                      asChild
+                                      size="lg"
+                                      className="shadow"
+                                    >
                                       <Link to={b.link}>Дэлгэрэнгүй харах</Link>
                                     </Button>
                                   </div>
@@ -183,7 +195,9 @@ export default function Index() {
                     aria-label={`Slide ${i + 1}`}
                     onClick={() => emblaApi?.scrollTo(i)}
                     className={`h-2.5 w-2.5 rounded-full transition ${
-                      selectedIndex === i ? "bg-primary" : "bg-white/50 hover:bg-white/80"
+                      selectedIndex === i
+                        ? "bg-primary"
+                        : "bg-white/50 hover:bg-white/80"
                     }`}
                   />
                 ))}
@@ -201,11 +215,12 @@ export default function Index() {
                 дээрх онлайн дэлгүүр
               </span>
               <h1 className="mt-4 text-3xl md:text-5xl font-extrabолд leading-tight tracking-tight">
-                Талын Маркет — Монгол хэрэглэгчдэд зориулсан бүх төрлийн худалдаа
+                Талын Маркет — Монгол хэрэглэгчдэд зориулсан бүх төрлийн
+                худалдаа
               </h1>
               <p className="mt-3 md:mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
-                Албан ёсны брэндүүд, баталгаат бараа, хурдан хүргэлт. Та хэрэгтэй
-                бүхнээ нэг газраас.
+                Албан ёсны брэндүүд, баталгаат бараа, хурдан хүргэлт. Та
+                хэрэгтэй бүхнээ нэг газраас.
               </p>
               <div className="mt-6 flex items-center gap-3">
                 <Link
@@ -230,14 +245,24 @@ export default function Index() {
       <section id="featured" className="container mx-auto px-4 pb-10 md:pb-14">
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold">Онцлох бүтээгдэхүүн</h2>
-            <p className="text-muted-foreground text-sm md:text-base">Шинээр нэмэгдсэн ба хамгийн их зарагддаг бараанууд</p>
+            <h2 className="text-xl md:text-2xl font-bold">
+              Онцлох бүтээгдэхүүн
+            </h2>
+            <p className="text-muted-foreground text-sm md:text-base">
+              Шинээр нэмэгдсэн ба хамгийн их зарагддаг бараанууд
+            </p>
           </div>
           <div className="flex items-center gap-2">
-            <Link to="/catalog" className="inline md:hidden rounded-full border px-3 py-1 text-xs">
+            <Link
+              to="/catalog"
+              className="inline md:hidden rounded-full border px-3 py-1 text-xs"
+            >
               더보기
             </Link>
-            <Link to="/catalog" className="hidden md:inline text-sm text-primary underline underline-offset-4">
+            <Link
+              to="/catalog"
+              className="hidden md:inline text-sm text-primary underline underline-offset-4"
+            >
               Бүгдийг харах
             </Link>
           </div>
@@ -249,7 +274,10 @@ export default function Index() {
           ))}
         </div>
         <div className="md:hidden mt-4 flex justify-center">
-          <Link to="/catalog" className="inline-flex items-center justify-center rounded-full border px-5 py-2 text-sm">
+          <Link
+            to="/catalog"
+            className="inline-flex items-center justify-center rounded-full border px-5 py-2 text-sm"
+          >
             ���보기
           </Link>
         </div>

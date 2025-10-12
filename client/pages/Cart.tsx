@@ -10,14 +10,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getCart, setCart, type CartItem, getCurrentUser, getSettings } from "@/data/store";
+import {
+  getCart,
+  setCart,
+  type CartItem,
+  getCurrentUser,
+  getSettings,
+} from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Cart() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [items, setItems] = useState<CartItem[]>(getCart());
-  const [shippingFee, setShippingFee] = useState<number>(getSettings().shippingFee);
+  const [shippingFee, setShippingFee] = useState<number>(
+    getSettings().shippingFee,
+  );
 
   useEffect(() => {
     const update = () => {
@@ -34,11 +42,17 @@ export default function Cart() {
     window.addEventListener("storage", update);
     window.addEventListener("cart-updated", update as EventListener);
     const updateSettings = () => setShippingFee(getSettings().shippingFee);
-    window.addEventListener("settings-updated", updateSettings as EventListener);
+    window.addEventListener(
+      "settings-updated",
+      updateSettings as EventListener,
+    );
     return () => {
       window.removeEventListener("storage", update);
       window.removeEventListener("cart-updated", update as EventListener);
-      window.removeEventListener("settings-updated", updateSettings as EventListener);
+      window.removeEventListener(
+        "settings-updated",
+        updateSettings as EventListener,
+      );
     };
   }, []);
 
@@ -56,7 +70,10 @@ export default function Cart() {
     () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
     [items],
   );
-  const shipping = useMemo(() => (items.length > 0 ? Math.max(0, shippingFee) : 0), [items, shippingFee]);
+  const shipping = useMemo(
+    () => (items.length > 0 ? Math.max(0, shippingFee) : 0),
+    [items, shippingFee],
+  );
   const grand = useMemo(() => subtotal + shipping, [subtotal, shipping]);
 
   const inc = (id: string) =>
@@ -104,7 +121,11 @@ export default function Cart() {
       <div className="md:hidden grid gap-3">
         {items.map((i) => (
           <div key={i.id} className="rounded-md border bg-card p-3 flex gap-3">
-            <img src={i.image} alt={i.name} className="h-16 w-16 rounded object-cover" />
+            <img
+              src={i.image}
+              alt={i.name}
+              className="h-16 w-16 rounded object-cover"
+            />
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
@@ -117,16 +138,36 @@ export default function Cart() {
                     </div>
                   )}
                 </div>
-                <Button variant="destructive" size="sm" onClick={() => remove(i.id)}>Устгах</Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => remove(i.id)}
+                >
+                  Устгах
+                </Button>
               </div>
               <div className="mt-2 flex items-center justify-between">
                 <div className="inline-flex items-center rounded-md border bg-background">
-                  <button aria-label="Хасах" className="px-3 py-2" onClick={() => dec(i.id)}>−</button>
+                  <button
+                    aria-label="Хасах"
+                    className="px-3 py-2"
+                    onClick={() => dec(i.id)}
+                  >
+                    −
+                  </button>
                   <span className="min-w-10 text-center">{i.qty}</span>
-                  <button aria-label="Нэмэх" className="px-3 py-2" onClick={() => inc(i.id)}>+</button>
+                  <button
+                    aria-label="Нэмэх"
+                    className="px-3 py-2"
+                    onClick={() => inc(i.id)}
+                  >
+                    +
+                  </button>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs text-muted-foreground">{format(i.price)} × {i.qty}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {format(i.price)} × {i.qty}
+                  </div>
                   <div className="font-semibold">{format(i.price * i.qty)}</div>
                 </div>
               </div>
@@ -134,7 +175,9 @@ export default function Cart() {
           </div>
         ))}
         {items.length === 0 && (
-          <div className="text-sm text-muted-foreground">Сагс хоосон байна.</div>
+          <div className="text-sm text-muted-foreground">
+            Сагс хоосон байна.
+          </div>
         )}
       </div>
 
@@ -202,7 +245,9 @@ export default function Cart() {
               </TableRow>
             ))}
           </TableBody>
-          {items.length === 0 && <TableCaption>Сагс хоосон байна.</TableCaption>}
+          {items.length === 0 && (
+            <TableCaption>Сагс хоосон байна.</TableCaption>
+          )}
         </Table>
       </div>
 

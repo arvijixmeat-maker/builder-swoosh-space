@@ -19,7 +19,9 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [imgIdx, setImgIdx] = useState(0);
   const [color, setColor] = useState<string | undefined>(() =>
-    product?.colors && product.colors.length > 0 ? product.colors[0] : undefined,
+    product?.colors && product.colors.length > 0
+      ? product.colors[0]
+      : undefined,
   );
   const [size, setSize] = useState<string | undefined>(() =>
     product?.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined,
@@ -52,9 +54,8 @@ export default function ProductDetail() {
     return true;
   };
 
-  const lineId = (pid: string) => `${pid}${color ? `-c:${color}` : ""}${
-    size ? `-s:${size}` : ""
-  }`;
+  const lineId = (pid: string) =>
+    `${pid}${color ? `-c:${color}` : ""}${size ? `-s:${size}` : ""}`;
 
   const addToCart = () => {
     if (!ensureSelections()) return;
@@ -82,7 +83,10 @@ export default function ProductDetail() {
       ];
     }
     setCart(next);
-    const opt = [color ? `ө��г: ${color}` : null, size ? `хэмжээ: ${size}` : null]
+    const opt = [
+      color ? `ө��г: ${color}` : null,
+      size ? `хэмжээ: ${size}` : null,
+    ]
       .filter(Boolean)
       .join(", ");
     toast({
@@ -278,13 +282,16 @@ export default function ProductDetail() {
           <AccordionItem value="details">
             <AccordionTrigger>Дэлгэрэнгүй тайлбар</AccordionTrigger>
             <AccordionContent>
-              {settings.productDetailsText && settings.productDetailsText.trim().length > 0 ? (
-                <div className="whitespace-pre-line">{settings.productDetailsText}</div>
+              {settings.productDetailsText &&
+              settings.productDetailsText.trim().length > 0 ? (
+                <div className="whitespace-pre-line">
+                  {settings.productDetailsText}
+                </div>
               ) : (
                 <>
-                  Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн бөгөөд
-                  өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа, албан ёсны
-                  сервисийн дэмжлэгтэй.
+                  Энэхүү бүтээгдэхүүн нь өндөр чанарын материалаар хийгдсэн
+                  бөгөөд өдөр тутмын хэрэглээнд тохиромжтой. Баталгаат хугацаа,
+                  албан ёсны сервисийн дэмжлэгтэй.
                 </>
               )}
             </AccordionContent>
@@ -292,8 +299,11 @@ export default function ProductDetail() {
           <AccordionItem value="specs">
             <AccordionTrigger>Үзүүлэлт</AccordionTrigger>
             <AccordionContent>
-              {settings.productSpecsText && settings.productSpecsText.trim().length > 0 ? (
-                <div className="whitespace-pre-line">{settings.productSpecsText}</div>
+              {settings.productSpecsText &&
+              settings.productSpecsText.trim().length > 0 ? (
+                <div className="whitespace-pre-line">
+                  {settings.productSpecsText}
+                </div>
               ) : (
                 <>
                   - Материал: Пластик/Металл
@@ -306,10 +316,16 @@ export default function ProductDetail() {
           <AccordionItem value="shipping">
             <AccordionTrigger>Хүргэлт ба буцаалт</AccordionTrigger>
             <AccordionContent>
-              {settings.shippingReturnText && settings.shippingReturnText.trim().length > 0 ? (
-                <div className="whitespace-pre-line">{settings.shippingReturnText}</div>
+              {settings.shippingReturnText &&
+              settings.shippingReturnText.trim().length > 0 ? (
+                <div className="whitespace-pre-line">
+                  {settings.shippingReturnText}
+                </div>
               ) : (
-                <>Хүргэлтийн нөхцөл, буцаалтын бодлого хэрэглэгчийг хамгаалсан найдвартай журмаар хэрэгжинэ.</>
+                <>
+                  Хүргэлтийн нөхцөл, буцаалтын бодлого хэрэглэгчийг хамгаалсан
+                  найдвартай журмаар хэрэгжинэ.
+                </>
               )}
             </AccordionContent>
           </AccordionItem>
