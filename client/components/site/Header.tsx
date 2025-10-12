@@ -195,7 +195,6 @@ export default function Header() {
             >
               Ангилал
             </NavLink>
-
           </div>
         </div>
       </div>
