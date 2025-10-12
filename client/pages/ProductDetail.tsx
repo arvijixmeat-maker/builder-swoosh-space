@@ -266,7 +266,7 @@ export default function ProductDetail() {
             <Button className="px-6" onClick={addToCart}>
               Сагсанд нэмэх
             </Button>
-            <Button variant="secondary" className="px-6" onClick={buyNow}>
+            <Button className="px-6" onClick={buyNow}>
               Одоо худалдаж авах
             </Button>
           </div>
@@ -309,7 +309,7 @@ export default function ProductDetail() {
               {settings.shippingReturnText && settings.shippingReturnText.trim().length > 0 ? (
                 <div className="whitespace-pre-line">{settings.shippingReturnText}</div>
               ) : (
-                <>Хүргэлтийн нөхцөл, буцаалтын бодлого хэрэглэгчийг хамгаалсан на��двартай журмаар хэрэгжинэ.</>
+                <>Хүргэлтийн нөхцөл, буцаалтын бодлого хэрэглэгчийг хамгаалсан найдвартай журмаар хэрэгжинэ.</>
               )}
             </AccordionContent>
           </AccordionItem>
