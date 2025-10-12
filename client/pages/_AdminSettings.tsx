@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { getSettings, setSettings, type BankAccount, type Settings } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,12 +15,18 @@ export default function SettingsPanel() {
   const [holder, setHolder] = useState("");
   const [note, setNote] = useState("");
   const [accounts, setAccounts] = useState<BankAccount[]>(getSettings().bankAccounts);
+  const [detailsText, setDetailsText] = useState<string>(getSettings().productDetailsText || "");
+  const [specsText, setSpecsText] = useState<string>(getSettings().productSpecsText || "");
+  const [shippingText, setShippingText] = useState<string>(getSettings().shippingReturnText || "");
 
   useEffect(() => {
     const reload = () => {
       const s = getSettings();
       setShippingFee(s.shippingFee);
       setAccounts(s.bankAccounts);
+      setDetailsText(s.productDetailsText || "");
+      setSpecsText(s.productSpecsText || "");
+      setShippingText(s.shippingReturnText || "");
     };
     window.addEventListener("settings-updated", reload as EventListener);
     return () => window.removeEventListener("settings-updated", reload as EventListener);
@@ -30,6 +37,18 @@ export default function SettingsPanel() {
     const next: Settings = { ...s, shippingFee: Math.max(0, Number(shippingFee) || 0) };
     setSettings(next);
     toast({ title: "Хүргэлтийн төлбөр шинэчлэгдлээ" });
+  };
+
+  const saveTexts = () => {
+    const s = getSettings();
+    const next: Settings = {
+      ...s,
+      productDetailsText: detailsText,
+      productSpecsText: specsText,
+      shippingReturnText: shippingText,
+    };
+    setSettings(next);
+    toast({ title: "Бүтээгдэхүүний мэдээллийн текстүүд шинэчлэгдлээ" });
   };
 
   const addAccount = () => {
@@ -75,6 +94,29 @@ export default function SettingsPanel() {
 
       <Card>
         <CardHeader>
+          <CardTitle>Бүтээгдэхүүний мэдээлэл (Accordion) текстүүд</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-3">
+          <div className="grid gap-1">
+            <Label htmlFor="detailsText">Дэлгэрэнгүй тайлбар</Label>
+            <Textarea id="detailsText" value={detailsText} onChange={(e) => setDetailsText(e.target.value)} placeholder="Бүтээгдэхүүний дэлгэрэнгүй тайлбар..." />
+          </div>
+          <div className="grid gap-1">
+            <Label htmlFor="specsText">Үзүүлэлт</Label>
+            <Textarea id="specsText" value={specsText} onChange={(e) => setSpecsText(e.target.value)} placeholder="Үзүүлэлтүүд..." />
+          </div>
+          <div className="grid gap-1">
+            <Label htmlFor="shippingText">Хүргэлт ба буцаалт</Label>
+            <Textarea id="shippingText" value={shippingText} onChange={(e) => setShippingText(e.target.value)} placeholder="Хүргэлт, буцаалтын нөхцөл..." />
+          </div>
+          <div>
+            <Button onClick={saveTexts}>Текстүүд хадгалах</Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Банк шилжүүлгийн данс удирдах</CardTitle>
         </CardHeader>
         <CardContent>
@@ -115,7 +157,7 @@ export default function SettingsPanel() {
               </div>
             ))}
             {accounts.length === 0 && (
-              <div className="text-sm text-muted-foreground">Одоогоор бүртгэлтэй данс алга.</div>
+              <div className="text-sm text-muted-foreground">��доогоор бүртгэлтэй данс алга.</div>
             )}
           </div>
         </CardContent>
