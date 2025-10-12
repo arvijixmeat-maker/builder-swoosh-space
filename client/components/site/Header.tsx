@@ -196,16 +196,6 @@ export default function Header() {
               Ангилал
             </NavLink>
 
-            <NavLink
-              to="/cart"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-primary"
-                  : "text-foreground/80 hover:text-foreground"
-              }
-            >
-              Сагс
-            </NavLink>
           </div>
         </div>
       </div>
