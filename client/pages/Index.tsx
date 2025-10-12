@@ -250,7 +250,7 @@ export default function Index() {
         </div>
         <div className="md:hidden mt-4 flex justify-center">
           <Link to="/catalog" className="inline-flex items-center justify-center rounded-full border px-5 py-2 text-sm">
-            더보기
+            ���보기
           </Link>
         </div>
 
@@ -279,7 +279,12 @@ export default function Index() {
                     Бүгдийг харах
                   </Link>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 gap-3 md:hidden">
+                  {list.map((p) => (
+                    <ProductCard key={p.id} product={p} compact />
+                  ))}
+                </div>
+                <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                   {list.map((p) => (
                     <ProductCard key={p.id} product={p} />
                   ))}
