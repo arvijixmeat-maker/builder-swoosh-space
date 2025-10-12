@@ -1,13 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  ShoppingCart,
-  Search,
-  TentTree,
-  Heart,
-  User,
-  Menu,
-} from "lucide-react";
+import { ShoppingCart, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser, logoutUser, getCategories, getCart } from "@/data/store";
 
@@ -53,9 +46,13 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-extrabold text-xl">
-          <TentTree className="h-6 w-6 text-primary" />
-          <span>Талын Маркет</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets%2F20bb325d07124ff1b740216a070177ed%2F3f2bf1d38ff445bba2a5998b407ec614?format=webp&width=800"
+            alt="Талын Маркет лого"
+            className="h-8 w-auto"
+            decoding="async"
+          />
         </Link>
 
         <div className="hidden md:flex items-center gap-1 rounded-md border px-2 py-1.5 w-full max-w-xl bg-card">
