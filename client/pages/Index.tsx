@@ -257,7 +257,7 @@ export default function Index() {
               to="/catalog"
               className="inline md:hidden rounded-full border px-3 py-1 text-xs"
             >
-              더보기
+              Дэлгэрэнгүй харах
             </Link>
             <Link
               to="/catalog"
@@ -278,7 +278,7 @@ export default function Index() {
             to="/catalog"
             className="inline-flex items-center justify-center rounded-full border px-5 py-2 text-sm"
           >
-            ���보기
+            Дэлгэрэнгүй харах
           </Link>
         </div>
 
