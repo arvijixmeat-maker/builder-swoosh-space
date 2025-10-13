@@ -55,7 +55,7 @@ export const products: Product[] = [
   },
   {
     id: "8",
-    name: "Ноолууран цамц эр��гтэй",
+    name: "Ноолууран цамц эрэгтэй",
     price: 219000,
     image:
       "https://images.unsplash.com/photo-1610030469983-a9c5f8f0f84d?q=80&w=1200&auto=format&fit=crop",
