@@ -229,13 +229,7 @@ export default function Index() {
             </h2>
           </div>
           <div className="flex items-center gap-2">
-            <Link to="/catalog" className="hidden">
-              Дэлгэрэнгүй харах
-            </Link>
-            <Link
-              to="/catalog"
-              className="hidden md:inline text-sm text-primary underline underline-offset-4"
-            >
+            <Link to="/catalog" className="text-sm text-primary underline underline-offset-4">
               Бүгдийг харах
             </Link>
           </div>
@@ -245,14 +239,6 @@ export default function Index() {
           {allProducts.slice(0, 6).map((p) => (
             <ProductCard key={p.id} product={p} compact />
           ))}
-        </div>
-        <div className="md:hidden mt-4 flex justify-center">
-          <Link
-            to="/catalog"
-            className="inline-flex items-center justify-center rounded-full border px-5 py-2 text-sm"
-          >
-            Дэлгэрэнгүй харах
-          </Link>
         </div>
 
         {/* Desktop+ grid */}
