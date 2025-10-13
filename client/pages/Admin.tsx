@@ -534,7 +534,7 @@ export default function Admin() {
                         <SelectContent align="end">
                           <SelectItem value="unpaid">Төлбөр төлөгдөөгүй</SelectItem>
                           <SelectItem value="paid">Төлбөр төлөгдсөн</SelectItem>
-                          <SelectItem value="shipping">Хүргэлт хийгдэж б��йна</SelectItem>
+                          <SelectItem value="shipping">Хүргэлт хийгдэж байна</SelectItem>
                           <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
                         </SelectContent>
                       </Select>
@@ -555,31 +555,50 @@ export default function Admin() {
               <CardTitle>Хэрэглэгчид</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Огноо</TableHead>
-                    <TableHead>Нэр</TableHead>
-                    <TableHead>И-мэйл</TableHead>
-                    <TableHead>Утас</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((u) => (
-                    <TableRow key={u.id}>
-                      <TableCell>
-                        {new Date(u.createdAt).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>{u.name}</TableCell>
-                      <TableCell>{u.email}</TableCell>
-                      <TableCell>{u.phone}</TableCell>
+              <div className="hidden md:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Огноо</TableHead>
+                      <TableHead>Нэр</TableHead>
+                      <TableHead>И-мэйл</TableHead>
+                      <TableHead>Утас</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((u) => (
+                      <TableRow key={u.id}>
+                        <TableCell>
+                          {new Date(u.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>{u.name}</TableCell>
+                        <TableCell>{u.email}</TableCell>
+                        <TableCell>{u.phone}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  {users.length === 0 && (
+                    <TableCaption>Одоогоор хэрэглэгч бүртгэлгүй.</TableCaption>
+                  )}
+                </Table>
+              </div>
+              <div className="md:hidden grid gap-3">
+                {users.map((u) => (
+                  <div key={u.id} className="rounded-lg border bg-card p-3 text-sm">
+                    <div className="font-medium">{u.name}</div>
+                    <div className="text-xs text-muted-foreground">{new Date(u.createdAt).toLocaleDateString()}</div>
+                    <div className="mt-1 grid grid-cols-3 gap-2">
+                      <div className="col-span-1 text-muted-foreground">И-мэйл</div>
+                      <div className="col-span-2 break-all">{u.email}</div>
+                      <div className="col-span-1 text-muted-foreground">Утас</div>
+                      <div className="col-span-2">{u.phone}</div>
+                    </div>
+                  </div>
+                ))}
                 {users.length === 0 && (
-                  <TableCaption>Одоогоор хэрэглэгч бүртгэлгүй.</TableCaption>
+                  <div className="text-sm text-muted-foreground">Одоогоор хэрэглэгч бүртгэлгүй.</div>
                 )}
-              </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -602,7 +621,7 @@ export default function Admin() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>
-                        {editing ? "Бүтээгдэхүүн засах" : "Шинэ бүтээгдэхүүн"}
+                        {editing ? "Бүтээгдэхүүн засах" : "��инэ бүтээгдэхүүн"}
                       </DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4">
@@ -686,7 +705,7 @@ export default function Admin() {
                         </select>
                         {categories.length === 0 && (
                           <span className="text-xs text-muted-foreground">
-                            Эхлээд "Ангилал" хэсгээс категори нэмнэ үү.
+                            Эхлээд "Ангилал" хэсгээс кате��ори нэмнэ үү.
                           </span>
                         )}
                       </div>
