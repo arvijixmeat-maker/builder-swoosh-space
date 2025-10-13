@@ -10,11 +10,7 @@ import { convertImageFileToWebpDataUrl } from "@/lib/image";
 
 export default function AdminBanners() {
   const { toast } = useToast();
-  const [title, setTitle] = useState("");
-  const [subtitle, setSubtitle] = useState("");
-  const [link, setLink] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState("");
   const [items, setItems] = useState<Banner[]>(getBanners());
 
   useEffect(() => {
@@ -26,31 +22,22 @@ export default function AdminBanners() {
 
   const add = async () => {
     try {
-      let img: string | null = null;
-      if (imageFile) img = await convertImageFileToWebpDataUrl(imageFile, 0.9);
-      else if (imageUrl.trim()) img = imageUrl.trim();
-      if (!img) {
+      if (!imageFile) {
         toast({
-          title: "Зураг сонго��о уу",
-          description: "Файл эсвэл зураг URL",
+          title: "Зураг сонгоно уу",
+          description: "Файл сонгоно уу",
         });
         return;
       }
+      const img = await convertImageFileToWebpDataUrl(imageFile, 0.9);
       const next: Banner = {
         id: (crypto as any)?.randomUUID?.() || String(Date.now()),
         image: img,
-        title: title.trim() || undefined,
-        subtitle: subtitle.trim() || undefined,
-        link: link.trim() || undefined,
       };
       const all = [next, ...items];
       setBanners(all);
       setItems(all);
-      setTitle("");
-      setSubtitle("");
-      setLink("");
       setImageFile(null);
-      setImageUrl("");
       toast({ title: "Баннер нэмэгдлээ" });
     } catch (e) {
       toast({ title: "Алдаа", description: "Зураг нэмэхэд алдаа гарлаа" });
@@ -74,11 +61,6 @@ export default function AdminBanners() {
     setItems(draft);
   };
 
-  const update = (id: string, patch: Partial<Banner>) => {
-    const next = items.map((b) => (b.id === id ? { ...b, ...patch } : b));
-    setBanners(next);
-    setItems(next);
-  };
 
   return (
     <Card id="banners" className="mb-6">
@@ -94,33 +76,6 @@ export default function AdminBanners() {
               type="file"
               accept="image/*"
               onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="btitle">Гарчиг</Label>
-            <Input
-              id="btitle"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="ж: Шинэ коллекц"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="bsub">Дэд гарчиг</Label>
-            <Input
-              id="bsub"
-              value={subtitle}
-              onChange={(e) => setSubtitle(e.target.value)}
-              placeholder="ж: 20% хямдрал"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="blink">Холбоос (сонголттой)</Label>
-            <Input
-              id="blink"
-              value={link}
-              onChange={(e) => setLink(e.target.value)}
-              placeholder="ж: /catalog"
             />
           </div>
         </div>
@@ -141,28 +96,7 @@ export default function AdminBanners() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="p-3 grid gap-2 text-sm">
-                <div className="grid gap-1">
-                  <Label>Гарчиг</Label>
-                  <Input
-                    value={b.title || ""}
-                    onChange={(e) => update(b.id, { title: e.target.value })}
-                  />
-                </div>
-                <div className="grid gap-1">
-                  <Label>Дэд гарчиг</Label>
-                  <Input
-                    value={b.subtitle || ""}
-                    onChange={(e) => update(b.id, { subtitle: e.target.value })}
-                  />
-                </div>
-                <div className="grid gap-1">
-                  <Label>Холбоос</Label>
-                  <Input
-                    value={b.link || ""}
-                    onChange={(e) => update(b.id, { link: e.target.value })}
-                  />
-                </div>
+              <div className="p-3">
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-2">
                     <Button
