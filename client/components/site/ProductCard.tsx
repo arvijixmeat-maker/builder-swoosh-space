@@ -52,11 +52,14 @@ export default function ProductCard({
     toast({ title: "Сагсанд нэмэгдлээ", description: product.name });
   };
 
+  const fmt = (n: number) =>
+    `${new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(n)}₩`;
+
+  const hasCompare =
+    typeof product.compareAtPrice === "number" &&
+    (product.compareAtPrice as number) > product.price;
+
   const renderPrice = () => {
-    const fmt = (n: number) => `${new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(n)}₩`;
-    const hasCompare =
-      typeof product.compareAtPrice === "number" &&
-      product.compareAtPrice! > product.price;
     return (
       <div className="flex items-baseline gap-2 whitespace-nowrap">
         <span className="text-sm md:text-base font-extrabold text-red-600">
@@ -70,6 +73,9 @@ export default function ProductCard({
       </div>
     );
   };
+
+  const badgeText =
+    product.badge === "шинэ" ? "신상" : product.badge || "";
 
   return (
     <Card className={`overflow-hidden group h-full flex flex-col`}>
@@ -85,23 +91,33 @@ export default function ProductCard({
             loading="lazy"
           />
         </Link>
-        {(typeof product.compareAtPrice === "number" && (product.compareAtPrice as number) > product.price) || product.badge ? (
+
+        {/* Discount pill (left) */}
+        {hasCompare && (
           <div className="absolute top-2 left-2">
-            <span className="rounded bg-red-600 text-white px-1.5 py-0.5 text-[10px]">
-              {typeof product.compareAtPrice === "number" && (product.compareAtPrice as number) > product.price
-                ? "특가"
-                : product.badge === "шинэ" ? "신상" : product.badge}
+            <span className="inline-flex items-center justify-center rounded-full bg-red-600 text-white h-7 px-2 text-[11px] font-bold">
+              -
+              {Math.max(
+                0,
+                Math.round(
+                  (1 - product.price / (product.compareAtPrice as number)) *
+                    100,
+                ),
+              )}%
             </span>
           </div>
-        ) : null}
-        {typeof product.compareAtPrice === "number" && product.compareAtPrice! > product.price && (
-          <div className="absolute top-2 left-2">
-            <span className="inline-flex items-center justify-center rounded-full bg-red-600 text-white h-7 w-12 text-[11px] font-bold">
-              -{Math.max(0, Math.round((1 - product.price / (product.compareAtPrice as number)) * 100))}%
+        )}
+
+        {/* Optional badge (right) */}
+        {badgeText && (
+          <div className="absolute top-2 right-2">
+            <span className="rounded bg-black/80 text-white px-1.5 py-0.5 text-[10px]">
+              {badgeText}
             </span>
           </div>
         )}
       </div>
+
       <CardContent
         className={`${compact ? "p-2" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}
       >
@@ -118,9 +134,14 @@ export default function ProductCard({
               {product.description}
             </p>
           )}
-          <div className="mt-1">
-            {renderPrice()}
-          </div>
+          <div className="mt-1">{renderPrice()}</div>
+        </div>
+
+        {/* Mobile quick add to cart */}
+        <div className="mt-1 md:hidden">
+          <Button size={compact ? "sm" : "default"} className="w-full" onClick={addToCart}>
+            Сагслах
+          </Button>
         </div>
       </CardContent>
     </Card>
