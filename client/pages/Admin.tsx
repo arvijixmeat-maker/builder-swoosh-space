@@ -67,6 +67,7 @@ export default function Admin() {
     image: "",
     images: [],
     category: "",
+    description: "",
     badge: "",
     colors: [],
     sizes: [],
