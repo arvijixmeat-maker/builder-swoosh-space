@@ -605,9 +605,9 @@ export default function Admin() {
 
         <TabsContent value="products">
           <Card id="products">
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
               <CardTitle>Бүтээгдэхүүн удирдах</CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Button variant="outline" size="sm" onClick={exportJson}>
                   <Download className="h-4 w-4 mr-2" /> Экспорт JSON
                 </Button>
@@ -621,7 +621,7 @@ export default function Admin() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>
-                        {editing ? "Бүтээгдэхүүн засах" : "��инэ бүтээгдэхүүн"}
+                        {editing ? "Бүтээгдэхүүн засах" : "Шинэ бүтээгдэхүүн"}
                       </DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4">
@@ -705,7 +705,7 @@ export default function Admin() {
                         </select>
                         {categories.length === 0 && (
                           <span className="text-xs text-muted-foreground">
-                            Эхлээд "Ангилал" хэсгээс кате��ори нэмнэ үү.
+                            Эхлээд "Ангилал" хэсгээс категори нэмнэ үү.
                           </span>
                         )}
                       </div>
@@ -941,7 +941,7 @@ export default function Admin() {
                 </TableBody>
                 {products.length === 0 && (
                   <TableCaption>
-                    Одоогоор бүртгэлгүй байна. "Нэмэх" дарж эхлүүлнэ үү.
+                    Одоогоор бүртгэлгүй б��йна. "Нэмэх" дарж эхлүүлнэ үү.
                   </TableCaption>
                 )}
               </Table>
