@@ -41,7 +41,16 @@ export default function Orders() {
     };
   }, [navigate]);
 
-  const formatDate = (ts: number) => new Date(ts).toLocaleString();
+  const formatDate = (ts: number) =>
+    new Date(ts).toLocaleString("ko-KR", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
   const format = (n: number) =>
     new Intl.NumberFormat("ko-KR", {
       style: "currency",
