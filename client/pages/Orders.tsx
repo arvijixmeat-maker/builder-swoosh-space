@@ -9,6 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   getOrders,
   setOrders,
@@ -50,19 +52,54 @@ export default function Orders() {
     shipping: "Хүргэлт хийгдэж байна",
     delivered: "Хүргэгдсэн",
   };
+  const mine = useMemo(() => orders.filter((o) => !o.userId || o.userId === getCurrentUserId()), [orders]);
+  const stats = useMemo(
+    () => ({
+      total: mine.length,
+      unpaid: mine.filter((o) => o.status === "unpaid").length,
+      processing: mine.filter((o) => o.status === "paid" || o.status === "shipping").length,
+      spent: mine.reduce((s, o) => s + o.total, 0),
+    }),
+    [mine],
+  );
 
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Захиалгын түүх</h1>
-          <p className="text-muted-foreground mt-1">
-            Таны хийсэн бүх захиалгууд
-          </p>
+          <h1 className="text-2xl md:text-3xl font-bold">Миний хуудас</h1>
+          <p className="text-muted-foreground mt-1">Захиалгын түүх ба тойм</p>
         </div>
         <Link to="/">
           <Button variant="outline">Нүүр рүү</Button>
         </Link>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+        <Card>
+          <CardHeader className="p-3 md:p-4 pb-1">
+            <CardTitle className="text-xs text-muted-foreground">Нийт захиалга</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{stats.total}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="p-3 md:p-4 pb-1">
+            <CardTitle className="text-xs text-muted-foreground">Шинэ/Төлбөргүй</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{stats.unpaid}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="p-3 md:p-4 pb-1">
+            <CardTitle className="text-xs text-muted-foreground">Боловсруулж буй</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{stats.processing}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="p-3 md:p-4 pb-1">
+            <CardTitle className="text-xs text-muted-foreground">Нийт зарцуулсан</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{format(stats.spent)}</CardContent>
+        </Card>
       </div>
 
       <Table>
@@ -76,17 +113,29 @@ export default function Orders() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders
-            .filter((o) => !o.userId || o.userId === getCurrentUserId())
-            .map((o) => (
-              <TableRow key={o.id}>
-                <TableCell>{formatDate(o.createdAt)}</TableCell>
-                <TableCell className="font-mono text-xs">{o.id}</TableCell>
-                <TableCell>{itemsCount(o)}</TableCell>
-                <TableCell>{format(o.total)}</TableCell>
-                <TableCell>{statusLabel[o.status]}</TableCell>
-              </TableRow>
-            ))}
+          {mine.map((o) => (
+            <TableRow key={o.id}>
+              <TableCell>{formatDate(o.createdAt)}</TableCell>
+              <TableCell className="font-mono text-xs">{o.id}</TableCell>
+              <TableCell>{itemsCount(o)}</TableCell>
+              <TableCell>{format(o.total)}</TableCell>
+              <TableCell>
+                <Badge
+                  variant={
+                    o.status === "unpaid"
+                      ? "destructive"
+                      : o.status === "paid"
+                      ? "default"
+                      : o.status === "shipping"
+                      ? "secondary"
+                      : "outline"
+                  }
+                >
+                  {statusLabel[o.status]}
+                </Badge>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
         {orders.filter((o) => !o.userId || o.userId === getCurrentUserId())
           .length === 0 && (
@@ -96,58 +145,58 @@ export default function Orders() {
         )}
       </Table>
 
-      {orders.filter((o) => !o.userId || o.userId === getCurrentUserId())
-        .length > 0 && (
-        <div className="mt-6 text-sm text-muted-foreground">
-          <p>Захиалгын дэлгэ��энгүй:</p>
-          <ul className="mt-2 space-y-2">
-            {orders
-              .filter((o) => !o.userId || o.userId === getCurrentUserId())
-              .map((o) => (
-                <li key={o.id} className="rounded-md border bg-card p-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="font-medium">№ {o.id}</div>
-                    <div>{formatDate(o.createdAt)}</div>
-                  </div>
-                  <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <div className="text-xs text-muted-foreground">
-                        Хүлээн авагч
-                      </div>
-                      <div>
-                        {o.customer.name} · {o.customer.phone}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Хаяг</div>
-                      <div>{o.customer.address}</div>
+      {mine.length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-sm text-muted-foreground">Захиалгын дэлгэрэнгүй</h2>
+          <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            {mine.map((o) => (
+              <li key={o.id}>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between p-4 pb-0">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">№ {o.id}</Badge>
+                      <Badge
+                        variant={
+                          o.status === "unpaid"
+                            ? "destructive"
+                            : o.status === "paid"
+                            ? "default"
+                            : o.status === "shipping"
+                            ? "secondary"
+                            : "outline"
+                        }
+                      >
+                        {statusLabel[o.status]}
+                      </Badge>
                     </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground">
-                        Бараанууд
+                    <div className="text-xs text-muted-foreground">{formatDate(o.createdAt)}</div>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="md:col-span-2">
+                        <div className="text-xs text-muted-foreground">Хүлээн авагч</div>
+                        <div>{o.customer.name} · {o.customer.phone}</div>
+                        <div className="text-xs text-muted-foreground mt-2">Хаяг</div>
+                        <div>{o.customer.address}</div>
                       </div>
-                      <div className="mt-1 grid grid-cols-3 gap-2">
-                        {o.items.map((i) => (
-                          <div
-                            key={i.id}
-                            className="rounded border bg-background p-2"
-                          >
-                            <img
-                              src={i.image}
-                              alt={i.name}
-                              className="h-14 w-full object-cover rounded"
-                            />
-                            <div className="mt-1 truncate text-xs">
-                              {i.name}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              ×{i.qty}
-                            </div>
-                          </div>
-                        ))}
+                      <div className="text-right">
+                        <div className="text-xs text-muted-foreground">Нийт</div>
+                        <div className="text-xl font-bold">{format(o.total)}</div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
+                    <div className="mt-3 grid grid-cols-3 gap-2">
+                      {o.items.map((i) => (
+                        <div key={i.id} className="rounded border bg-background p-2">
+                          <img src={i.image} alt={i.name} className="h-14 w-full object-cover rounded" />
+                          <div className="mt-1 truncate text-xs">{i.name}</div>
+                          <div className="text-xs text-muted-foreground">×{i.qty}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
           </ul>
         </div>
       )}
