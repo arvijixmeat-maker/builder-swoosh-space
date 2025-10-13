@@ -25,7 +25,7 @@ export default function Orders() {
   const navigate = useNavigate();
   const [orders, setLocal] = useState<Order[]>(getOrders());
   const user = getCurrentUser();
-  const [filter, setFilter] = useState<"all" | "unpaid" | "processing" | "delivered">("all");
+  const [filter, setFilter] = useState<"unpaid" | "paid" | "shipping">("unpaid");
 
   useEffect(() => {
     const uid = getCurrentUserId();
@@ -67,17 +67,16 @@ export default function Orders() {
   };
   const mine = useMemo(() => orders.filter((o) => !o.userId || o.userId === getCurrentUserId()), [orders]);
   const filteredMine = useMemo(() => {
-    if (filter === "all") return mine;
     if (filter === "unpaid") return mine.filter((o) => o.status === "unpaid");
-    if (filter === "delivered") return mine.filter((o) => o.status === "delivered");
-    return mine.filter((o) => o.status === "paid" || o.status === "shipping");
+    if (filter === "paid") return mine.filter((o) => o.status === "paid");
+    return mine.filter((o) => o.status === "shipping");
   }, [mine, filter]);
   const stats = useMemo(
     () => ({
       total: mine.length,
       unpaid: mine.filter((o) => o.status === "unpaid").length,
-      processing: mine.filter((o) => o.status === "paid" || o.status === "shipping").length,
-      delivered: mine.filter((o) => o.status === "delivered").length,
+      paid: mine.filter((o) => o.status === "paid").length,
+      shipping: mine.filter((o) => o.status === "shipping").length,
       spent: mine.reduce((s, o) => s + o.total, 0),
     }),
     [mine],
@@ -109,15 +108,21 @@ export default function Orders() {
         </Card>
         <Card>
           <CardHeader className="p-3 md:p-4 pb-1">
-            <CardTitle className="text-xs text-muted-foreground">Шинэ/Төлбөргүй</CardTitle>
+            <CardTitle className="text-xs text-muted-foreground">Төлбөр төлөгдөөгүй</CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{stats.unpaid}</CardContent>
         </Card>
         <Card>
           <CardHeader className="p-3 md:p-4 pb-1">
-            <CardTitle className="text-xs text-muted-foreground">Боловсруулж буй</CardTitle>
+            <CardTitle className="text-xs text-muted-foreground">Төлбөр төлөгдсөн</CardTitle>
           </CardHeader>
-          <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{stats.processing}</CardContent>
+          <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{stats.paid}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="p-3 md:p-4 pb-1">
+            <CardTitle className="text-xs text-muted-foreground">Хүргэлт</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 md:p-4 pt-0 text-2xl font-bold">{stats.shipping}</CardContent>
         </Card>
         <Card>
           <CardHeader className="p-3 md:p-4 pb-1">
@@ -129,17 +134,14 @@ export default function Orders() {
 
       <div className="mb-3 overflow-x-auto">
         <ToggleGroup type="single" value={filter} onValueChange={(v) => v && setFilter(v as any)}>
-          <ToggleGroupItem value="all" variant="outline" size="sm" className="rounded-full">
-            Бүгд <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.total}</span>
-          </ToggleGroupItem>
           <ToggleGroupItem value="unpaid" variant="outline" size="sm" className="rounded-full">
-            Төлбөргүй <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.unpaid}</span>
+            Төлбөр төлөгдөөгүй <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.unpaid}</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="processing" variant="outline" size="sm" className="rounded-full">
-            Боловсруулж буй <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.processing}</span>
+          <ToggleGroupItem value="paid" variant="outline" size="sm" className="rounded-full">
+            Төлбөр төлөгдсөн <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.paid}</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="delivered" variant="outline" size="sm" className="rounded-full">
-            Хүргэгдсэн <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.delivered}</span>
+          <ToggleGroupItem value="shipping" variant="outline" size="sm" className="rounded-full">
+            Хүргэлт <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.shipping}</span>
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
