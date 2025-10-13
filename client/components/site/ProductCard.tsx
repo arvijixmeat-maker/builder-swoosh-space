@@ -11,6 +11,7 @@ export interface Product {
   image: string;
   images?: string[];
   category?: string;
+  description?: string; // short description shown in cards
   badge?: string;
   colors?: string[]; // color names or hex
   sizes?: string[]; // size labels like XS,S,M,L,XL
@@ -105,11 +106,6 @@ export default function ProductCard({
         className={`${compact ? "p-2" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}
       >
         <div className="min-w-0">
-          {product.category && (
-            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
-              {product.category}
-            </div>
-          )}
           <Link to={`/product/${product.id}`} className="block min-w-0">
             <h3
               className={`${compact ? "text-[12px]" : "text-sm md:text-base"} font-medium leading-snug line-clamp-2`}
@@ -117,11 +113,11 @@ export default function ProductCard({
               {product.name}
             </h3>
           </Link>
-          <div className="mt-1 flex items-center gap-1 text-muted-foreground">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <span key={i} className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
-            ))}
-          </div>
+          {product.description && (
+            <p className="mt-1 text-[11px] text-muted-foreground line-clamp-2">
+              {product.description}
+            </p>
+          )}
           <div className="mt-1">
             {renderPrice()}
           </div>
