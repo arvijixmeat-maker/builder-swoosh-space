@@ -271,7 +271,7 @@ export default function ProductDetail() {
               Сагсанд нэмэх
             </Button>
             <Button className="px-6" onClick={buyNow}>
-              О��оо худалдаж авах
+              Одоо худалдаж авах
             </Button>
           </div>
         </div>
