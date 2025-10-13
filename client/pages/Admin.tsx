@@ -274,7 +274,7 @@ export default function Admin() {
           Админ хяналтын самбар
         </h1>
         <p className="text-muted-foreground mt-1">
-          Бүтээгдэхүүн, захиалга, ангиллыг удирдах
+          Бүтээгдэхүүн, захиалга, ангиллыг у��ирдах
         </p>
       </div>
 
@@ -885,66 +885,93 @@ export default function Admin() {
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[64px]">Зураг</TableHead>
-                    <TableHead>Нэр</TableHead>
-                    <TableHead>Үнэ</TableHead>
-                    <TableHead>Ангилал</TableHead>
-                    <TableHead>Тэмдэглэгээ</TableHead>
-                    <TableHead className="w-[120px] text-right">
-                      Үйлдэл
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {products.map((p) => (
-                    <TableRow key={p.id}>
-                      <TableCell>
-                        <img
-                          src={p.image}
-                          alt={p.name}
-                          className="h-10 w-10 rounded object-cover"
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">{p.name}</TableCell>
-                      <TableCell>
-                        {new Intl.NumberFormat("ko-KR", {
-                          style: "currency",
-                          currency: "KRW",
-                          maximumFractionDigits: 0,
-                        }).format(p.price)}
-                      </TableCell>
-                      <TableCell>{p.category}</TableCell>
-                      <TableCell>{p.badge}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => startEdit(p)}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => remove(p.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+              <div className="hidden md:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[64px]">Зураг</TableHead>
+                      <TableHead>Нэр</TableHead>
+                      <TableHead>Үнэ</TableHead>
+                      <TableHead>Ангилал</TableHead>
+                      <TableHead>Тэмдэглэгээ</TableHead>
+                      <TableHead className="w-[120px] text-right">
+                        Үйлдэл
+                      </TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
+                  </TableHeader>
+                  <TableBody>
+                    {products.map((p) => (
+                      <TableRow key={p.id}>
+                        <TableCell>
+                          <img
+                            src={p.image}
+                            alt={p.name}
+                            className="h-10 w-10 rounded object-cover"
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{p.name}</TableCell>
+                        <TableCell>
+                          {new Intl.NumberFormat("ko-KR", {
+                            style: "currency",
+                            currency: "KRW",
+                            maximumFractionDigits: 0,
+                          }).format(p.price)}
+                        </TableCell>
+                        <TableCell>{p.category}</TableCell>
+                        <TableCell>{p.badge}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => startEdit(p)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => remove(p.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  {products.length === 0 && (
+                    <TableCaption>
+                      Одоогоор бүртгэлгүй байна. "Нэмэх" дарж эхлүүлнэ үү.
+                    </TableCaption>
+                  )}
+                </Table>
+              </div>
+              <div className="md:hidden grid gap-3">
+                {products.map((p) => (
+                  <div key={p.id} className="rounded-lg border bg-card p-3">
+                    <div className="flex items-center gap-3">
+                      <img src={p.image} alt={p.name} className="h-12 w-12 rounded object-cover" />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-medium truncate">{p.name}</div>
+                        <div className="text-sm text-muted-foreground">{new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(p.price)}</div>
+                        <div className="text-xs text-muted-foreground mt-0.5">{p.category || "-"}{p.badge ? ` • ${p.badge}` : ""}</div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button variant="secondary" size="sm" onClick={() => startEdit(p)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => remove(p.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
                 {products.length === 0 && (
-                  <TableCaption>
-                    Одоогоор бүртгэлгүй б��йна. "Нэмэх" дарж эхлүүлнэ үү.
-                  </TableCaption>
+                  <div className="text-sm text-muted-foreground">Одоогоор бүртгэлгүй байна. "Нэмэх" дарж эхлүүлнэ үү.</div>
                 )}
-              </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
