@@ -89,6 +89,22 @@ export default function ProductCard({
             loading="lazy"
           />
         </Link>
+        {product.colors && product.colors.length > 0 && (
+          <div className="flex items-center justify-center gap-1 py-2">
+            {(product.colors || []).slice(0, 5).map((c, idx) => (
+              <span
+                key={idx}
+                className="h-2.5 w-2.5 rounded-full ring-1 ring-black/10"
+                style={{ background: c }}
+              />
+            ))}
+            {product.colors.length > 5 && (
+              <span className="ml-1 text-[10px] text-muted-foreground">
+                +{product.colors.length - 5}
+              </span>
+            )}
+          </div>
+        )}
       </div>
       <CardContent
         className={`${compact ? "p-2" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}
