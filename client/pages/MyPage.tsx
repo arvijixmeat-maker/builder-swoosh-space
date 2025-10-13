@@ -66,6 +66,7 @@ export default function MyPage() {
       birthDay: birthDay ? Number(birthDay) : undefined,
     };
     updateCurrentUser(patch);
+    setEditing(false);
     toast({ title: "Хадгалагдлаа" });
   };
 
