@@ -116,6 +116,7 @@ export default function ProductCard({
                 {product.category}
               </div>
             )}
+            <div className="text-[11px] text-muted-foreground">{product.id}</div>
             <Link to={`/product/${product.id}`} className="block min-w-0">
               <h3
                 className={`${compact ? "text-[12px]" : "text-sm md:text-base"} font-medium leading-snug line-clamp-2`}
@@ -123,6 +124,22 @@ export default function ProductCard({
                 {product.name}
               </h3>
             </Link>
+            <div className="mt-1 flex flex-wrap items-center gap-1">
+              {product.colors && product.colors.length > 0 && (
+                <span className="rounded bg-muted border px-1.5 py-0.5 text-[10px]">{product.colors.length}컬러</span>
+              )}
+              {typeof product.compareAtPrice === "number" && product.compareAtPrice! > product.price && (
+                <span className="rounded bg-orange-100 text-orange-700 border border-orange-200 px-1.5 py-0.5 text-[10px]">특가</span>
+              )}
+              {product.badge && (
+                <span className="rounded bg-blue-100 text-blue-700 border border-blue-200 px-1.5 py-0.5 text-[10px]">
+                  {product.badge === "шинэ" ? "신상" : product.badge}
+                </span>
+              )}
+              {product.sizes && product.sizes.length > 0 && (
+                <span className="rounded bg-muted border px-1.5 py-0.5 text-[10px]">{product.sizes.length}사이즈</span>
+              )}
+            </div>
           </div>
           {renderPrice()}
         </div>
