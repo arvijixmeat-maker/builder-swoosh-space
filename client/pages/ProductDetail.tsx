@@ -4,6 +4,8 @@ import { getProduct } from "@/data/products";
 import { getCart, setCart, getCurrentUser, getSettings, getProductsLS, PRODUCTS_KEY } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import ProductCard, { type Product } from "@/components/site/ProductCard";
 import {
   Accordion,
   AccordionContent,
@@ -31,7 +33,7 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-16">
-        <p className="text-muted-foreground">Бүтээгдэхүүн олдсонгүй.</p>
+        <p className="text-muted-foreground">Бүтээгдэхүүн олдсон��үй.</p>
         <Link
           to="/"
           className="text-primary underline underline-offset-4 mt-2 inline-block"
