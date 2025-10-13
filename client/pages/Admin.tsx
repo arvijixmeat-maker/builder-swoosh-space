@@ -690,6 +690,15 @@ export default function Admin() {
                         />
                       </div>
                       <div className="grid gap-2">
+                        <Label htmlFor="desc">Тайлбар (сонголттой)</Label>
+                        <Textarea
+                          id="desc"
+                          value={form.description || ""}
+                          onChange={(e) => setForm({ ...form, description: e.target.value })}
+                          placeholder="Богино тайлбар..."
+                        />
+                      </div>
+                      <div className="grid gap-2">
                         <Label>Өнгө (сонголт)</Label>
                         <div className="grid grid-cols-8 gap-2">
                           {[
@@ -790,7 +799,7 @@ export default function Admin() {
                         </div>
                         {form.sizes && form.sizes.length === 0 && (
                           <span className="text-xs text-muted-foreground">
-                            Сонголтгүй бол х��мжээ шүүлтгүй гэж үзнэ.
+                            Сонголтгүй бол хэмжээ шүүлтгүй гэж үзнэ.
                           </span>
                         )}
                       </div>
