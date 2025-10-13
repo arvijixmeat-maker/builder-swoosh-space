@@ -63,7 +63,7 @@ export default function ProductCard({
       product.compareAtPrice! > product.price;
     return (
       <div className="flex items-baseline gap-2 whitespace-nowrap">
-        <span className="text-sm md:text-base font-extrabold text-foreground">
+        <span className="text-sm md:text-base font-extrabold text-red-600">
           {fmt(product.price)}
         </span>
         {hasCompare && (
@@ -98,20 +98,11 @@ export default function ProductCard({
             </span>
           </div>
         ) : null}
-        {product.colors && product.colors.length > 0 && (
-          <div className="flex items-center justify-center gap-1 py-2">
-            {(product.colors || []).slice(0, 5).map((c, idx) => (
-              <span
-                key={idx}
-                className="h-2.5 w-2.5 rounded-full ring-1 ring-black/10"
-                style={{ background: c }}
-              />
-            ))}
-            {product.colors.length > 5 && (
-              <span className="ml-1 text-[10px] text-muted-foreground">
-                +{product.colors.length - 5}
-              </span>
-            )}
+        {typeof product.compareAtPrice === "number" && product.compareAtPrice! > product.price && (
+          <div className="absolute top-2 left-2">
+            <span className="inline-flex items-center justify-center rounded-full bg-red-600 text-white h-7 w-12 text-[11px] font-bold">
+              -{Math.max(0, Math.round((1 - product.price / (product.compareAtPrice as number)) * 100))}%
+            </span>
           </div>
         )}
       </div>
@@ -132,21 +123,10 @@ export default function ProductCard({
                 {product.name}
               </h3>
             </Link>
-            <div className="mt-1 flex flex-wrap items-center gap-1">
-              {product.colors && product.colors.length > 0 && (
-                <span className="rounded bg-muted border px-1.5 py-0.5 text-[10px]">{product.colors.length}컬러</span>
-              )}
-              {typeof product.compareAtPrice === "number" && product.compareAtPrice! > product.price && (
-                <span className="rounded bg-orange-100 text-orange-700 border border-orange-200 px-1.5 py-0.5 text-[10px]">특가</span>
-              )}
-              {product.badge && (
-                <span className="rounded bg-blue-100 text-blue-700 border border-blue-200 px-1.5 py-0.5 text-[10px]">
-                  {product.badge === "шинэ" ? "신상" : product.badge}
-                </span>
-              )}
-              {product.sizes && product.sizes.length > 0 && (
-                <span className="rounded bg-muted border px-1.5 py-0.5 text-[10px]">{product.sizes.length}사이즈</span>
-              )}
+            <div className="mt-1 flex items-center gap-1 text-muted-foreground">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i} className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
+              ))}
             </div>
           </div>
           {renderPrice()}
