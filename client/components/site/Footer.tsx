@@ -70,8 +70,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:underline">
-                  Салбарын мэдээлэл
+                <Link to="/login?redirect=/admin" className="hover:underline">
+                  Админ нэвтрэх
                 </Link>
               </li>
             </ul>
