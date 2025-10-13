@@ -31,7 +31,9 @@ export default function Checkout() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [shippingFee, setShippingFee] = useState<number>(getSettings().shippingFee);
+  const [shippingFee, setShippingFee] = useState<number>(
+    getSettings().shippingFee,
+  );
   const [accounts, setAccounts] = useState(getSettings().bankAccounts);
 
   useEffect(() => {
@@ -53,12 +55,18 @@ export default function Checkout() {
       setShippingFee(s.shippingFee);
       setAccounts(s.bankAccounts);
     };
-    window.addEventListener("settings-updated", updateSettings as EventListener);
+    window.addEventListener(
+      "settings-updated",
+      updateSettings as EventListener,
+    );
     updateSettings();
     return () => {
       window.removeEventListener("storage", update);
       window.removeEventListener("cart-updated", update as EventListener);
-      window.removeEventListener("settings-updated", updateSettings as EventListener);
+      window.removeEventListener(
+        "settings-updated",
+        updateSettings as EventListener,
+      );
     };
   }, []);
 
@@ -66,7 +74,10 @@ export default function Checkout() {
     () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
     [items],
   );
-  const shipping = useMemo(() => (items.length > 0 ? Math.max(0, shippingFee) : 0), [items, shippingFee]);
+  const shipping = useMemo(
+    () => (items.length > 0 ? Math.max(0, shippingFee) : 0),
+    [items, shippingFee],
+  );
   const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
   const format = (n: number) =>
     new Intl.NumberFormat("ko-KR", {
@@ -219,17 +230,24 @@ export default function Checkout() {
             <div className="font-medium mb-2">Банкны мэдээлэл</div>
             <ul className="space-y-2">
               {accounts.map((a, idx) => (
-                <li key={idx} className="flex items-start justify-between gap-3 rounded-md border border-red-200 bg-red-50 p-2">
+                <li
+                  key={idx}
+                  className="flex items-start justify-between gap-3 rounded-md border border-red-200 bg-red-50 p-2"
+                >
                   <div className="min-w-0">
                     <div className="text-muted-foreground">
                       {a.bankName} / {a.holder}
                     </div>
                     {a.note ? (
-                      <div className="text-xs text-muted-foreground mt-0.5">{a.note}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">
+                        {a.note}
+                      </div>
                     ) : null}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono whitespace-nowrap">{a.accountNumber}</span>
+                    <span className="font-mono whitespace-nowrap">
+                      {a.accountNumber}
+                    </span>
                     <button
                       type="button"
                       aria-label="계좌번호 복사"
@@ -237,7 +255,10 @@ export default function Checkout() {
                       onClick={async () => {
                         try {
                           await navigator.clipboard.writeText(a.accountNumber);
-                          toast({ title: "Хууллаа", description: "Дансны дугаар хууллаа" });
+                          toast({
+                            title: "Хууллаа",
+                            description: "Дансны дугаар хууллаа",
+                          });
                         } catch {}
                       }}
                     >

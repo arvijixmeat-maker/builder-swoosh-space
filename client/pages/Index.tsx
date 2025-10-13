@@ -253,10 +253,7 @@ export default function Index() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Link
-              to="/catalog"
-              className="hidden"
-            >
+            <Link to="/catalog" className="hidden">
               Дэлгэрэнгүй харах
             </Link>
             <Link

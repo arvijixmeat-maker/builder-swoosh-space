@@ -20,9 +20,9 @@ export default function AdminBanners() {
   useEffect(() => {
     const reload = () => setItems(getBanners());
     window.addEventListener("banners-updated", reload as EventListener);
-    return () => window.removeEventListener("banners-updated", reload as EventListener);
+    return () =>
+      window.removeEventListener("banners-updated", reload as EventListener);
   }, []);
-
 
   const add = async () => {
     try {
@@ -30,7 +30,10 @@ export default function AdminBanners() {
       if (imageFile) img = await convertImageFileToWebpDataUrl(imageFile, 0.9);
       else if (imageUrl.trim()) img = imageUrl.trim();
       if (!img) {
-        toast({ title: "Зураг сонгоно уу", description: "Файл эсвэл зураг URL" });
+        toast({
+          title: "Зураг сонгоно уу",
+          description: "Файл эсвэл зураг URL",
+        });
         return;
       }
       const next: Banner = {
@@ -86,60 +89,122 @@ export default function AdminBanners() {
         <div className="grid md:grid-cols-5 gap-3 items-end">
           <div className="grid gap-2">
             <Label htmlFor="bimg">Зураг (файл)</Label>
-            <Input id="bimg" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
+            <Input
+              id="bimg"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="burl">Зураг URL (сонголттой)</Label>
-            <Input id="burl" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
+            <Input
+              id="burl"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://..."
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="btitle">Гарчиг</Label>
-            <Input id="btitle" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ж: Шинэ коллекц" />
+            <Input
+              id="btitle"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="ж: Шинэ коллекц"
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="bsub">Дэд гарчиг</Label>
-            <Input id="bsub" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="ж: 20% хямдрал" />
+            <Input
+              id="bsub"
+              value={subtitle}
+              onChange={(e) => setSubtitle(e.target.value)}
+              placeholder="ж: 20% хямдрал"
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="blink">Холбоос (сонголттой)</Label>
-            <Input id="blink" value={link} onChange={(e) => setLink(e.target.value)} placeholder="ж: /catalog" />
+            <Input
+              id="blink"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              placeholder="ж: /catalog"
+            />
           </div>
         </div>
         <div className="mt-3">
-          <Button type="button" onClick={add}><Plus className="h-4 w-4 mr-2" />Нэмэх</Button>
+          <Button type="button" onClick={add}>
+            <Plus className="h-4 w-4 mr-2" />
+            Нэмэх
+          </Button>
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map((b) => (
             <div key={b.id} className="rounded-md border overflow-hidden">
               <div className="aspect-[16/7] bg-muted overflow-hidden">
-                <img src={b.image} alt={b.title || "banner"} className="w-full h-full object-cover" />
+                <img
+                  src={b.image}
+                  alt={b.title || "banner"}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="p-3 grid gap-2 text-sm">
                 <div className="grid gap-1">
                   <Label>Гарчиг</Label>
-                  <Input value={b.title || ""} onChange={(e) => update(b.id, { title: e.target.value })} />
+                  <Input
+                    value={b.title || ""}
+                    onChange={(e) => update(b.id, { title: e.target.value })}
+                  />
                 </div>
                 <div className="grid gap-1">
                   <Label>Дэд гарчиг</Label>
-                  <Input value={b.subtitle || ""} onChange={(e) => update(b.id, { subtitle: e.target.value })} />
+                  <Input
+                    value={b.subtitle || ""}
+                    onChange={(e) => update(b.id, { subtitle: e.target.value })}
+                  />
                 </div>
                 <div className="grid gap-1">
                   <Label>Холбоос</Label>
-                  <Input value={b.link || ""} onChange={(e) => update(b.id, { link: e.target.value })} />
+                  <Input
+                    value={b.link || ""}
+                    onChange={(e) => update(b.id, { link: e.target.value })}
+                  />
                 </div>
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="icon" onClick={() => move(b.id, -1)}><ArrowUp className="h-4 w-4" /></Button>
-                    <Button variant="outline" size="icon" onClick={() => move(b.id, 1)}><ArrowDown className="h-4 w-4" /></Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => move(b.id, -1)}
+                    >
+                      <ArrowUp className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => move(b.id, 1)}
+                    >
+                      <ArrowDown className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button variant="destructive" size="sm" onClick={() => remove(b.id)}><Trash2 className="h-4 w-4 mr-1" />Устгах</Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => remove(b.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Устгах
+                  </Button>
                 </div>
               </div>
             </div>
           ))}
           {items.length === 0 && (
-            <div className="text-sm text-muted-foreground">Одоогоор баннер байхгүй. Дээрх хэлбэрээр нэмнэ үү.</div>
+            <div className="text-sm text-muted-foreground">
+              Одоогоор баннер байхгүй. Дээрх хэлбэрээр нэмнэ үү.
+            </div>
           )}
         </div>
       </CardContent>
