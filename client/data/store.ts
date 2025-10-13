@@ -373,6 +373,7 @@ export const addUser = (
     lastName: u.lastName,
     email: u.email,
     phone: u.phone,
+    avatar: (u as any).avatar,
     password: u.password,
     gender: u.gender,
     birthYear: u.birthYear,
