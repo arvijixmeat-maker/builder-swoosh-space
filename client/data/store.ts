@@ -447,12 +447,17 @@ export const seedDefaultAdmin = () => {
       (u) => u.email?.toLowerCase?.() === "admin@local",
     );
     if (idx >= 0) {
-      if (!existing[idx].isAdmin) {
-        const next = existing.map((u, i) =>
-          i === idx ? { ...u, isAdmin: true } : u,
-        );
-        setUsers(next);
-      }
+      const next = existing.map((u, i) =>
+        i === idx
+          ? {
+              ...u,
+              isAdmin: true,
+              email: "admin",
+              password: "admin123",
+            }
+          : u,
+      );
+      setUsers(next);
       return;
     }
     if (existing.length > 0) return;
