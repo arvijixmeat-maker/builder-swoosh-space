@@ -86,9 +86,6 @@ export default function MyPage() {
               <Link to="/orders" className="hover:underline">
                 Миний захиалга ({ordersCount})
               </Link>
-              <Link to="/cart" className="hover:underline">
-                Хүргэгдэх сагс ({cartCount})
-              </Link>
               <button
                 onClick={logout}
                 className="text-destructive text-left hover:underline"
