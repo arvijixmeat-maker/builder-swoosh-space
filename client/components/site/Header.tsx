@@ -151,7 +151,7 @@ export default function Header() {
               {cartCount > 0 && (
                 <span
                   aria-label={`Сагсанд ${cartCount} бүтээгдэхүүн байна`}
-                  className="absolute -top-1 -right-1 min-w-4 h-4 rounded-full bg-primary px-1 text-[10px] leading-4 text-primary-foreground text-center"
+                  className="absolute -top-1 -right-1 min-w-4 h-4 rounded-full bg-primary px-1 text-[10px] leading-4 text-blue-600 text-center"
                 >
                   {cartCount}
                 </span>
