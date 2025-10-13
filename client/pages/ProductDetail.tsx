@@ -29,11 +29,15 @@ export default function ProductDetail() {
     product?.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined,
   );
   const [settings, setSettingsState] = useState(getSettings());
+  const allProducts = getProductsLS<Product>(PRODUCTS_KEY);
+  const related = product?.category
+    ? allProducts.filter((p) => p.category === product.category && p.id !== product.id)
+    : [];
 
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-16">
-        <p className="text-muted-foreground">Бүтээгдэхүүн олдсон��үй.</p>
+        <p className="text-muted-foreground">Бүтээгдэхүүн олдсонгүй.</p>
         <Link
           to="/"
           className="text-primary underline underline-offset-4 mt-2 inline-block"
