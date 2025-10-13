@@ -454,7 +454,15 @@ export default function Admin() {
                   {orders.map((o) => (
                     <TableRow key={o.id}>
                       <TableCell>
-                        {new Date(o.createdAt).toLocaleString("ko-KR", { year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false })}
+                        {new Date(o.createdAt).toLocaleString("ko-KR", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: false,
+                        })}
                       </TableCell>
                       <TableCell className="font-mono text-xs">
                         {o.id}
