@@ -80,12 +80,22 @@ export default function MyPage() {
       <div className="grid grid-cols-1 md:grid-cols-[240px,1fr] gap-6">
         <Card className="h-fit">
           <CardHeader>
-            <CardTitle className="text-lg">{user.name}</CardTitle>
+            <CardTitle className="text-lg">{name || user.name}</CardTitle>
           </CardHeader>
           <CardContent>
             <nav className="grid gap-2 text-sm">
               <span className="font-medium text-muted-foreground">Профайл</span>
-              <Link to="/orders" className="hover:underline">
+              <div className="text-xs text-muted-foreground space-y-1">
+                <div>И-мэйл: {user.email}</div>
+                <div>Утас: {user.phone}</div>
+                <div>
+                  Хүйс: {gender === "male" ? "Эр" : gender === "female" ? "Эм" : gender ? "Бусад" : "-"}
+                </div>
+                <div>
+                  Төрсөн: {birthYear || birthMonth || birthDay ? `${birthYear || ""}${birthMonth ? "." + birthMonth : ""}${birthDay ? "." + birthDay : ""}` : "-"}
+                </div>
+              </div>
+              <Link to="/orders" className="hover:underline mt-2">
                 Миний захиалга ({ordersCount})
               </Link>
               <button
