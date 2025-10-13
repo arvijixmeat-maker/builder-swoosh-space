@@ -86,7 +86,7 @@ export default function Index() {
 
   const fallback = [
     "Электроник",
-    "Гэр ахуй",
+    "Гэр а��уй",
     "Гоо с��йхан",
     "Спорт",
     "Хувцас",
@@ -121,16 +121,18 @@ export default function Index() {
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex px-2">
                 {banners.map((b) => (
-                  <div
-                    key={b.id}
-                    className="min-w-0 flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] px-2"
-                  >
-                    <div className="relative overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5 aspect-[3/4] bg-white">
+                  <div key={b.id} className="min-w-0 flex-[0_0_100%] px-2">
+                    <div className="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-black/5 aspect-[16/6] bg-white">
                       <img
                         src={b.image}
                         alt={b.title || "banner"}
                         className="absolute inset-0 h-full w-full object-cover"
                       />
+                      <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                        <Button size="sm" className="rounded-full bg-black text-white hover:bg-black/90">
+                          Дэлгэрэнгүй
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -138,22 +140,22 @@ export default function Index() {
             </div>
 
             {/* Controls */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 right-0 flex items-center justify-between px-2">
+            <div className="pointer-events-none absolute bottom-4 right-4 flex items-center gap-2">
               <button
                 type="button"
                 aria-label="Өмнөх"
                 onClick={() => emblaApi?.scrollPrev()}
-                className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-black/50"
+                className="pointer-events-auto inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow ring-1 ring-black/10 hover:bg-white/90"
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 aria-label="Дараах"
                 onClick={() => emblaApi?.scrollNext()}
-                className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-black/50"
+                className="pointer-events-auto inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow ring-1 ring-black/10 hover:bg-white/90"
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-4 w-4" />
               </button>
             </div>
 
