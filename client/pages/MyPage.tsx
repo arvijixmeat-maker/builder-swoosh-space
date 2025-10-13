@@ -89,10 +89,20 @@ export default function MyPage() {
                 <div>И-мэйл: {user.email}</div>
                 <div>Утас: {user.phone}</div>
                 <div>
-                  Хүйс: {gender === "male" ? "Эр" : gender === "female" ? "Эм" : gender ? "Бусад" : "-"}
+                  Хүйс:{" "}
+                  {gender === "male"
+                    ? "Эр"
+                    : gender === "female"
+                      ? "Эм"
+                      : gender
+                        ? "Бусад"
+                        : "-"}
                 </div>
                 <div>
-                  Төрсөн: {birthYear || birthMonth || birthDay ? `${birthYear || ""}${birthMonth ? "." + birthMonth : ""}${birthDay ? "." + birthDay : ""}` : "-"}
+                  Төрсөн:{" "}
+                  {birthYear || birthMonth || birthDay
+                    ? `${birthYear || ""}${birthMonth ? "." + birthMonth : ""}${birthDay ? "." + birthDay : ""}`
+                    : "-"}
                 </div>
               </div>
               <Link to="/orders" className="hover:underline mt-2">
@@ -142,7 +152,10 @@ export default function MyPage() {
                   </div>
                   <div className="grid gap-2">
                     <Label>Хүйс</Label>
-                    <Select value={gender} onValueChange={(v) => setGender(v as any)}>
+                    <Select
+                      value={gender}
+                      onValueChange={(v) => setGender(v as any)}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Сонгоно уу" />
                       </SelectTrigger>
@@ -208,7 +221,15 @@ export default function MyPage() {
                   </div>
                   <div>
                     <div className="text-muted-foreground">Хүйс</div>
-                    <div>{gender === "male" ? "Эр" : gender === "female" ? "Эм" : gender ? "Бусад" : "-"}</div>
+                    <div>
+                      {gender === "male"
+                        ? "Эр"
+                        : gender === "female"
+                          ? "Эм"
+                          : gender
+                            ? "Бусад"
+                            : "-"}
+                    </div>
                   </div>
                   <div>
                     <div className="text-muted-foreground">Төрсөн огноо</div>

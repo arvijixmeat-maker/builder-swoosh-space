@@ -90,7 +90,9 @@ export default function ProductCard({
           />
         </Link>
       </div>
-      <CardContent className={`${compact ? "p-2" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}>
+      <CardContent
+        className={`${compact ? "p-2" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}
+      >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             {product.category && (
@@ -99,7 +101,9 @@ export default function ProductCard({
               </div>
             )}
             <Link to={`/product/${product.id}`} className="block min-w-0">
-              <h3 className={`${compact ? "text-[12px]" : "text-sm md:text-base"} font-medium leading-snug line-clamp-2`}>
+              <h3
+                className={`${compact ? "text-[12px]" : "text-sm md:text-base"} font-medium leading-snug line-clamp-2`}
+              >
                 {product.name}
               </h3>
             </Link>

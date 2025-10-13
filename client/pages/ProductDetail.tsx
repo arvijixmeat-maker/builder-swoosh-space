@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
-import { getCart, setCart, getCurrentUser, getSettings, getProductsLS, PRODUCTS_KEY } from "@/data/store";
+import {
+  getCart,
+  setCart,
+  getCurrentUser,
+  getSettings,
+  getProductsLS,
+  PRODUCTS_KEY,
+} from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -30,7 +37,9 @@ export default function ProductDetail() {
   const [settings, setSettingsState] = useState(getSettings());
   const allProducts = getProductsLS<Product>(PRODUCTS_KEY);
   const related = product?.category
-    ? allProducts.filter((p) => p.category === product.category && p.id !== product.id)
+    ? allProducts.filter(
+        (p) => p.category === product.category && p.id !== product.id,
+      )
     : [];
 
   if (!product) {
@@ -340,8 +349,13 @@ export default function ProductDetail() {
       {product.category && (
         <section className="mt-12">
           <div className="mb-4 md:mb-6 flex items-end justify-between">
-            <h2 className="text-xl md:text-2xl font-bold">{product.category}</h2>
-            <Link to="/catalog" className="text-sm text-primary underline underline-offset-4">
+            <h2 className="text-xl md:text-2xl font-bold">
+              {product.category}
+            </h2>
+            <Link
+              to="/catalog"
+              className="text-sm text-primary underline underline-offset-4"
+            >
               Бүгдийг харах
             </Link>
           </div>
