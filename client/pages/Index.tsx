@@ -122,7 +122,7 @@ export default function Index() {
               <div className="flex px-2">
                 {banners.map((b) => (
                   <div key={b.id} className="min-w-0 flex-[0_0_100%] px-2">
-                    <div className="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-black/5 aspect-[16/6] bg-white">
+                    <div className="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-black/5 aspect-[4/3] md:aspect-[16/6] bg-white">
                       <img
                         src={b.image}
                         alt={b.title || "banner"}
@@ -140,7 +140,7 @@ export default function Index() {
             </div>
 
             {/* Controls */}
-            <div className="pointer-events-none absolute bottom-4 right-4 flex items-center gap-2">
+            <div className="pointer-events-none absolute bottom-4 right-4 hidden md:flex items-center gap-2">
               <button
                 type="button"
                 aria-label="Өмнөх"
