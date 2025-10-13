@@ -36,7 +36,7 @@ export default function ProductDetail() {
           to="/"
           className="text-primary underline underline-offset-4 mt-2 inline-block"
         >
-          Нүүр хуу��ас руу буцах
+          Нүүр хуудас руу буцах
         </Link>
       </div>
     );
@@ -84,7 +84,7 @@ export default function ProductDetail() {
     }
     setCart(next);
     const opt = [
-      color ? `ө��г: ${color}` : null,
+      color ? `өнгө: ${color}` : null,
       size ? `хэмжээ: ${size}` : null,
     ]
       .filter(Boolean)
@@ -99,7 +99,7 @@ export default function ProductDetail() {
     const user = getCurrentUser();
     if (!user) {
       toast({
-        title: "Нэвтрэх ��аардлагатай",
+        title: "Нэвтрэх шаардлагатай",
         description: "Захиалга хийхийн тулд нэвтэрнэ үү",
       });
       navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
@@ -271,7 +271,7 @@ export default function ProductDetail() {
               Сагсанд нэмэх
             </Button>
             <Button className="px-6" onClick={buyNow}>
-              Одоо худалдаж авах
+              О��оо худалдаж авах
             </Button>
           </div>
         </div>
