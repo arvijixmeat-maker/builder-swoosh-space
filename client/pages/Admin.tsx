@@ -567,7 +567,7 @@ export default function Admin() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>
-                        {editing ? "Бү��ээ��дэхүүн засах" : "Шинэ бүтээгдэхүүн"}
+                        {editing ? "Бүтээгдэхүүн засах" : "Шинэ бүтээгдэхүүн"}
                       </DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4">
@@ -651,7 +651,7 @@ export default function Admin() {
                         </select>
                         {categories.length === 0 && (
                           <span className="text-xs text-muted-foreground">
-                            Эхлээд "Ангилал" хэсгээс категори нэмнэ ��ү.
+                            Эхлээд "Ангилал" хэсгээс категори нэмнэ үү.
                           </span>
                         )}
                       </div>
@@ -742,7 +742,7 @@ export default function Admin() {
                         )}
                       </div>
                       <div className="grid gap-2">
-                        <Label>��эмжээ (сонголт)</Label>
+                        <Label>Хэмжээ (сонголт)</Label>
                         <div className="flex flex-wrap gap-2">
                           {[
                             "XS",
@@ -829,7 +829,7 @@ export default function Admin() {
                     <TableHead>Ангилал</TableHead>
                     <TableHead>Тэмдэглэгээ</TableHead>
                     <TableHead className="w-[120px] text-right">
-                      Үйлд��л
+                      Үйлдэл
                     </TableHead>
                   </TableRow>
                 </TableHeader>
