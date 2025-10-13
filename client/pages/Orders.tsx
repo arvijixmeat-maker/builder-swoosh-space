@@ -16,12 +16,15 @@ import {
   setOrders,
   type Order,
   getCurrentUserId,
+  getCurrentUser,
 } from "@/data/store";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Orders() {
   const navigate = useNavigate();
   const [orders, setLocal] = useState<Order[]>(getOrders());
+  const user = getCurrentUser();
+  const [filter, setFilter] = useState<"all" | "unpaid" | "processing" | "delivered">("all");
 
   useEffect(() => {
     const uid = getCurrentUserId();
@@ -53,6 +56,12 @@ export default function Orders() {
     delivered: "Хүргэгдсэн",
   };
   const mine = useMemo(() => orders.filter((o) => !o.userId || o.userId === getCurrentUserId()), [orders]);
+  const filteredMine = useMemo(() => {
+    if (filter === "all") return mine;
+    if (filter === "unpaid") return mine.filter((o) => o.status === "unpaid");
+    if (filter === "delivered") return mine.filter((o) => o.status === "delivered");
+    return mine.filter((o) => o.status === "paid" || o.status === "shipping");
+  }, [mine, filter]);
   const stats = useMemo(
     () => ({
       total: mine.length,
@@ -65,14 +74,19 @@ export default function Orders() {
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Миний хуудас</h1>
-          <p className="text-muted-foreground mt-1">Захиалгын түүх ба тойм</p>
+      <div className="relative overflow-hidden rounded-xl border bg-gradient-to-r from-primary/10 via-red-400/10 to-primary/10 p-4 md:p-6 mb-6">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold">Миний хуудас</h1>
+            <p className="text-muted-foreground">Захиалгын түүх ба тойм</p>
+          </div>
+          <div className="hidden md:flex items-center gap-2 rounded-full border bg-white/60 backdrop-blur px-3 py-1.5">
+            <span className="text-sm">{user?.name || "Хэрэглэгч"}</span>
+          </div>
+          <Link to="/">
+            <Button variant="outline" className="shrink-0">Нүүр рүү</Button>
+          </Link>
         </div>
-        <Link to="/">
-          <Button variant="outline">Нүүр рүү</Button>
-        </Link>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
@@ -102,54 +116,74 @@ export default function Orders() {
         </Card>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Огноо</TableHead>
-            <TableHead>Захиалга №</TableHead>
-            <TableHead>Тоо</TableHead>
-            <TableHead>Нийт</TableHead>
-            <TableHead>Төлөв</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {mine.map((o) => (
-            <TableRow key={o.id}>
-              <TableCell>{formatDate(o.createdAt)}</TableCell>
-              <TableCell className="font-mono text-xs">{o.id}</TableCell>
-              <TableCell>{itemsCount(o)}</TableCell>
-              <TableCell>{format(o.total)}</TableCell>
-              <TableCell>
-                <Badge
-                  variant={
-                    o.status === "unpaid"
-                      ? "destructive"
-                      : o.status === "paid"
-                      ? "default"
-                      : o.status === "shipping"
-                      ? "secondary"
-                      : "outline"
-                  }
-                >
-                  {statusLabel[o.status]}
-                </Badge>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        {orders.filter((o) => !o.userId || o.userId === getCurrentUserId())
-          .length === 0 && (
-          <TableCaption>
-            Одоогоор захиалга алга. Дэлгүүрээс бараа сонгон захиалаарай.
-          </TableCaption>
-        )}
-      </Table>
+      <div className="mb-3 flex gap-2 overflow-x-auto">
+        {[
+          { key: "all", label: "Бүгд" },
+          { key: "unpaid", label: "Төлбөргүй" },
+          { key: "processing", label: "Боловсруулж буй" },
+          { key: "delivered", label: "Хүргэгдсэн" },
+        ].map((f) => (
+          <Button
+            key={f.key}
+            size="sm"
+            variant={filter === (f.key as any) ? "default" : "outline"}
+            onClick={() => setFilter(f.key as any)}
+            className="rounded-full"
+          >
+            {f.label}
+          </Button>
+        ))}
+      </div>
 
-      {mine.length > 0 && (
+      <Card className="shadow-sm">
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Огноо</TableHead>
+                <TableHead>Захиалга №</TableHead>
+                <TableHead>Тоо</TableHead>
+                <TableHead>Нийт</TableHead>
+                <TableHead>Төлөв</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredMine.map((o) => (
+                <TableRow key={o.id}>
+                  <TableCell>{formatDate(o.createdAt)}</TableCell>
+                  <TableCell className="font-mono text-xs">{o.id}</TableCell>
+                  <TableCell>{itemsCount(o)}</TableCell>
+                  <TableCell>{format(o.total)}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        o.status === "unpaid"
+                          ? "destructive"
+                          : o.status === "paid"
+                          ? "default"
+                          : o.status === "shipping"
+                          ? "secondary"
+                          : "outline"
+                      }
+                    >
+                      {statusLabel[o.status]}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            {filteredMine.length === 0 && (
+              <TableCaption>Тохирох захиалга олдсонгүй.</TableCaption>
+            )}
+          </Table>
+        </CardContent>
+      </Card>
+
+      {filteredMine.length > 0 && (
         <div className="mt-6">
           <h2 className="text-sm text-muted-foreground">Захиалгын дэлгэрэнгүй</h2>
           <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-            {mine.map((o) => (
+            {filteredMine.map((o) => (
               <li key={o.id}>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between p-4 pb-0">
