@@ -30,7 +30,7 @@ export default function AdminBanners() {
       if (imageFile) img = await convertImageFileToWebpDataUrl(imageFile, 0.9);
       else if (imageUrl.trim()) img = imageUrl.trim();
       if (!img) {
-        toast({ title: "Зураг сонгоно уу", description: "Файл эсв��л зураг URL" });
+        toast({ title: "Зураг сонгоно уу", description: "Файл эсвэл зураг URL" });
         return;
       }
       const next: Banner = {
