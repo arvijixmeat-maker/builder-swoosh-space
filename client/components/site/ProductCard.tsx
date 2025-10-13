@@ -62,8 +62,8 @@ export default function ProductCard({
       typeof product.compareAtPrice === "number" &&
       product.compareAtPrice! > product.price;
     return (
-      <div className="flex items-center gap-2 whitespace-nowrap">
-        <span className="inline-flex items-center rounded-md bg-primary text-primary-foreground px-2 py-1 text-[12px] font-semibold">
+      <div className="flex items-baseline gap-2 whitespace-nowrap">
+        <span className="text-sm md:text-base font-extrabold text-foreground">
           {fmt(product.price)}
         </span>
         {hasCompare && (
@@ -80,7 +80,7 @@ export default function ProductCard({
       <div className="relative">
         <Link
           to={`/product/${product.id}`}
-          className={`block overflow-hidden bg-muted ${compact ? "aspect-square" : "aspect-[4/5] md:aspect-square"}`}
+          className={`block overflow-hidden bg-muted aspect-square`}
         >
           <img
             src={product.image}
@@ -89,6 +89,15 @@ export default function ProductCard({
             loading="lazy"
           />
         </Link>
+        {(typeof product.compareAtPrice === "number" && (product.compareAtPrice as number) > product.price) || product.badge ? (
+          <div className="absolute top-2 left-2">
+            <span className="rounded bg-red-600 text-white px-1.5 py-0.5 text-[10px]">
+              {typeof product.compareAtPrice === "number" && (product.compareAtPrice as number) > product.price
+                ? "특가"
+                : product.badge === "шинэ" ? "신상" : product.badge}
+            </span>
+          </div>
+        ) : null}
         {product.colors && product.colors.length > 0 && (
           <div className="flex items-center justify-center gap-1 py-2">
             {(product.colors || []).slice(0, 5).map((c, idx) => (
@@ -116,7 +125,6 @@ export default function ProductCard({
                 {product.category}
               </div>
             )}
-            <div className="text-[11px] text-muted-foreground">{product.id}</div>
             <Link to={`/product/${product.id}`} className="block min-w-0">
               <h3
                 className={`${compact ? "text-[12px]" : "text-sm md:text-base"} font-medium leading-snug line-clamp-2`}
