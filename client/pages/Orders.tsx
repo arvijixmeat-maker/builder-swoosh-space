@@ -179,61 +179,6 @@ export default function Orders() {
         </CardContent>
       </Card>
 
-      {filteredMine.length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-sm text-muted-foreground">Захиалгын дэлгэрэнгүй</h2>
-          <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-            {filteredMine.map((o) => (
-              <li key={o.id}>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between p-4 pb-0">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">№ {o.id}</Badge>
-                      <Badge
-                        variant={
-                          o.status === "unpaid"
-                            ? "destructive"
-                            : o.status === "paid"
-                            ? "default"
-                            : o.status === "shipping"
-                            ? "secondary"
-                            : "outline"
-                        }
-                      >
-                        {statusLabel[o.status]}
-                      </Badge>
-                    </div>
-                    <div className="text-xs text-muted-foreground">{formatDate(o.createdAt)}</div>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="md:col-span-2">
-                        <div className="text-xs text-muted-foreground">Хүлээн авагч</div>
-                        <div>{o.customer.name} · {o.customer.phone}</div>
-                        <div className="text-xs text-muted-foreground mt-2">Хаяг</div>
-                        <div>{o.customer.address}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs text-muted-foreground">Нийт</div>
-                        <div className="text-xl font-bold">{format(o.total)}</div>
-                      </div>
-                    </div>
-                    <div className="mt-3 grid grid-cols-3 gap-2">
-                      {o.items.map((i) => (
-                        <div key={i.id} className="rounded border bg-background p-2">
-                          <img src={i.image} alt={i.name} className="h-14 w-full object-cover rounded" />
-                          <div className="mt-1 truncate text-xs">{i.name}</div>
-                          <div className="text-xs text-muted-foreground">×{i.qty}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
