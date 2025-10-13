@@ -236,7 +236,7 @@ export default function SettingsPanel() {
             ))}
             {accounts.length === 0 && (
               <div className="text-sm text-muted-foreground">
-                ��доогоор бүртгэлтэй данс алга.
+                Одоогоор бүртгэлтэй данс алга.
               </div>
             )}
           </div>
