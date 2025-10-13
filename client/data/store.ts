@@ -2,6 +2,7 @@ export const PRODUCTS_KEY = "admin_products";
 export const CATEGORIES_KEY = "admin_categories";
 export const CART_KEY = "cart_items";
 export const ORDERS_KEY = "orders";
+export const ORDERS_SEQ_KEY = "orders_seq";
 export const USERS_KEY = "users";
 export const CURRENT_USER_KEY = "current_user_id";
 export const SETTINGS_KEY = "shop_settings";
@@ -323,9 +324,24 @@ export const setOrders = (orders: Order[]) => {
   }
 };
 
+const getNextOrderId = (): string => {
+  try {
+    const raw = localStorage.getItem(ORDERS_SEQ_KEY);
+    const cur = raw ? parseInt(raw, 10) || 0 : 0;
+    const next = cur + 1;
+    localStorage.setItem(ORDERS_SEQ_KEY, String(next));
+    return String(next).padStart(6, "0");
+  } catch {
+    // Fallback if storage fails
+    return String(Date.now());
+  }
+};
+
 export const addOrder = (order: Order) => {
   const current = getOrders();
-  setOrders([order, ...current]);
+  const id = getNextOrderId();
+  const payload: Order = { ...order, id };
+  setOrders([payload, ...current]);
 };
 
 export const getUsers = (): User[] => {
