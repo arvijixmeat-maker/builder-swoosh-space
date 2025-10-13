@@ -190,7 +190,7 @@ export default function Index() {
                 худалдаа
               </h1>
               <p className="mt-3 md:mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
-                Албан ёсны брэндүүд, баталгаат бараа, хурдан хүргэлт. Та
+                Албан ёсны брэндүүд, ба��алгаат бараа, хурдан хүргэлт. Та
                 хэрэгтэй бүхнээ нэг газраас.
               </p>
               <div className="mt-6 flex items-center gap-3">
@@ -213,14 +213,14 @@ export default function Index() {
       )}
 
       {/* Featured products */}
-      <section id="featured" className="container mx-auto px-4 pb-10 md:pb-14">
+      <section id="featured" className="container mx-auto px-4 mt-6 md:mt-10 pb-10 md:pb-14">
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
             <h2 className="text-xl md:text-2xl font-bold">
               Онцлох бүтээгдэхүүн
             </h2>
             <p className="text-muted-foreground text-sm md:text-base">
-              Хамгийн их борлуулттай бүтээгдэх��үн
+              Хамгийн их борлуулттай бүтээгдэхүүн
             </p>
           </div>
           <div className="flex items-center gap-2">
