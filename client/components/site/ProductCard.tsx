@@ -53,7 +53,7 @@ export default function ProductCard({
   };
 
   const renderPrice = () => {
-    const fmt = (n: number) => `${new Intl.NumberFormat("mn-MN", { maximumFractionDigits: 0 }).format(n)}₮`;
+    const fmt = (n: number) => `${new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(n)}₩`;
     const hasCompare =
       typeof product.compareAtPrice === "number" &&
       product.compareAtPrice! > product.price;
