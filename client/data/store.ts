@@ -59,6 +59,7 @@ export interface User {
   lastName?: string;
   email: string;
   phone: string;
+  avatar?: string;
   password: string;
   gender?: "male" | "female" | "other";
   birthYear?: number;
