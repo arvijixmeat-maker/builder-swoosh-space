@@ -1,4 +1,3 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/data/products";
 import { getCart, setCart, getCurrentUser, getSettings, getProductsLS, PRODUCTS_KEY } from "@/data/store";
