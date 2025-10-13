@@ -83,7 +83,7 @@ export default function Checkout() {
     if (!name.trim() || !phone.trim() || !address.trim()) {
       toast({
         title: "Мэдээлэл дутуу",
-        description: "Нэр, утас, хаяг б��глөнө үү",
+        description: "Нэр, утас, хаяг бөглөнө үү",
       });
       return;
     }
@@ -109,7 +109,7 @@ export default function Checkout() {
     setCart([]);
     toast({
       title: "Захиалга амжилттай",
-      description: "Захиалга тан�� бүртгэгдлээ",
+      description: "Захиалга тань бүртгэгдлээ",
     });
     navigate("/orders");
   };
