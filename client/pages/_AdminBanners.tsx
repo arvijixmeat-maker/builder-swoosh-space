@@ -29,7 +29,10 @@ export default function AdminBanners() {
         });
         return;
       }
-      const img = await convertImageFileToWebpDataUrl(imageFile, 0.9);
+      const img = await convertImageFileToWebpDataUrl(imageFile, 0.9, {
+        targetWidth: 1920,
+        targetAspect: 16 / 6,
+      });
       const next: Banner = {
         id: (crypto as any)?.randomUUID?.() || String(Date.now()),
         image: img,
