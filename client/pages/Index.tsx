@@ -119,46 +119,18 @@ export default function Index() {
             onMouseLeave={() => setIsPlaying(true)}
           >
             <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex">
+              <div className="flex px-2">
                 {banners.map((b) => (
-                  <div key={b.id} className="min-w-0 flex-[0_0_100%] relative">
-                    <div className="container mx-auto px-4 py-4">
-                      <div className="relative overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5 aspect-[16/6] sm:aspect-[16/6] md:aspect-[16/5] bg-white">
-                        <img
-                          src={b.image}
-                          alt={b.title || "banner"}
-                          className="absolute inset-0 h-full w-full object-contain bg-white"
-                        />
-                        {(b.title || b.subtitle || b.link) && (
-                          <div className="absolute inset-0">
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-black/0" />
-                            <div className="absolute inset-0 flex items-center">
-                              <div className="container mx-auto px-6">
-                                <div className="max-w-xl md:max-w-2xl text-white">
-                                  {b.title && (
-                                    <h2 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-sm">
-                                      {b.title}
-                                    </h2>
-                                  )}
-                                  {b.subtitle && (
-                                    <p className="mt-3 md:mt-4 text-sm md:text-lg text-white/85">
-                                      {b.subtitle}
-                                    </p>
-                                  )}
-                                  {b.link && (
-                                    <div className="mt-6">
-                                      <Button asChild size="lg" className="shadow">
-                                        <Link to={b.link}>Дэлгэрэнгүй харах</Link>
-                                      </Button>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        <div className="relative flex flex-col min-h-[100px] p-5 w-full max-w-[1200px] mx-auto" />
-                      </div>
+                  <div
+                    key={b.id}
+                    className="min-w-0 flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] px-2"
+                  >
+                    <div className="relative overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5 aspect-[3/4] bg-white">
+                      <img
+                        src={b.image}
+                        alt={b.title || "banner"}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
                     </div>
                   </div>
                 ))}
