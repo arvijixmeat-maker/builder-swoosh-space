@@ -31,7 +31,7 @@ export default function AdminBanners() {
       else if (imageUrl.trim()) img = imageUrl.trim();
       if (!img) {
         toast({
-          title: "Зураг сонгоно уу",
+          title: "Зураг сонго��о уу",
           description: "Файл эсвэл зураг URL",
         });
         return;
@@ -94,15 +94,6 @@ export default function AdminBanners() {
               type="file"
               accept="image/*"
               onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="burl">Зураг URL (сонголттой)</Label>
-            <Input
-              id="burl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://..."
             />
           </div>
           <div className="grid gap-2">
