@@ -41,6 +41,7 @@ export default function MyPage() {
   const [birthDay, setBirthDay] = useState<string>(
     user?.birthDay ? String(user.birthDay) : "",
   );
+  const [editing, setEditing] = useState<boolean>(true);
 
   useEffect(() => {
     if (!user) {
