@@ -279,7 +279,7 @@ export default function Admin() {
       </div>
 
       <Tabs defaultValue="dashboard" className="mt-2">
-        <TabsList className="w-full justify-start gap-1 flex-wrap">
+        <TabsList className="w-full justify-start gap-1 overflow-x-auto flex-nowrap md:flex-wrap">
           <TabsTrigger value="dashboard">Хяналт</TabsTrigger>
           <TabsTrigger value="products">Бүтээгдэхүүн</TabsTrigger>
           <TabsTrigger value="orders" className="relative">
