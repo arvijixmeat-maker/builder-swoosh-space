@@ -70,11 +70,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/cart" className="hover:underline">
-                  Сагс
-                </Link>
-              </li>
-              <li>
                 <Link to="#" className="hover:underline">
                   Салбарын мэдээлэл
                 </Link>
