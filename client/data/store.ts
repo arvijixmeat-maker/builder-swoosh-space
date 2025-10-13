@@ -460,9 +460,9 @@ export const seedDefaultAdmin = () => {
       id: crypto.randomUUID(),
       createdAt: Date.now(),
       name: "Admin",
-      email: "admin@local",
+      email: "admin",
       phone: "0000000000",
-      password: "admin1234",
+      password: "admin123",
       isAdmin: true,
     };
     setUsers([admin, ...existing]);
