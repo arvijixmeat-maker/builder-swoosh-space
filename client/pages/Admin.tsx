@@ -143,6 +143,7 @@ export default function Admin() {
       image: "",
       images: [],
       category: "",
+      description: "",
       badge: "",
       colors: [],
       sizes: [],
@@ -789,7 +790,7 @@ export default function Admin() {
                         </div>
                         {form.sizes && form.sizes.length === 0 && (
                           <span className="text-xs text-muted-foreground">
-                            Сонголтгүй бол хэмжээ шүүлтгүй гэж үзнэ.
+                            Сонголтгүй бол х��мжээ шүүлтгүй гэж үзнэ.
                           </span>
                         )}
                       </div>
