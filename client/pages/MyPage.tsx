@@ -113,80 +113,119 @@ export default function MyPage() {
             <CardTitle>Хувийн мэдээлэл</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">И-мэйл</Label>
-                <Input id="email" value={user.email} disabled />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="phone">Утас</Label>
-                <Input id="phone" value={user.phone} disabled />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="firstName">Нэр</Label>
-                <Input
-                  id="firstName"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="lastName">Овог</Label>
-                <Input
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Хүйс</Label>
-                <Select
-                  value={gender}
-                  onValueChange={(v) => setGender(v as any)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Сонгоно уу" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Эр</SelectItem>
-                    <SelectItem value="female">Эм</SelectItem>
-                    <SelectItem value="other">Бусад</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label>Төрсөн огноо</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  <Input
-                    placeholder="Жил"
-                    value={birthYear}
-                    onChange={(e) => setBirthYear(e.target.value)}
-                    inputMode="numeric"
-                  />
-                  <Input
-                    placeholder="Сар"
-                    value={birthMonth}
-                    onChange={(e) => setBirthMonth(e.target.value)}
-                    inputMode="numeric"
-                  />
-                  <Input
-                    placeholder="Өдөр"
-                    value={birthDay}
-                    onChange={(e) => setBirthDay(e.target.value)}
-                    inputMode="numeric"
-                  />
+            {editing ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">И-мэйл</Label>
+                    <Input id="email" value={user.email} disabled />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="phone">Утас</Label>
+                    <Input id="phone" value={user.phone} disabled />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="firstName">Нэр</Label>
+                    <Input
+                      id="firstName"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="lastName">Овог</Label>
+                    <Input
+                      id="lastName"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Хүйс</Label>
+                    <Select value={gender} onValueChange={(v) => setGender(v as any)}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Сонгоно уу" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="male">Эр</SelectItem>
+                        <SelectItem value="female">Эм</SelectItem>
+                        <SelectItem value="other">Бусад</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Төрсөн огноо</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      <Input
+                        placeholder="Жил"
+                        value={birthYear}
+                        onChange={(e) => setBirthYear(e.target.value)}
+                        inputMode="numeric"
+                      />
+                      <Input
+                        placeholder="Сар"
+                        value={birthMonth}
+                        onChange={(e) => setBirthMonth(e.target.value)}
+                        inputMode="numeric"
+                      />
+                      <Input
+                        placeholder="Өдөр"
+                        value={birthDay}
+                        onChange={(e) => setBirthDay(e.target.value)}
+                        inputMode="numeric"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="mt-6 flex items-center justify-between">
-              <button
-                onClick={logout}
-                className="text-sm text-destructive hover:underline"
-              >
-                Бүртгэл устгах
-              </button>
-              <Button onClick={save}>Хадгалах</Button>
-            </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <button
+                    onClick={logout}
+                    className="text-sm text-destructive hover:underline"
+                  >
+                    Бүртгэл устгах
+                  </button>
+                  <Button onClick={save}>Хадгалах</Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <div className="text-muted-foreground">И-мэйл</div>
+                    <div>{user.email}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Утас</div>
+                    <div>{user.phone}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Нэр</div>
+                    <div>{name}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Овог</div>
+                    <div>{lastName || "-"}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Хүйс</div>
+                    <div>{gender === "male" ? "Эр" : gender === "female" ? "Эм" : gender ? "Бусад" : "-"}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Төрсөн огноо</div>
+                    <div>
+                      {birthYear || birthMonth || birthDay
+                        ? `${birthYear || ""}${birthMonth ? "." + birthMonth : ""}${birthDay ? "." + birthDay : ""}`
+                        : "-"}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 flex items-center justify-end gap-3">
+                  <Button variant="outline" onClick={() => setEditing(true)}>
+                    Засах
+                  </Button>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
