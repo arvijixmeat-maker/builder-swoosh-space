@@ -249,7 +249,7 @@ export default function Index() {
               Онцлох бүтээгдэхүүн
             </h2>
             <p className="text-muted-foreground text-sm md:text-base">
-              Хамгийн их борлуулттай бүтээгдэх��үн
+              Хамгийн их борлуулттай бүтээгдэхүүн
             </p>
           </div>
           <div className="flex items-center gap-2">
