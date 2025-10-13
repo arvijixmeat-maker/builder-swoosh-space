@@ -337,6 +337,27 @@ export default function ProductDetail() {
           </AccordionItem>
         </Accordion>
       </div>
+
+      {product.category && (
+        <section className="mt-12">
+          <div className="mb-4 md:mb-6 flex items-end justify-between">
+            <h2 className="text-xl md:text-2xl font-bold">{product.category}</h2>
+            <Link to="/catalog" className="text-sm text-primary underline underline-offset-4">
+              Бүгдийг харах
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
+            {related.slice(0, 10).map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+            {related.length === 0 && (
+              <div className="col-span-full text-sm text-muted-foreground">
+                Тохирох бүтээгдэхүүн алга.
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
