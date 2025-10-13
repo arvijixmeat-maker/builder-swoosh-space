@@ -694,7 +694,9 @@ export default function Admin() {
                         <Textarea
                           id="desc"
                           value={form.description || ""}
-                          onChange={(e) => setForm({ ...form, description: e.target.value })}
+                          onChange={(e) =>
+                            setForm({ ...form, description: e.target.value })
+                          }
                           placeholder="Богино тайлбар..."
                         />
                       </div>

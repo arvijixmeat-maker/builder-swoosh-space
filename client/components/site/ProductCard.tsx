@@ -74,8 +74,7 @@ export default function ProductCard({
     );
   };
 
-  const badgeText =
-    product.badge === "шинэ" ? "신상" : product.badge || "";
+  const badgeText = product.badge === "шинэ" ? "신상" : product.badge || "";
 
   return (
     <Card className={`overflow-hidden group h-full flex flex-col`}>
@@ -103,7 +102,8 @@ export default function ProductCard({
                   (1 - product.price / (product.compareAtPrice as number)) *
                     100,
                 ),
-              )}%
+              )}
+              %
             </span>
           </div>
         )}
@@ -139,7 +139,11 @@ export default function ProductCard({
 
         {/* Mobile quick add to cart */}
         <div className="mt-1 md:hidden">
-          <Button size={compact ? "sm" : "default"} className="w-full" onClick={addToCart}>
+          <Button
+            size={compact ? "sm" : "default"}
+            className="w-full"
+            onClick={addToCart}
+          >
             Сагслах
           </Button>
         </div>

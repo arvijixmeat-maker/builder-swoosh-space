@@ -129,7 +129,10 @@ export default function Index() {
                         className="absolute inset-0 h-full w-full object-cover"
                       />
                       <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                        <Button size="sm" className="rounded-full bg-black text-white hover:bg-black/90">
+                        <Button
+                          size="sm"
+                          className="rounded-full bg-black text-white hover:bg-black/90"
+                        >
                           Дэлгэрэнгүй
                         </Button>
                       </div>
