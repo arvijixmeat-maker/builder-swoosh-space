@@ -105,7 +105,7 @@ export default function Cart() {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Сагс</h1>
           <div className="text-muted-foreground mt-1 hidden md:block">
-            <h1>Таны сонгосон бар��анууд</h1>
+            <h1>Таны сонгосон бараанууд</h1>
             <h5></h5>
             <h3></h3>
           </div>
