@@ -64,7 +64,6 @@ export default function AdminBanners() {
     setItems(draft);
   };
 
-
   return (
     <Card id="banners" className="mb-6">
       <CardHeader>

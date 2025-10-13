@@ -213,7 +213,10 @@ export default function Index() {
       )}
 
       {/* Featured products */}
-      <section id="featured" className="container mx-auto px-4 mt-6 md:mt-10 pb-10 md:pb-14">
+      <section
+        id="featured"
+        className="container mx-auto px-4 mt-6 md:mt-10 pb-10 md:pb-14"
+      >
         <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
           <div>
             <h2 className="text-xl md:text-2xl font-bold">

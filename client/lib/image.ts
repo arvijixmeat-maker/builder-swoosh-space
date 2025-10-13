@@ -67,10 +67,14 @@ export async function convertImageFileToWebpDataUrl(
       let outH = cropH;
       if (opts?.targetWidth) {
         outW = Math.min(opts.targetWidth, cropW);
-        outH = Math.round(outW / (opts?.targetAspect ? opts.targetAspect : cropW / cropH));
+        outH = Math.round(
+          outW / (opts?.targetAspect ? opts.targetAspect : cropW / cropH),
+        );
       } else if (opts?.targetHeight) {
         outH = Math.min(opts.targetHeight, cropH);
-        outW = Math.round(outH * (opts?.targetAspect ? opts.targetAspect : cropW / cropH));
+        outW = Math.round(
+          outH * (opts?.targetAspect ? opts.targetAspect : cropW / cropH),
+        );
       } else if (opts?.maxWidth) {
         if (cropW > opts.maxWidth) {
           outW = opts.maxWidth;
