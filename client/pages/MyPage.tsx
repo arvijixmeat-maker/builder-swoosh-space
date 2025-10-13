@@ -93,8 +93,17 @@ export default function MyPage() {
   };
 
   const onChangePassword = () => {
-    if (!rules.len || !rules.upper || !rules.lower || !rules.num || !rules.match) {
-      toast({ title: "Нууц үг шаардлагыг хангаагүй байна", description: "8-аас дээш, том/жижиг үсэг болон тоо орсон байх", });
+    if (
+      !rules.len ||
+      !rules.upper ||
+      !rules.lower ||
+      !rules.num ||
+      !rules.match
+    ) {
+      toast({
+        title: "Нууц үг шаардлагыг хангаагүй байна",
+        description: "8-аас дээш, том/жижиг үсэг болон тоо орсон байх",
+      });
       return;
     }
     updateCurrentUser({ password: pwd });
@@ -109,7 +118,9 @@ export default function MyPage() {
   };
 
   const onPickFile = () => fileRef.current?.click();
-  const onFileChange: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+  const onFileChange: React.ChangeEventHandler<HTMLInputElement> = async (
+    e,
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -123,8 +134,14 @@ export default function MyPage() {
   };
 
   const PasswordRule = ({ ok, label }: { ok: boolean; label: string }) => (
-    <div className={`flex items-center gap-2 text-sm ${ok ? "text-green-600" : "text-red-600"}`}>
-      {ok ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+    <div
+      className={`flex items-center gap-2 text-sm ${ok ? "text-green-600" : "text-red-600"}`}
+    >
+      {ok ? (
+        <CheckCircle2 className="h-4 w-4" />
+      ) : (
+        <XCircle className="h-4 w-4" />
+      )}
       <span>{label}</span>
     </div>
   );
@@ -138,17 +155,30 @@ export default function MyPage() {
             <div className="flex items-center gap-3">
               <Avatar className="h-14 w-14">
                 <AvatarImage src={avatar} alt={name || user.name} />
-                <AvatarFallback>{(name || user.name || "?").slice(0, 1)}</AvatarFallback>
+                <AvatarFallback>
+                  {(name || user.name || "?").slice(0, 1)}
+                </AvatarFallback>
               </Avatar>
               <div>
                 <div className="font-semibold">{name || user.name}</div>
-                <div className="text-xs text-muted-foreground">{user.email}</div>
+                <div className="text-xs text-muted-foreground">
+                  {user.email}
+                </div>
               </div>
             </div>
             <nav className="mt-5 grid gap-2 text-sm">
-              <Link to="/orders" className="hover:underline">Захиалгууд ({ordersCount})</Link>
-              <Link to="/cart" className="hover:underline">Сагс ({cartCount})</Link>
-              <button onClick={logout} className="text-left text-destructive hover:underline">Гарах</button>
+              <Link to="/orders" className="hover:underline">
+                Захиалгууд ({ordersCount})
+              </Link>
+              <Link to="/cart" className="hover:underline">
+                Сагс ({cartCount})
+              </Link>
+              <button
+                onClick={logout}
+                className="text-left text-destructive hover:underline"
+              >
+                Гарах
+              </button>
             </nav>
           </CardContent>
         </Card>
@@ -163,11 +193,19 @@ export default function MyPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="firstName">Нэр</Label>
-                  <Input id="firstName" value={name} onChange={(e) => setName(e.target.value)} />
+                  <Input
+                    id="firstName"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="lastName">Овог</Label>
-                  <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                  <Input
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">И-мэйл</Label>
@@ -179,7 +217,10 @@ export default function MyPage() {
                 </div>
                 <div className="grid gap-2">
                   <Label>Хүйс</Label>
-                  <Select value={gender} onValueChange={(v) => setGender(v as any)}>
+                  <Select
+                    value={gender}
+                    onValueChange={(v) => setGender(v as any)}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Сонгоно уу" />
                     </SelectTrigger>
@@ -193,9 +234,24 @@ export default function MyPage() {
                 <div className="grid gap-2">
                   <Label>Төрсөн огноо</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <Input placeholder="Жил" value={birthYear} onChange={(e) => setBirthYear(e.target.value)} inputMode="numeric" />
-                    <Input placeholder="Сар" value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} inputMode="numeric" />
-                    <Input placeholder="Өдөр" value={birthDay} onChange={(e) => setBirthDay(e.target.value)} inputMode="numeric" />
+                    <Input
+                      placeholder="Жил"
+                      value={birthYear}
+                      onChange={(e) => setBirthYear(e.target.value)}
+                      inputMode="numeric"
+                    />
+                    <Input
+                      placeholder="Сар"
+                      value={birthMonth}
+                      onChange={(e) => setBirthMonth(e.target.value)}
+                      inputMode="numeric"
+                    />
+                    <Input
+                      placeholder="Өдөр"
+                      value={birthDay}
+                      onChange={(e) => setBirthDay(e.target.value)}
+                      inputMode="numeric"
+                    />
                   </div>
                 </div>
                 <div className="grid gap-2">
@@ -203,10 +259,24 @@ export default function MyPage() {
                   <div className="flex items-center gap-3">
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={avatar} alt={name || user.name} />
-                      <AvatarFallback>{(name || user.name || "?").slice(0, 1)}</AvatarFallback>
+                      <AvatarFallback>
+                        {(name || user.name || "?").slice(0, 1)}
+                      </AvatarFallback>
                     </Avatar>
-                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
-                    <Button type="button" variant="outline" onClick={onPickFile}>Зураг оруулах</Button>
+                    <input
+                      ref={fileRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={onFileChange}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={onPickFile}
+                    >
+                      Зураг оруулах
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -224,11 +294,21 @@ export default function MyPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="pwd">Шинэ нууц үг</Label>
-                  <Input id="pwd" type="password" value={pwd} onChange={(e) => setPwd(e.target.value)} />
+                  <Input
+                    id="pwd"
+                    type="password"
+                    value={pwd}
+                    onChange={(e) => setPwd(e.target.value)}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="pwd2">Шинэ нууц үг давтах</Label>
-                  <Input id="pwd2" type="password" value={pwd2} onChange={(e) => setPwd2(e.target.value)} />
+                  <Input
+                    id="pwd2"
+                    type="password"
+                    value={pwd2}
+                    onChange={(e) => setPwd2(e.target.value)}
+                  />
                 </div>
               </div>
               <div className="mt-3 grid gap-1">
@@ -255,13 +335,23 @@ export default function MyPage() {
                 </AlertDescription>
               </Alert>
               <div className="mt-4 flex justify-end">
-                <Button variant="secondary" onClick={() => toast({ title: "Код илгээлээ" })}>Код илгээх</Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => toast({ title: "Код илгээлээ" })}
+                >
+                  Код илгээх
+                </Button>
               </div>
             </CardContent>
           </Card>
 
           <div className="flex justify-between items-center">
-            <button onClick={logout} className="text-sm text-destructive hover:underline">Бүртгэл устгах</button>
+            <button
+              onClick={logout}
+              className="text-sm text-destructive hover:underline"
+            >
+              Бүртгэл устгах
+            </button>
           </div>
         </div>
       </div>
