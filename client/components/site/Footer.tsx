@@ -21,7 +21,8 @@ export default function Footer() {
               чанартай, хурдан хүргэлтээр танд хүргэнэ.
             </p>
             <button className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-xs shadow-sm">
-              <BadgeCheck className="h-4 w-4 text-primary" /> Улсын бүртгэлээр баталгаажсан
+              <BadgeCheck className="h-4 w-4 text-primary" /> Улсын бүртгэлээр
+              баталгаажсан
             </button>
           </div>
 
@@ -30,10 +31,26 @@ export default function Footer() {
               МЭДЭЭЛЭЛ
             </div>
             <ul className="space-y-2 text-sm">
-              <li><Link to="#" className="hover:underline">Бидний тухай</Link></li>
-              <li><Link to="#" className="hover:underline">Үйлчилгээний нөхцөл</Link></li>
-              <li><Link to="#" className="hover:underline">Хүргэлтийн нөхцөл</Link></li>
-              <li><Link to="#" className="hover:underline">Төлбөрийн нөхцөл</Link></li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Бидний тухай
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Үйлчилгээний нөхцөл
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Хүргэлтийн нөхцөл
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Төлбөрийн нөхцөл
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -42,10 +59,26 @@ export default function Footer() {
               ТУСЛАМЖ
             </div>
             <ul className="space-y-2 text-sm">
-              <li><Link to="#" className="hover:underline">Холбоо барих</Link></li>
-              <li><Link to="/mypage" className="hover:underline">Миний бүртгэл</Link></li>
-              <li><Link to="/cart" className="hover:underline">Сагс</Link></li>
-              <li><Link to="#" className="hover:underline">Салбарын мэдээлэл</Link></li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Холбоо барих
+                </Link>
+              </li>
+              <li>
+                <Link to="/mypage" className="hover:underline">
+                  Миний бүртгэл
+                </Link>
+              </li>
+              <li>
+                <Link to="/cart" className="hover:underline">
+                  Сагс
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Салбарын мэдээлэл
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -55,17 +88,27 @@ export default function Footer() {
             </div>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="inline-flex items-center gap-2 hover:underline">
+                <a
+                  href="#"
+                  className="inline-flex items-center gap-2 hover:underline"
+                >
                   <Facebook className="h-4 w-4" /> Facebook
                 </a>
               </li>
               <li>
-                <a href="#" className="inline-flex items-center gap-2 hover:underline">
+                <a
+                  href="#"
+                  className="inline-flex items-center gap-2 hover:underline"
+                >
                   <Instagram className="h-4 w-4" /> Instagram
                 </a>
               </li>
-              <li className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> 77076688</li>
-              <li className="inline-flex items-center gap-2"><Mail className="h-4 w-4" /> info@delgemelod.mn</li>
+              <li className="inline-flex items-center gap-2">
+                <Phone className="h-4 w-4" /> 77076688
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <Mail className="h-4 w-4" /> info@delgemelod.mn
+              </li>
             </ul>
           </div>
         </div>
