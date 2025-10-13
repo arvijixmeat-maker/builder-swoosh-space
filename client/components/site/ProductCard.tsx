@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { getCart, setCart } from "@/data/store";
 import { Link } from "react-router-dom";
+import { Heart, Star } from "lucide-react";
 
 export interface Product {
   id: string;
@@ -101,6 +102,14 @@ export default function ProductCard({
             </span>
           </div>
         )}
+        <div className="md:hidden px-2 pt-2 flex items-center gap-2">
+          <Button variant="outline" size="icon" aria-label="Wishlist">
+            <Heart className="h-4 w-4" />
+          </Button>
+          <Button onClick={addToCart} className="flex-1 rounded-full bg-black text-white hover:bg-black/90">
+            Сагслах
+          </Button>
+        </div>
       </div>
       <CardContent
         className={`${compact ? "p-2" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}
@@ -118,6 +127,10 @@ export default function ProductCard({
               {product.description}
             </p>
           )}
+          <div className="mt-1 md:hidden flex items-center gap-1 text-muted-foreground text-[12px]">
+            <span>0</span>
+            <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+          </div>
           <div className="mt-1">
             {renderPrice()}
           </div>
