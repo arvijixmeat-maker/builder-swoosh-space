@@ -222,9 +222,6 @@ export default function Index() {
             <h2 className="text-xl md:text-2xl font-bold">
               Онцлох бүтээгдэхүүн
             </h2>
-            <p className="text-muted-foreground text-sm md:text-base">
-              Хамгийн их борлуулттай бүтээгдэхүүн
-            </p>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/catalog" className="hidden">
