@@ -87,7 +87,7 @@ export default function Index() {
   const fallback = [
     "Электроник",
     "Гэр ахуй",
-    "Гоо сайхан",
+    "Гоо с��йхан",
     "Спорт",
     "Хувцас",
     "Хүүхдийн",
@@ -157,6 +157,7 @@ export default function Index() {
                             </div>
                           </div>
                         )}
+                        <div className="relative flex flex-col min-h-[100px] p-5 w-full max-w-[1200px] mx-auto" />
                       </div>
                     </div>
                   </div>
