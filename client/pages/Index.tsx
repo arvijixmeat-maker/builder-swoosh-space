@@ -249,13 +249,13 @@ export default function Index() {
               Онцлох бүтээгдэхүүн
             </h2>
             <p className="text-muted-foreground text-sm md:text-base">
-              Шинээр нэмэгдсэн ба хамгийн их зарагддаг бараанууд
+              Хамгийн их борлуулттай бүтээгдэх��үн
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Link
               to="/catalog"
-              className="inline md:hidden rounded-full border px-3 py-1 text-xs"
+              className="hidden"
             >
               Дэлгэрэнгүй харах
             </Link>
