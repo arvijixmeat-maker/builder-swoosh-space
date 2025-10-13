@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   getOrders,
   setOrders,
@@ -76,6 +77,7 @@ export default function Orders() {
       total: mine.length,
       unpaid: mine.filter((o) => o.status === "unpaid").length,
       processing: mine.filter((o) => o.status === "paid" || o.status === "shipping").length,
+      delivered: mine.filter((o) => o.status === "delivered").length,
       spent: mine.reduce((s, o) => s + o.total, 0),
     }),
     [mine],
@@ -125,23 +127,21 @@ export default function Orders() {
         </Card>
       </div>
 
-      <div className="mb-3 flex gap-2 overflow-x-auto">
-        {[
-          { key: "all", label: "Бүгд" },
-          { key: "unpaid", label: "Төлбөргүй" },
-          { key: "processing", label: "Боловсруулж буй" },
-          { key: "delivered", label: "Хүргэгдсэн" },
-        ].map((f) => (
-          <Button
-            key={f.key}
-            size="sm"
-            variant={filter === (f.key as any) ? "default" : "outline"}
-            onClick={() => setFilter(f.key as any)}
-            className="rounded-full"
-          >
-            {f.label}
-          </Button>
-        ))}
+      <div className="mb-3 overflow-x-auto">
+        <ToggleGroup type="single" value={filter} onValueChange={(v) => v && setFilter(v as any)}>
+          <ToggleGroupItem value="all" variant="outline" size="sm" className="rounded-full">
+            Бүгд <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.total}</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="unpaid" variant="outline" size="sm" className="rounded-full">
+            Төлбөргүй <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.unpaid}</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="processing" variant="outline" size="sm" className="rounded-full">
+            Боловсруулж буй <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.processing}</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="delivered" variant="outline" size="sm" className="rounded-full">
+            Хүргэгдсэн <span className="ml-1 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-muted px-1 text-[10px]">{stats.delivered}</span>
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
 
       <Card className="shadow-sm">
