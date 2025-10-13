@@ -443,76 +443,108 @@ export default function Admin() {
               <CardTitle>Захиалгууд</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Огноо</TableHead>
-                    <TableHead>Захиалга №</TableHead>
-                    <TableHead>Тоо</TableHead>
-                    <TableHead>Нийт</TableHead>
-                    <TableHead>Төлөв</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {orders.map((o) => (
-                    <TableRow key={o.id}>
-                      <TableCell>
-                        {new Date(o.createdAt).toLocaleString("ko-KR", {
-                          year: "numeric",
-                          month: "numeric",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                          hour12: false,
-                        })}
-                      </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {o.id}
-                      </TableCell>
-                      <TableCell>
-                        {o.items.reduce((s, i) => s + i.qty, 0)}
-                      </TableCell>
-                      <TableCell>
-                        {new Intl.NumberFormat("ko-KR", {
-                          style: "currency",
-                          currency: "KRW",
-                          maximumFractionDigits: 0,
-                        }).format(o.total)}
-                      </TableCell>
-                      <TableCell>
-                        <Select
-                          value={o.status}
-                          onValueChange={(v) =>
-                            updateOrderStatus(o.id, v as Order["status"])
-                          }
-                        >
-                          <SelectTrigger className="h-9 w-[220px]">
-                            <SelectValue placeholder="Төлөв сонгох" />
-                          </SelectTrigger>
-                          <SelectContent align="end">
-                            <SelectItem value="unpaid">
-                              Төлбөр төлөгдөөгүй
-                            </SelectItem>
-                            <SelectItem value="paid">
-                              Төлбөр төлөгдсөн
-                            </SelectItem>
-                            <SelectItem value="shipping">
-                              Хүргэлт хийгдэж байна
-                            </SelectItem>
-                            <SelectItem value="delivered">
-                              Хүргэгдсэн
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
+              <div className="hidden md:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Огноо</TableHead>
+                      <TableHead>Захиалга №</TableHead>
+                      <TableHead>Тоо</TableHead>
+                      <TableHead>Нийт</TableHead>
+                      <TableHead>Төлөв</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.map((o) => (
+                      <TableRow key={o.id}>
+                        <TableCell>
+                          {new Date(o.createdAt).toLocaleString("ko-KR", {
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: false,
+                          })}
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">
+                          {o.id}
+                        </TableCell>
+                        <TableCell>
+                          {o.items.reduce((s, i) => s + i.qty, 0)}
+                        </TableCell>
+                        <TableCell>
+                          {new Intl.NumberFormat("ko-KR", {
+                            style: "currency",
+                            currency: "KRW",
+                            maximumFractionDigits: 0,
+                          }).format(o.total)}
+                        </TableCell>
+                        <TableCell>
+                          <Select
+                            value={o.status}
+                            onValueChange={(v) =>
+                              updateOrderStatus(o.id, v as Order["status"])
+                            }
+                          >
+                            <SelectTrigger className="h-9 w-[220px]">
+                              <SelectValue placeholder="Төлөв сонгох" />
+                            </SelectTrigger>
+                            <SelectContent align="end">
+                              <SelectItem value="unpaid">
+                                Төлбөр төлөгдөөгүй
+                              </SelectItem>
+                              <SelectItem value="paid">
+                                Төлбөр төлөгдсөн
+                              </SelectItem>
+                              <SelectItem value="shipping">
+                                Хүргэлт хийгдэж байна
+                              </SelectItem>
+                              <SelectItem value="delivered">
+                                Хүргэгдсэн
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  {orders.length === 0 && (
+                    <TableCaption>Одоогоор захиалга алга.</TableCaption>
+                  )}
+                </Table>
+              </div>
+              <div className="md:hidden grid gap-3">
+                {orders.map((o) => (
+                  <div key={o.id} className="rounded-lg border bg-card p-3">
+                    <div className="flex items-center justify-between">
+                      <div className="font-mono text-xs">#{o.id}</div>
+                      <div className="text-xs text-muted-foreground">{new Date(o.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                      <div>Тоо</div><div className="text-right">{o.items.reduce((s, i) => s + i.qty, 0)}</div>
+                      <div>Нийт</div><div className="text-right">{new Intl.NumberFormat("ko-KR", {style: "currency", currency: "KRW", maximumFractionDigits: 0}).format(o.total)}</div>
+                    </div>
+                    <div className="mt-2">
+                      <Select value={o.status} onValueChange={(v) => updateOrderStatus(o.id, v as any)}>
+                        <SelectTrigger className="h-9 w-full">
+                          <SelectValue placeholder="Төлөв сонгох" />
+                        </SelectTrigger>
+                        <SelectContent align="end">
+                          <SelectItem value="unpaid">Төлбөр төлөгдөөгүй</SelectItem>
+                          <SelectItem value="paid">Төлбөр төлөгдсөн</SelectItem>
+                          <SelectItem value="shipping">Хүргэлт хийгдэж б��йна</SelectItem>
+                          <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                ))}
                 {orders.length === 0 && (
-                  <TableCaption>Одоогоор захиалга алга.</TableCaption>
+                  <div className="text-sm text-muted-foreground">Одоогоор захиалга алга.</div>
                 )}
-              </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
