@@ -123,38 +123,36 @@ export default function Index() {
                 {banners.map((b) => (
                   <div key={b.id} className="min-w-0 flex-[0_0_100%] relative">
                     <div className="relative mx-4 my-4 overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5">
-                      <div className="relative aspect-[16/6] sm:aspect-[16/6] md:aspect-[16/5] bg-muted">
+                      <div className="relative aspect-[16/6] sm:aspect-[16/6] md:aspect-[16/5] bg-white">
                         <img
                           src={b.image}
                           alt={b.title || "banner"}
-                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[6000ms] group-hover/embla:scale-105"
+                          className="absolute inset-0 h-full w-full object-contain bg-white"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-black/0" />
                         {(b.title || b.subtitle || b.link) && (
-                          <div className="absolute inset-0 flex items-center">
-                            <div className="container mx-auto px-6">
-                              <div className="max-w-xl md:max-w-2xl text-white">
-                                {b.title && (
-                                  <h2 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-sm">
-                                    {b.title}
-                                  </h2>
-                                )}
-                                {b.subtitle && (
-                                  <p className="mt-3 md:mt-4 text-sm md:text-lg text-white/85">
-                                    {b.subtitle}
-                                  </p>
-                                )}
-                                {b.link && (
-                                  <div className="mt-6">
-                                    <Button
-                                      asChild
-                                      size="lg"
-                                      className="shadow"
-                                    >
-                                      <Link to={b.link}>Дэлгэрэнгүй харах</Link>
-                                    </Button>
-                                  </div>
-                                )}
+                          <div className="absolute inset-0">
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-black/0" />
+                            <div className="absolute inset-0 flex items-center">
+                              <div className="container mx-auto px-6">
+                                <div className="max-w-xl md:max-w-2xl text-white">
+                                  {b.title && (
+                                    <h2 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-sm">
+                                      {b.title}
+                                    </h2>
+                                  )}
+                                  {b.subtitle && (
+                                    <p className="mt-3 md:mt-4 text-sm md:text-lg text-white/85">
+                                      {b.subtitle}
+                                    </p>
+                                  )}
+                                  {b.link && (
+                                    <div className="mt-6">
+                                      <Button asChild size="lg" className="shadow">
+                                        <Link to={b.link}>Дэлгэрэнгүй харах</Link>
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -249,7 +247,7 @@ export default function Index() {
               Онцлох бүтээгдэхүүн
             </h2>
             <p className="text-muted-foreground text-sm md:text-base">
-              Хамгийн их борлуулттай бүтээгдэхүүн
+              Хамгийн их борлуулттай бүтээгдэх��үн
             </p>
           </div>
           <div className="flex items-center gap-2">
