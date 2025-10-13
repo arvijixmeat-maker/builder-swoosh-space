@@ -122,8 +122,8 @@ export default function Index() {
               <div className="flex">
                 {banners.map((b) => (
                   <div key={b.id} className="min-w-0 flex-[0_0_100%] relative">
-                    <div className="relative mx-4 my-4 overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5">
-                      <div className="relative aspect-[16/6] sm:aspect-[16/6] md:aspect-[16/5] bg-white">
+                    <div className="container mx-auto px-4 py-4">
+                      <div className="relative overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5 aspect-[16/6] sm:aspect-[16/6] md:aspect-[16/5] bg-white">
                         <img
                           src={b.image}
                           alt={b.title || "banner"}
