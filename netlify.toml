@@ -13,3 +13,9 @@
   from = "/api/*"
   status = 200
   to = "/.netlify/functions/api/:splat"
+
+[[redirects]]
+  # SPA fallback so React Router routes work on refresh and deep links
+  from = "/*"
+  to = "/index.html"
+  status = 200
