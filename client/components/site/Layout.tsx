@@ -46,7 +46,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             }`}
           >
             <ShoppingBag className="w-6 h-6" />
-            <span className="text-xs mt-1">Каталог</span>
+            <span className="text-xs mt-1">Ангилал</span>
           </Link>
           <Link
             to="/cart"

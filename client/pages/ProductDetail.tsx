@@ -167,7 +167,7 @@ export default function ProductDetail() {
         </Link>
         <span className="mx-2">/</span>
         <Link to="/catalog" className="hover:text-foreground">
-          Каталог
+          Ангилал
         </Link>
         <span className="mx-2">/</span>
         <span className="text-foreground">{product.name}</span>
