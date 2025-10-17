@@ -286,44 +286,6 @@ export default function MyPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Нууц үг солих</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="pwd">Шинэ нууц үг</Label>
-                  <Input
-                    id="pwd"
-                    type="password"
-                    value={pwd}
-                    onChange={(e) => setPwd(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="pwd2">Шинэ нууц үг давтах</Label>
-                  <Input
-                    id="pwd2"
-                    type="password"
-                    value={pwd2}
-                    onChange={(e) => setPwd2(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="mt-3 grid gap-1">
-                <PasswordRule ok={rules.len} label="8-аас дээш тэмдэгттэй" />
-                <PasswordRule ok={rules.upper} label="Том үсэг орсон байх" />
-                <PasswordRule ok={rules.lower} label="Жижиг үсэг орсон байх" />
-                <PasswordRule ok={rules.num} label="Тоо орсон байх" />
-                <PasswordRule ok={rules.match} label="Давталт таарч байх" />
-              </div>
-              <div className="mt-6 flex justify-end">
-                <Button onClick={onChangePassword}>Хадгалах</Button>
-              </div>
-            </CardContent>
-          </Card>
-
           <div className="flex justify-between items-center">
             <button
               onClick={logout}
