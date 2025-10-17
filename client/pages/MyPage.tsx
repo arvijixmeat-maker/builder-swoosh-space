@@ -324,27 +324,6 @@ export default function MyPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Бүртгэл баталгаажуулах</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Alert className="bg-yellow-50 border-yellow-200 text-yellow-800">
-                <AlertDescription>
-                  Та өөрийн имэйл хаягаа баталгаажуулаагүй байна.
-                </AlertDescription>
-              </Alert>
-              <div className="mt-4 flex justify-end">
-                <Button
-                  variant="secondary"
-                  onClick={() => toast({ title: "Код илгээлээ" })}
-                >
-                  Код илгээх
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
           <div className="flex justify-between items-center">
             <button
               onClick={logout}
