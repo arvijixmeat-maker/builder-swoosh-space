@@ -254,31 +254,6 @@ export default function MyPage() {
                     />
                   </div>
                 </div>
-                <div className="grid gap-2">
-                  <Label>Зураг</Label>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={avatar} alt={name || user.name} />
-                      <AvatarFallback>
-                        {(name || user.name || "?").slice(0, 1)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <input
-                      ref={fileRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={onFileChange}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={onPickFile}
-                    >
-                      Зураг оруулах
-                    </Button>
-                  </div>
-                </div>
               </div>
               <div className="mt-6 flex justify-end">
                 <Button onClick={onSaveProfile}>Хадгалах</Button>
