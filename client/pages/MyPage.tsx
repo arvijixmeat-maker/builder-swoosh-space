@@ -147,37 +147,49 @@ export default function MyPage() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-10">
-      <div className="grid grid-cols-1 md:grid-cols-[260px,1fr] gap-6">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="grid grid-cols-1 lg:grid-cols-[280px,1fr] gap-8">
         {/* Sidebar */}
-        <Card className="h-fit">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-14 w-14">
+        <Card className="h-fit shadow-sm">
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center text-center">
+              <Avatar className="h-20 w-20 mb-4 border-4 border-background shadow-md">
                 <AvatarImage src={avatar} alt={name || user.name} />
-                <AvatarFallback>
+                <AvatarFallback className="text-2xl font-semibold">
                   {(name || user.name || "?").slice(0, 1)}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-semibold">{name || user.name}</div>
-                <div className="text-xs text-muted-foreground">
+                <div className="font-bold text-lg">{name || user.name}</div>
+                <div className="text-sm text-muted-foreground mt-1">
                   {user.email}
                 </div>
               </div>
             </div>
-            <nav className="mt-5 grid gap-2 text-sm">
-              <Link to="/orders" className="hover:underline">
-                Захиалгууд ({ordersCount})
+            <nav className="mt-6 grid gap-1">
+              <Link
+                to="/orders"
+                className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-accent transition-colors"
+              >
+                <span className="text-sm font-medium">Захиалгууд</span>
+                <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                  {ordersCount}
+                </span>
               </Link>
-              <Link to="/cart" className="hover:underline">
-                Сагс ({cartCount})
+              <Link
+                to="/cart"
+                className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-accent transition-colors"
+              >
+                <span className="text-sm font-medium">Сагс</span>
+                <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                  {cartCount}
+                </span>
               </Link>
               <button
                 onClick={logout}
-                className="text-left text-destructive hover:underline"
+                className="flex items-center px-3 py-2.5 rounded-lg hover:bg-destructive/10 text-destructive transition-colors text-left"
               >
-                Гарах
+                <span className="text-sm font-medium">Гарах</span>
               </button>
             </nav>
           </CardContent>
@@ -185,38 +197,38 @@ export default function MyPage() {
 
         {/* Main content */}
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Тохиргоо</CardTitle>
+          <Card className="shadow-sm">
+            <CardHeader className="border-b">
+              <CardTitle className="text-2xl">Тохиргоо</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="firstName">Нэр</Label>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName" className="text-sm font-medium">Нэр</Label>
                   <Input
                     id="firstName"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="lastName">Овог</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName" className="text-sm font-medium">Овог</Label>
                   <Input
                     id="lastName"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">И-мэйл</Label>
-                  <Input id="email" value={user.email} disabled />
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-medium">И-мэйл</Label>
+                  <Input id="email" value={user.email} disabled className="bg-muted" />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="phone">Утасны дугаар</Label>
-                  <Input id="phone" value={user.phone} disabled />
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-sm font-medium">Утасны дугаар</Label>
+                  <Input id="phone" value={user.phone} disabled className="bg-muted" />
                 </div>
-                <div className="grid gap-2">
-                  <Label>Хүйс</Label>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Хүйс</Label>
                   <Select
                     value={gender}
                     onValueChange={(v) => setGender(v as any)}
@@ -231,9 +243,9 @@ export default function MyPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid gap-2">
-                  <Label>Төрсөн огноо</Label>
-                  <div className="grid grid-cols-3 gap-2">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Төрсөн огноо</Label>
+                  <div className="grid grid-cols-3 gap-3">
                     <Input
                       placeholder="Жил"
                       value={birthYear}
@@ -255,20 +267,31 @@ export default function MyPage() {
                   </div>
                 </div>
               </div>
-              <div className="mt-6 flex justify-end">
-                <Button onClick={onSaveProfile}>Хадгалах</Button>
+              <div className="mt-8 flex justify-end">
+                <Button onClick={onSaveProfile} size="lg" className="px-8">Хадгалах</Button>
               </div>
             </CardContent>
           </Card>
 
-          <div className="flex justify-between items-center">
-            <button
-              onClick={logout}
-              className="text-sm text-destructive hover:underline"
-            >
-              Бүртгэл устгах
-            </button>
-          </div>
+          <Card className="border-destructive/50 shadow-sm">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-lg">Бүртгэл устгах</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Бүртгэлээ устгавал таны бүх мэдээлэл устах болно
+                  </p>
+                </div>
+                <Button
+                  onClick={logout}
+                  variant="destructive"
+                  size="sm"
+                >
+                  Устгах
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
