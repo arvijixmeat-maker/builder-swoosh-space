@@ -71,7 +71,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             }`}
           >
             <User className="w-6 h-6" />
-            <span className="text-xs mt-1">Би</span>
+            <span className="text-xs mt-1">Миний</span>
           </Link>
         </div>
       </nav>
