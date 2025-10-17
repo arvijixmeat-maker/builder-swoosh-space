@@ -120,11 +120,19 @@ export default function Header() {
                     {user.name.split(" ")[0]}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/mypage" className="w-full">
-                      Миний хуудас
-                    </Link>
-                  </DropdownMenuItem>
+                  {user.isAdmin ? (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="w-full">
+                        Админ хуудас
+                      </Link>
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem asChild>
+                      <Link to="/mypage" className="w-full">
+                        Миний хуудас
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout}>Гарах</DropdownMenuItem>
                 </>
