@@ -272,26 +272,6 @@ export default function MyPage() {
               </div>
             </CardContent>
           </Card>
-
-          <Card className="border-destructive/50 shadow-sm">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-lg">Бүртгэл устгах</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Бүртгэлээ устгавал таны бүх мэдээлэл устах болно
-                  </p>
-                </div>
-                <Button
-                  onClick={logout}
-                  variant="destructive"
-                  size="sm"
-                >
-                  Устгах
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
