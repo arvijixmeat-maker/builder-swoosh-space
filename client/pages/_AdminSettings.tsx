@@ -59,7 +59,7 @@ export default function SettingsPanel() {
     toast({ title: "Бүтээгдэхүүний мэдээллийн текстүүд шинэчлэгдлээ" });
   };
 
-  const addAccount = () => {
+  const addAccount = async () => {
     const a: BankAccount = {
       bankName: bankName.trim(),
       accountNumber: accountNumber.trim(),
@@ -73,9 +73,10 @@ export default function SettingsPanel() {
       });
       return;
     }
-    const s = getSettings();
+    const s = await getSettings();
     const next: Settings = { ...s, bankAccounts: [a, ...s.bankAccounts] };
-    setSettings(next);
+    await setSettings(next);
+    await loadData();
     setBankName("");
     setAccountNumber("");
     setHolder("");
@@ -83,13 +84,14 @@ export default function SettingsPanel() {
     toast({ title: "Данс нэмэгдлээ" });
   };
 
-  const removeAccount = (idx: number) => {
-    const s = getSettings();
+  const removeAccount = async (idx: number) => {
+    const s = await getSettings();
     const next: Settings = {
       ...s,
       bankAccounts: s.bankAccounts.filter((_, i) => i !== idx),
     };
-    setSettings(next);
+    await setSettings(next);
+    await loadData();
     toast({ title: "Данс устгагдлаа" });
   };
 
