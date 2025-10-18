@@ -281,19 +281,21 @@ export default function ProductDetail() {
                 +
               </button>
             </div>
-            <Button
-              variant="outline"
-              className="w-full py-6 text-base font-semibold border-2 hover:bg-gray-50"
-              onClick={addToCart}
-            >
-              Сагсанд нэмэх
-            </Button>
-            <Button
-              className="w-full py-6 text-base font-semibold bg-[#EF4444] hover:bg-[#DC2626] text-white"
-              onClick={buyNow}
-            >
-              Одоо худалдаж авах
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1 py-6 text-base font-semibold border-2 hover:bg-gray-50"
+                onClick={addToCart}
+              >
+                Сагсанд нэмэх
+              </Button>
+              <Button
+                className="flex-1 py-6 text-base font-semibold bg-[#EF4444] hover:bg-[#DC2626] text-white"
+                onClick={buyNow}
+              >
+                Худалдан авах
+              </Button>
+            </div>
           </div>
         </div>
       </div>
