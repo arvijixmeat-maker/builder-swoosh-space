@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +24,24 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
-import { Plus, Pencil, Trash2, Download, X, Check, ChevronDown } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Download,
+  X,
+  Check,
+  ChevronDown,
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  FolderOpen,
+  Image as ImageIcon,
+  Settings,
+  Store,
+  ExternalLink,
+} from "lucide-react";
 import SettingsPanel from "./_AdminSettings";
 import AdminBanners from "./_AdminBanners";
 import {
@@ -50,6 +65,7 @@ import {
   type User,
   getCurrentUser,
 } from "@/data/store";
+import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "admin_products";
 
@@ -79,6 +95,7 @@ export default function Admin() {
   const [orders, setOrdersState] = useState<Order[]>([]);
   const [users, setUsersState] = useState<User[]>([]);
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
+  const [activeTab, setActiveTab] = useState("dashboard");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -269,242 +286,475 @@ export default function Admin() {
     URL.revokeObjectURL(url);
   };
 
+  const menuItems = [
+    { id: "dashboard", label: "Самбар", icon: LayoutDashboard },
+    { id: "products", label: "Бүтээгдэхүүн", icon: Package },
+    {
+      id: "orders",
+      label: "Захиалга",
+      icon: ShoppingCart,
+      badge: orders.filter((o) => o.status === "unpaid").length,
+    },
+    { id: "users", label: "Хэрэглэгчид", icon: Users },
+    { id: "categories", label: "Ангилал", icon: FolderOpen },
+    { id: "banners", label: "Баннер", icon: ImageIcon },
+    { id: "settings", label: "Тохиргоо", icon: Settings },
+  ];
+
   return (
-    <div className="container mx-auto px-4 py-10">
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold">
-          Админ хяналтын самбар
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Бүтээгдэхүүн, захиалга, ангиллыг у��ирдах
-        </p>
-      </div>
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-r flex flex-col">
+        {/* Logo */}
+        <div className="p-6 border-b">
+          <Link to="/" className="flex items-center gap-2 font-bold text-xl">
+            <Store className="h-6 w-6 text-primary" />
+            <span>Талын Маркет</span>
+          </Link>
+        </div>
 
-      <Tabs defaultValue="dashboard" className="mt-2">
-        <TabsList className="w-full justify-start gap-1 overflow-x-auto flex-nowrap md:flex-wrap">
-          <TabsTrigger value="dashboard">Хяналт</TabsTrigger>
-          <TabsTrigger value="products">Бүтээгдэхүүн</TabsTrigger>
-          <TabsTrigger value="orders" className="relative">
-            Захиалгууд
-            {orders.filter((o) => o.status === "unpaid").length > 0 && (
-              <span className="ml-2 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] leading-5 text-white">
-                {orders.filter((o) => o.status === "unpaid").length}
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="users">Хэрэглэгчид</TabsTrigger>
-          <TabsTrigger value="categories">Ангилал</TabsTrigger>
-          <TabsTrigger value="banners">Баннер</TabsTrigger>
-          <TabsTrigger value="settings">Тохиргоо</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="dashboard">
-          <div
-            id="stats"
-            className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">
-                  Нийт бүтээгдэхүүн
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-bold">
-                {stats.totalProducts}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">
-                  Ангиллын тоо
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-bold">
-                {stats.categories}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">
-                  Хямд (&lt;200k)
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-bold">
-                {stats.lowPrice}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">
-                  Өндөр (≥200k)
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-bold">
-                {stats.highPrice}
-              </CardContent>
-            </Card>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 overflow-y-auto">
+          <div className="space-y-1">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                    activeTab === item.id
+                      ? "bg-primary text-primary-foreground"
+                      : "text-gray-700 hover:bg-gray-100"
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="flex-1 text-left">{item.label}</span>
+                  {item.badge && item.badge > 0 && (
+                    <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
-        </TabsContent>
+        </nav>
 
-        <TabsContent value="categories">
-          <Card id="categories" className="mb-6">
-            <CardHeader>
-              <CardTitle>Ангилал удирдах</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col md:flex-row md:items-center gap-3">
-                <div className="flex-1 grid gap-2">
-                  <Label htmlFor="newCat">Шинэ ангилал</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="newCat"
-                      value={newCat}
-                      onChange={(e) => setNewCat(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          addCategory();
-                        }
-                      }}
-                      placeholder="ж: Электроник"
-                    />
-                    <Button type="button" onClick={addCategory}>
-                      Нэмэх
-                    </Button>
-                  </div>
-                </div>
+        {/* Store Link */}
+        <div className="p-4 border-t">
+          <Link
+            to="/"
+            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100"
+          >
+            <ExternalLink className="h-4 w-4" />
+            <span>Дэлгүүр рүү очих</span>
+          </Link>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="p-8">
+          {/* Dashboard */}
+          {activeTab === "dashboard" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">Хяналтын самбар</h1>
+                <p className="text-muted-foreground mt-1">
+                  Ерөнхий мэдээлэл ба тоо баримт
+                </p>
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {categories.map((c) => (
-                  <span
-                    key={c}
-                    className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs"
-                  >
-                    {editingCat === c ? (
-                      <>
-                        <input
-                          className="h-7 rounded border bg-background px-2 text-xs"
-                          value={editCatValue}
-                          onChange={(e) => setEditCatValue(e.target.value)}
+              <div
+                id="stats"
+                className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
+              >
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm text-muted-foreground">
+                      Нийт бүтээгдэхүүн
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-2xl font-bold">
+                    {stats.totalProducts}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm text-muted-foreground">
+                      Ангиллын тоо
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-2xl font-bold">
+                    {stats.categories}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm text-muted-foreground">
+                      Хямд (&lt;200k)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-2xl font-bold">
+                    {stats.lowPrice}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm text-muted-foreground">
+                      Өндөр (≥200k)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-2xl font-bold">
+                    {stats.highPrice}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {/* Categories */}
+          {activeTab === "categories" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">Ангилал</h1>
+                <p className="text-muted-foreground mt-1">
+                  Барaa бүтээгдэхүүний ангилал удирдах
+                </p>
+              </div>
+              <Card id="categories" className="mb-6">
+                <CardHeader>
+                  <CardTitle>Ангилал удирдах</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col md:flex-row md:items-center gap-3">
+                    <div className="flex-1 grid gap-2">
+                      <Label htmlFor="newCat">Шинэ ангилал</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="newCat"
+                          value={newCat}
+                          onChange={(e) => setNewCat(e.target.value)}
                           onKeyDown={(e) => {
-                            if (e.key === "Enter") saveEditCategory();
-                            if (e.key === "Escape") cancelEditCategory();
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              addCategory();
+                            }
                           }}
-                          aria-label="Ангилал нэр"
-                          autoFocus
+                          placeholder="ж: Электроник"
                         />
-                        <button
-                          aria-label="Save"
-                          onClick={saveEditCategory}
-                          className="opacity-80 hover:opacity-100"
-                        >
-                          <Check className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          aria-label="Cancel"
-                          onClick={cancelEditCategory}
-                          className="opacity-60 hover:opacity-100"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <span>{c}</span>
-                        <button
-                          aria-label="Edit"
-                          onClick={() => startEditCategory(c)}
-                          className="opacity-60 hover:opacity-100"
-                        >
-                          <Pencil className="h-3 w-3" />
-                        </button>
-                        <button
-                          aria-label="Remove"
-                          onClick={() => removeCategory(c)}
-                          className="opacity-60 hover:opacity-100"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </>
+                        <Button type="button" onClick={addCategory}>
+                          Нэмэх
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {categories.map((c) => (
+                      <span
+                        key={c}
+                        className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs"
+                      >
+                        {editingCat === c ? (
+                          <>
+                            <input
+                              className="h-7 rounded border bg-background px-2 text-xs"
+                              value={editCatValue}
+                              onChange={(e) => setEditCatValue(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") saveEditCategory();
+                                if (e.key === "Escape") cancelEditCategory();
+                              }}
+                              aria-label="Ангилал нэр"
+                              autoFocus
+                            />
+                            <button
+                              aria-label="Save"
+                              onClick={saveEditCategory}
+                              className="opacity-80 hover:opacity-100"
+                            >
+                              <Check className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              aria-label="Cancel"
+                              onClick={cancelEditCategory}
+                              className="opacity-60 hover:opacity-100"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <span>{c}</span>
+                            <button
+                              aria-label="Edit"
+                              onClick={() => startEditCategory(c)}
+                              className="opacity-60 hover:opacity-100"
+                            >
+                              <Pencil className="h-3 w-3" />
+                            </button>
+                            <button
+                              aria-label="Remove"
+                              onClick={() => removeCategory(c)}
+                              className="opacity-60 hover:opacity-100"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </>
+                        )}
+                      </span>
+                    ))}
+                    {categories.length === 0 && (
+                      <span className="text-sm text-muted-foreground">
+                        Одоогоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.
+                      </span>
                     )}
-                  </span>
-                ))}
-                {categories.length === 0 && (
-                  <span className="text-sm text-muted-foreground">
-                    Одоогоор ангилал алга. Дээрх талбараар шинээр нэмнэ үү.
-                  </span>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-        <TabsContent value="orders">
-          <Card id="orders" className="mb-6">
-            <CardHeader>
-              <CardTitle>Захиалгууд</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="hidden md:block overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[40px]"></TableHead>
-                      <TableHead>Огноо</TableHead>
-                      <TableHead>Захиалга №</TableHead>
-                      <TableHead>Тоо</TableHead>
-                      <TableHead>Нийт</TableHead>
-                      <TableHead>Төлөв</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
+          {/* Orders */}
+          {activeTab === "orders" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">Захиалга</h1>
+                <p className="text-muted-foreground mt-1">
+                  Захиалгын жагсаалт болон төлөв
+                </p>
+              </div>
+              <Card id="orders" className="mb-6">
+                <CardHeader>
+                  <CardTitle>Захиалгууд</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="hidden md:block overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[40px]"></TableHead>
+                          <TableHead>Огноо</TableHead>
+                          <TableHead>Захиалга №</TableHead>
+                          <TableHead>Тоо</TableHead>
+                          <TableHead>Нийт</TableHead>
+                          <TableHead>Төлөв</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {orders.map((o) => {
+                          const isExpanded = expandedOrders.has(o.id);
+                          return (
+                            <>
+                              <TableRow
+                                key={o.id}
+                                className="cursor-pointer hover:bg-muted/50"
+                                onClick={() => {
+                                  const next = new Set(expandedOrders);
+                                  if (next.has(o.id)) next.delete(o.id);
+                                  else next.add(o.id);
+                                  setExpandedOrders(next);
+                                }}
+                              >
+                                <TableCell>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0"
+                                  >
+                                    <ChevronDown
+                                      className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                                    />
+                                  </Button>
+                                </TableCell>
+                                <TableCell>
+                                  {new Date(o.createdAt).toLocaleString(
+                                    "ko-KR",
+                                    {
+                                      year: "numeric",
+                                      month: "numeric",
+                                      day: "numeric",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      second: "2-digit",
+                                      hour12: false,
+                                    }
+                                  )}
+                                </TableCell>
+                                <TableCell className="font-mono text-xs">
+                                  {o.id}
+                                </TableCell>
+                                <TableCell>
+                                  {o.items.reduce((s, i) => s + i.qty, 0)}
+                                </TableCell>
+                                <TableCell>
+                                  {new Intl.NumberFormat("ko-KR", {
+                                    style: "currency",
+                                    currency: "KRW",
+                                    maximumFractionDigits: 0,
+                                  }).format(o.total)}
+                                </TableCell>
+                                <TableCell onClick={(e) => e.stopPropagation()}>
+                                  <Select
+                                    value={o.status}
+                                    onValueChange={(v) =>
+                                      updateOrderStatus(
+                                        o.id,
+                                        v as Order["status"]
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger className="h-9 w-[220px]">
+                                      <SelectValue placeholder="Төлөв сонгох" />
+                                    </SelectTrigger>
+                                    <SelectContent align="end">
+                                      <SelectItem value="unpaid">
+                                        Төлбөр төлөгдөөгүй
+                                      </SelectItem>
+                                      <SelectItem value="paid">
+                                        Төлбөр төлөгдсөн
+                                      </SelectItem>
+                                      <SelectItem value="shipping">
+                                        Хүргэлт хийгдэж байна
+                                      </SelectItem>
+                                      <SelectItem value="delivered">
+                                        Хүргэгдсэн
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </TableCell>
+                              </TableRow>
+                              {isExpanded && (
+                                <TableRow key={`${o.id}-details`}>
+                                  <TableCell colSpan={6} className="bg-muted/30">
+                                    <div className="p-4">
+                                      <div className="font-semibold mb-2">
+                                        Захиалгын дэлгэрэнгүй:
+                                      </div>
+                                      <div className="space-y-2">
+                                        {o.items.map((item, idx) => (
+                                          <div
+                                            key={idx}
+                                            className="flex items-start gap-3 p-2 bg-background rounded"
+                                          >
+                                            <img
+                                              src={item.image}
+                                              alt={item.name}
+                                              className="h-12 w-12 rounded object-cover"
+                                            />
+                                            <div className="flex-1">
+                                              <div className="font-medium">
+                                                {item.name}
+                                              </div>
+                                              <div className="text-sm text-muted-foreground">
+                                                {new Intl.NumberFormat("ko-KR", {
+                                                  style: "currency",
+                                                  currency: "KRW",
+                                                  maximumFractionDigits: 0,
+                                                }).format(item.price)}{" "}
+                                                × {item.qty}
+                                              </div>
+                                              {(item.color || item.size) && (
+                                                <div className="flex gap-2 mt-1">
+                                                  {item.color && (
+                                                    <span className="inline-flex items-center gap-1 text-xs bg-muted px-2 py-0.5 rounded">
+                                                      <span
+                                                        className="h-3 w-3 rounded-full border"
+                                                        style={{
+                                                          background: item.color,
+                                                        }}
+                                                      />
+                                                      {item.color}
+                                                    </span>
+                                                  )}
+                                                  {item.size && (
+                                                    <span className="text-xs bg-muted px-2 py-0.5 rounded">
+                                                      사이즈: {item.size}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      <div className="mt-3 pt-3 border-t">
+                                        <div className="text-sm">
+                                          <strong>고객:</strong>{" "}
+                                          {o.customer.name}
+                                        </div>
+                                        <div className="text-sm">
+                                          <strong>전화:</strong>{" "}
+                                          {o.customer.phone}
+                                        </div>
+                                        <div className="text-sm">
+                                          <strong>주소:</strong>{" "}
+                                          {o.customer.address}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            </>
+                          );
+                        })}
+                      </TableBody>
+                      {orders.length === 0 && (
+                        <TableCaption>Одоогоор захиалга алга.</TableCaption>
+                      )}
+                    </Table>
+                  </div>
+                  <div className="md:hidden grid gap-3">
                     {orders.map((o) => {
                       const isExpanded = expandedOrders.has(o.id);
                       return (
-                        <>
-                          <TableRow key={o.id} className="cursor-pointer hover:bg-muted/50" onClick={() => {
-                            const next = new Set(expandedOrders);
-                            if (next.has(o.id)) next.delete(o.id);
-                            else next.add(o.id);
-                            setExpandedOrders(next);
-                          }}>
-                            <TableCell>
-                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                                <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                              </Button>
-                            </TableCell>
-                            <TableCell>
-                              {new Date(o.createdAt).toLocaleString("ko-KR", {
-                                year: "numeric",
-                                month: "numeric",
-                                day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                second: "2-digit",
-                                hour12: false,
-                              })}
-                            </TableCell>
-                            <TableCell className="font-mono text-xs">
-                              {o.id}
-                            </TableCell>
-                            <TableCell>
-                              {o.items.reduce((s, i) => s + i.qty, 0)}
-                            </TableCell>
-                            <TableCell>
-                              {new Intl.NumberFormat("ko-KR", {
-                                style: "currency",
-                                currency: "KRW",
-                                maximumFractionDigits: 0,
-                              }).format(o.total)}
-                            </TableCell>
-                            <TableCell onClick={(e) => e.stopPropagation()}>
+                        <div key={o.id} className="rounded-lg border bg-card">
+                          <div
+                            className="p-3"
+                            onClick={() => {
+                              const next = new Set(expandedOrders);
+                              if (next.has(o.id)) next.delete(o.id);
+                              else next.add(o.id);
+                              setExpandedOrders(next);
+                            }}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <ChevronDown
+                                  className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                                />
+                                <div className="font-mono text-xs">
+                                  #{o.id}
+                                </div>
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {new Date(o.createdAt).toLocaleDateString()}
+                              </div>
+                            </div>
+                            <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                              <div>Тоо</div>
+                              <div className="text-right">
+                                {o.items.reduce((s, i) => s + i.qty, 0)}
+                              </div>
+                              <div>Нийт</div>
+                              <div className="text-right">
+                                {new Intl.NumberFormat("ko-KR", {
+                                  style: "currency",
+                                  currency: "KRW",
+                                  maximumFractionDigits: 0,
+                                }).format(o.total)}
+                              </div>
+                            </div>
+                            <div className="mt-2" onClick={(e) => e.stopPropagation()}>
                               <Select
                                 value={o.status}
                                 onValueChange={(v) =>
-                                  updateOrderStatus(o.id, v as Order["status"])
+                                  updateOrderStatus(o.id, v as any)
                                 }
                               >
-                                <SelectTrigger className="h-9 w-[220px]">
+                                <SelectTrigger className="h-9 w-full">
                                   <SelectValue placeholder="Төлөв сонгох" />
                                 </SelectTrigger>
                                 <SelectContent align="end">
@@ -522,524 +772,539 @@ export default function Admin() {
                                   </SelectItem>
                                 </SelectContent>
                               </Select>
-                            </TableCell>
-                          </TableRow>
+                            </div>
+                          </div>
                           {isExpanded && (
-                            <TableRow key={`${o.id}-details`}>
-                              <TableCell colSpan={6} className="bg-muted/30">
-                                <div className="p-4">
-                                  <div className="font-semibold mb-2">Захиалгын дэлгэрэнгүй:</div>
-                                  <div className="space-y-2">
-                                    {o.items.map((item, idx) => (
-                                      <div key={idx} className="flex items-start gap-3 p-2 bg-background rounded">
-                                        <img src={item.image} alt={item.name} className="h-12 w-12 rounded object-cover" />
-                                        <div className="flex-1">
-                                          <div className="font-medium">{item.name}</div>
-                                          <div className="text-sm text-muted-foreground">
-                                            {new Intl.NumberFormat("ko-KR", {
-                                              style: "currency",
-                                              currency: "KRW",
-                                              maximumFractionDigits: 0,
-                                            }).format(item.price)} × {item.qty}
-                                          </div>
-                                          {(item.color || item.size) && (
-                                            <div className="flex gap-2 mt-1">
-                                              {item.color && (
-                                                <span className="inline-flex items-center gap-1 text-xs bg-muted px-2 py-0.5 rounded">
-                                                  <span className="h-3 w-3 rounded-full border" style={{background: item.color}} />
-                                                  {item.color}
-                                                </span>
-                                              )}
-                                              {item.size && (
-                                                <span className="text-xs bg-muted px-2 py-0.5 rounded">
-                                                  사이즈: {item.size}
-                                                </span>
-                                              )}
-                                            </div>
+                            <div className="border-t p-3 bg-muted/30">
+                              <div className="font-semibold mb-2 text-sm">
+                                Захиалгын дэлгэрэнгүй:
+                              </div>
+                              <div className="space-y-2">
+                                {o.items.map((item, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-start gap-2 p-2 bg-background rounded"
+                                  >
+                                    <img
+                                      src={item.image}
+                                      alt={item.name}
+                                      className="h-10 w-10 rounded object-cover"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="text-sm font-medium truncate">
+                                        {item.name}
+                                      </div>
+                                      <div className="text-xs text-muted-foreground">
+                                        {new Intl.NumberFormat("ko-KR", {
+                                          style: "currency",
+                                          currency: "KRW",
+                                          maximumFractionDigits: 0,
+                                        }).format(item.price)}{" "}
+                                        × {item.qty}
+                                      </div>
+                                      {(item.color || item.size) && (
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {item.color && (
+                                            <span className="inline-flex items-center gap-1 text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                                              <span
+                                                className="h-2 w-2 rounded-full border"
+                                                style={{
+                                                  background: item.color,
+                                                }}
+                                              />
+                                              {item.color}
+                                            </span>
+                                          )}
+                                          {item.size && (
+                                            <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                                              {item.size}
+                                            </span>
                                           )}
                                         </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                  <div className="mt-3 pt-3 border-t">
-                                    <div className="text-sm"><strong>고객:</strong> {o.customer.name}</div>
-                                    <div className="text-sm"><strong>전화:</strong> {o.customer.phone}</div>
-                                    <div className="text-sm"><strong>주소:</strong> {o.customer.address}</div>
-                                  </div>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </>
-                      );
-                    })}
-                  </TableBody>
-                  {orders.length === 0 && (
-                    <TableCaption>Одоогоор захиалга алга.</TableCaption>
-                  )}
-                </Table>
-              </div>
-              <div className="md:hidden grid gap-3">
-                {orders.map((o) => {
-                  const isExpanded = expandedOrders.has(o.id);
-                  return (
-                    <div key={o.id} className="rounded-lg border bg-card">
-                      <div className="p-3" onClick={() => {
-                        const next = new Set(expandedOrders);
-                        if (next.has(o.id)) next.delete(o.id);
-                        else next.add(o.id);
-                        setExpandedOrders(next);
-                      }}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                            <div className="font-mono text-xs">#{o.id}</div>
-                          </div>
-                          <div className="text-xs text-muted-foreground">{new Date(o.createdAt).toLocaleDateString()}</div>
-                        </div>
-                        <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                          <div>Тоо</div><div className="text-right">{o.items.reduce((s, i) => s + i.qty, 0)}</div>
-                          <div>Нийт</div><div className="text-right">{new Intl.NumberFormat("ko-KR", {style: "currency", currency: "KRW", maximumFractionDigits: 0}).format(o.total)}</div>
-                        </div>
-                        <div className="mt-2" onClick={(e) => e.stopPropagation()}>
-                          <Select value={o.status} onValueChange={(v) => updateOrderStatus(o.id, v as any)}>
-                            <SelectTrigger className="h-9 w-full">
-                              <SelectValue placeholder="Төлөв сонгох" />
-                            </SelectTrigger>
-                            <SelectContent align="end">
-                              <SelectItem value="unpaid">Төлбөр төлөгдөөгүй</SelectItem>
-                              <SelectItem value="paid">Төлбөр төлөгдсөн</SelectItem>
-                              <SelectItem value="shipping">Хүргэлт хийгдэж байна</SelectItem>
-                              <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      {isExpanded && (
-                        <div className="border-t p-3 bg-muted/30">
-                          <div className="font-semibold mb-2 text-sm">Захиалгын дэлгэрэнгүй:</div>
-                          <div className="space-y-2">
-                            {o.items.map((item, idx) => (
-                              <div key={idx} className="flex items-start gap-2 p-2 bg-background rounded">
-                                <img src={item.image} alt={item.name} className="h-10 w-10 rounded object-cover" />
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-sm font-medium truncate">{item.name}</div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {new Intl.NumberFormat("ko-KR", {
-                                      style: "currency",
-                                      currency: "KRW",
-                                      maximumFractionDigits: 0,
-                                    }).format(item.price)} × {item.qty}
-                                  </div>
-                                  {(item.color || item.size) && (
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                      {item.color && (
-                                        <span className="inline-flex items-center gap-1 text-[10px] bg-muted px-1.5 py-0.5 rounded">
-                                          <span className="h-2 w-2 rounded-full border" style={{background: item.color}} />
-                                          {item.color}
-                                        </span>
-                                      )}
-                                      {item.size && (
-                                        <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded">
-                                          {item.size}
-                                        </span>
                                       )}
                                     </div>
-                                  )}
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mt-2 pt-2 border-t text-xs space-y-1">
+                                <div>
+                                  <strong>고객:</strong> {o.customer.name}
+                                </div>
+                                <div>
+                                  <strong>전화:</strong> {o.customer.phone}
+                                </div>
+                                <div>
+                                  <strong>주소:</strong> {o.customer.address}
                                 </div>
                               </div>
-                            ))}
-                          </div>
-                          <div className="mt-2 pt-2 border-t text-xs space-y-1">
-                            <div><strong>고객:</strong> {o.customer.name}</div>
-                            <div><strong>전화:</strong> {o.customer.phone}</div>
-                            <div><strong>주소:</strong> {o.customer.address}</div>
-                          </div>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-                {orders.length === 0 && (
-                  <div className="text-sm text-muted-foreground">Одоогоор захиалга алга.</div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="users">
-          <Card id="users" className="mb-6">
-            <CardHeader>
-              <CardTitle>Хэрэглэгчид</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="hidden md:block overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Огноо</TableHead>
-                      <TableHead>Нэр</TableHead>
-                      <TableHead>И-мэйл</TableHead>
-                      <TableHead>Утас</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {users.map((u) => (
-                      <TableRow key={u.id}>
-                        <TableCell>
-                          {new Date(u.createdAt).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>{u.name}</TableCell>
-                        <TableCell>{u.email}</TableCell>
-                        <TableCell>{u.phone}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                  {users.length === 0 && (
-                    <TableCaption>Одоогоор хэрэглэгч бүртгэлгүй.</TableCaption>
-                  )}
-                </Table>
-              </div>
-              <div className="md:hidden grid gap-3">
-                {users.map((u) => (
-                  <div key={u.id} className="rounded-lg border bg-card p-3 text-sm">
-                    <div className="font-medium">{u.name}</div>
-                    <div className="text-xs text-muted-foreground">{new Date(u.createdAt).toLocaleDateString()}</div>
-                    <div className="mt-1 grid grid-cols-3 gap-2">
-                      <div className="col-span-1 text-muted-foreground">И-мэйл</div>
-                      <div className="col-span-2 break-all">{u.email}</div>
-                      <div className="col-span-1 text-muted-foreground">Утас</div>
-                      <div className="col-span-2">{u.phone}</div>
-                    </div>
+                      );
+                    })}
+                    {orders.length === 0 && (
+                      <div className="text-sm text-muted-foreground">
+                        Одоогоор захиалга алга.
+                      </div>
+                    )}
                   </div>
-                ))}
-                {users.length === 0 && (
-                  <div className="text-sm text-muted-foreground">Одоогоор хэрэглэгч бүртгэлгүй.</div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-        <TabsContent value="products">
-          <Card id="products">
-            <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
-              <CardTitle>Бүтээгдэхүүн удирдах</CardTitle>
-              <div className="flex items-center gap-2 flex-wrap">
-                <Button variant="outline" size="sm" onClick={exportJson}>
-                  <Download className="h-4 w-4 mr-2" /> Экспорт JSON
-                </Button>
-                <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Нэмэх
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        {editing ? "Бүтээгдэхүүн засах" : "Шинэ бүтээгдэхүүн"}
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4">
-                      <div className="grid gap-2">
-                        <Label htmlFor="name">Нэр</Label>
-                        <Input
-                          id="name"
-                          value={form.name}
-                          onChange={(e) =>
-                            setForm({ ...form, name: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="price">Үнэ (KRW)</Label>
-                        <Input
-                          id="price"
-                          type="number"
-                          value={form.price}
-                          onChange={(e) =>
-                            setForm({ ...form, price: Number(e.target.value) })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2 md:grid-cols-2">
-                        <div className="grid gap-2">
-                          <Label htmlFor="compareAt">
-                            Хуучин үнэ (сонголттой)
-                          </Label>
-                          <Input
-                            id="compareAt"
-                            type="number"
-                            value={form.compareAtPrice ?? ""}
-                            onChange={(e) =>
-                              setForm({
-                                ...form,
-                                compareAtPrice:
-                                  e.target.value === ""
-                                    ? undefined
-                                    : Number(e.target.value),
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="couponPrice">
-                            Купон үнэ (сонголттой)
-                          </Label>
-                          <Input
-                            id="couponPrice"
-                            type="number"
-                            value={form.couponPrice ?? ""}
-                            onChange={(e) =>
-                              setForm({
-                                ...form,
-                                couponPrice:
-                                  e.target.value === ""
-                                    ? undefined
-                                    : Number(e.target.value),
-                              })
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="category">Ангилал</Label>
-                        <select
-                          id="category"
-                          className="h-10 rounded-md border bg-background px-3 text-sm"
-                          value={form.category || ""}
-                          onChange={(e) =>
-                            setForm({ ...form, category: e.target.value })
-                          }
-                        >
-                          <option value="">Сонгоно уу</option>
-                          {categories.map((c) => (
-                            <option key={c} value={c}>
-                              {c}
-                            </option>
-                          ))}
-                        </select>
-                        {categories.length === 0 && (
-                          <span className="text-xs text-muted-foreground">
-                            Эхлээд "Ангилал" хэсгээс категори нэмнэ үү.
-                          </span>
-                        )}
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="image">Зураг (олон)</Label>
-                        <Input
-                          id="image"
-                          type="file"
-                          multiple
-                          accept="image/*"
-                          onChange={async (e) => {
-                            const files = Array.from(e.target.files || []);
-                            if (!files.length) return;
-                            const { convertImageFileToWebpDataUrl } =
-                              await import("@/lib/image");
-                            const images = await Promise.all(
-                              files.map((f) =>
-                                convertImageFileToWebpDataUrl(f, 0.9),
-                              ),
-                            );
-                            setForm({ ...form, images, image: images[0] });
-                          }}
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="badge">Тэмдэглэгээ (сонголттой)</Label>
-                        <Input
-                          id="badge"
-                          value={form.badge || ""}
-                          onChange={(e) =>
-                            setForm({ ...form, badge: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="desc">Тайлбар (сонголттой)</Label>
-                        <Textarea
-                          id="desc"
-                          value={form.description || ""}
-                          onChange={(e) =>
-                            setForm({ ...form, description: e.target.value })
-                          }
-                          placeholder="Богино тайлбар..."
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label>Өнгө (сонголт)</Label>
-                        <div className="grid grid-cols-8 gap-2">
-                          {[
-                            "#000000",
-                            "#FFFFFF",
-                            "#808080",
-                            "#FF0000",
-                            "#FFA500",
-                            "#FFFF00",
-                            "#008000",
-                            "#00FFFF",
-                            "#0000FF",
-                            "#4B0082",
-                            "#800080",
-                            "#FFC0CB",
-                            "#A0522D",
-                            "#F5DEB3",
-                            "#2F4F4F",
-                            "#FF69B4",
-                          ].map((c) => {
-                            const selected = (form.colors || []).includes(c);
-                            return (
-                              <button
-                                key={c}
-                                type="button"
-                                onClick={() => {
-                                  const set = new Set(form.colors || []);
-                                  if (set.has(c)) set.delete(c);
-                                  else set.add(c);
-                                  setForm({ ...form, colors: Array.from(set) });
-                                }}
-                                className={`relative h-8 w-8 rounded-full border transition ${
-                                  selected ? "ring-2 ring-primary" : ""
-                                }`}
-                                style={{ background: c }}
-                                aria-pressed={selected}
-                                aria-label={`Color ${c}`}
-                                title={c}
-                              >
-                                {selected && (
-                                  <span className="absolute inset-0 flex items-center justify-center">
-                                    <Check className="h-3 w-3 text-primary-foreground" />
-                                  </span>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {form.colors && form.colors.length === 0 && (
-                          <span className="text-xs text-muted-foreground">
-                            Сонголтгүй бол өнгө шүүлтгүй гэж үзнэ.
-                          </span>
-                        )}
-                      </div>
-                      <div className="grid gap-2">
-                        <Label>Хэмжээ (сонголт)</Label>
-                        <div className="flex flex-wrap gap-2">
-                          {[
-                            "XS",
-                            "S",
-                            "M",
-                            "L",
-                            "XL",
-                            "XXL",
-                            "35",
-                            "36",
-                            "37",
-                            "38",
-                            "39",
-                            "40",
-                            "41",
-                            "42",
-                            "43",
-                            "44",
-                          ].map((s) => {
-                            const selected = (form.sizes || []).includes(s);
-                            return (
-                              <button
-                                key={s}
-                                type="button"
-                                onClick={() => {
-                                  const set = new Set(form.sizes || []);
-                                  if (set.has(s)) set.delete(s);
-                                  else set.add(s);
-                                  setForm({ ...form, sizes: Array.from(set) });
-                                }}
-                                className={`h-8 rounded-md border bg-card px-2 text-xs transition ${
-                                  selected ? "ring-2 ring-primary" : ""
-                                }`}
-                                aria-pressed={selected}
-                                aria-label={`Size ${s}`}
-                                title={s}
-                              >
-                                {s}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {form.sizes && form.sizes.length === 0 && (
-                          <span className="text-xs text-muted-foreground">
-                            Сонголтгүй бол хэмжээ шүүлтгүй гэж үзнэ.
-                          </span>
-                        )}
-                      </div>
-                      {form.images && form.images.length > 0 ? (
-                        <div className="mt-2 grid grid-cols-3 gap-2">
-                          {form.images.map((src, idx) => (
-                            <img
-                              key={idx}
-                              src={src}
-                              alt={`preview-${idx}`}
-                              className="h-24 w-full object-cover rounded-md border"
-                            />
-                          ))}
-                        </div>
-                      ) : form.image ? (
-                        <img
-                          src={form.image}
-                          alt="preview"
-                          className="mt-2 h-32 w-full object-cover rounded-md border"
-                        />
-                      ) : null}
-                    </div>
-                    <DialogFooter>
-                      <Button onClick={submit}>
-                        {editing ? "Хадгалах" : "Нэмэх"}
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+          {/* Users */}
+          {activeTab === "users" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">Хэрэглэгчид</h1>
+                <p className="text-muted-foreground mt-1">
+                  Бүртгэлтэй хэрэглэгчдийн жагсаалт
+                </p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="hidden md:block overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[64px]">Зураг</TableHead>
-                      <TableHead>Нэр</TableHead>
-                      <TableHead>Үнэ</TableHead>
-                      <TableHead>Ангилал</TableHead>
-                      <TableHead>Тэмдэглэгээ</TableHead>
-                      <TableHead className="w-[120px] text-right">
-                        Үйлдэл
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
+              <Card id="users" className="mb-6">
+                <CardHeader>
+                  <CardTitle>Хэрэглэгчид</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="hidden md:block overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Огноо</TableHead>
+                          <TableHead>Нэр</TableHead>
+                          <TableHead>И-мэйл</TableHead>
+                          <TableHead>Утас</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {users.map((u) => (
+                          <TableRow key={u.id}>
+                            <TableCell>
+                              {new Date(u.createdAt).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>{u.name}</TableCell>
+                            <TableCell>{u.email}</TableCell>
+                            <TableCell>{u.phone}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      {users.length === 0 && (
+                        <TableCaption>
+                          Одоогоор хэрэглэгч бүртгэлгүй.
+                        </TableCaption>
+                      )}
+                    </Table>
+                  </div>
+                  <div className="md:hidden grid gap-3">
+                    {users.map((u) => (
+                      <div
+                        key={u.id}
+                        className="rounded-lg border bg-card p-3 text-sm"
+                      >
+                        <div className="font-medium">{u.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(u.createdAt).toLocaleDateString()}
+                        </div>
+                        <div className="mt-1 grid grid-cols-3 gap-2">
+                          <div className="col-span-1 text-muted-foreground">
+                            И-мэйл
+                          </div>
+                          <div className="col-span-2 break-all">{u.email}</div>
+                          <div className="col-span-1 text-muted-foreground">
+                            Утас
+                          </div>
+                          <div className="col-span-2">{u.phone}</div>
+                        </div>
+                      </div>
+                    ))}
+                    {users.length === 0 && (
+                      <div className="text-sm text-muted-foreground">
+                        Одоогоор хэрэглэгч бүртгэлгүй.
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Products */}
+          {activeTab === "products" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">Бүтээгдэхүүн</h1>
+                <p className="text-muted-foreground mt-1">
+                  Барaa бүтээгдэхүүн удирдах
+                </p>
+              </div>
+              <Card id="products">
+                <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
+                  <CardTitle>Бүтээгдэхүүн удирдах</CardTitle>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Button variant="outline" size="sm" onClick={exportJson}>
+                      <Download className="h-4 w-4 mr-2" /> Экспорт JSON
+                    </Button>
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" onClick={startCreate}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Нэмэх
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-h-[90vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>
+                            {editing ? "Бүтээгдэхүүн засах" : "Шинэ бүтээгдэхүүн"}
+                          </DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="name">Нэр</Label>
+                            <Input
+                              id="name"
+                              value={form.name}
+                              onChange={(e) =>
+                                setForm({ ...form, name: e.target.value })
+                              }
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="price">Үнэ (KRW)</Label>
+                            <Input
+                              id="price"
+                              type="number"
+                              value={form.price}
+                              onChange={(e) =>
+                                setForm({ ...form, price: Number(e.target.value) })
+                              }
+                            />
+                          </div>
+                          <div className="grid gap-2 md:grid-cols-2">
+                            <div className="grid gap-2">
+                              <Label htmlFor="compareAt">
+                                Хуучин үнэ (сонголттой)
+                              </Label>
+                              <Input
+                                id="compareAt"
+                                type="number"
+                                value={form.compareAtPrice ?? ""}
+                                onChange={(e) =>
+                                  setForm({
+                                    ...form,
+                                    compareAtPrice:
+                                      e.target.value === ""
+                                        ? undefined
+                                        : Number(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="grid gap-2">
+                              <Label htmlFor="couponPrice">
+                                Купон үнэ (сонголттой)
+                              </Label>
+                              <Input
+                                id="couponPrice"
+                                type="number"
+                                value={form.couponPrice ?? ""}
+                                onChange={(e) =>
+                                  setForm({
+                                    ...form,
+                                    couponPrice:
+                                      e.target.value === ""
+                                        ? undefined
+                                        : Number(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="category">Ангилал</Label>
+                            <select
+                              id="category"
+                              className="h-10 rounded-md border bg-background px-3 text-sm"
+                              value={form.category || ""}
+                              onChange={(e) =>
+                                setForm({ ...form, category: e.target.value })
+                              }
+                            >
+                              <option value="">Сонгоно уу</option>
+                              {categories.map((c) => (
+                                <option key={c} value={c}>
+                                  {c}
+                                </option>
+                              ))}
+                            </select>
+                            {categories.length === 0 && (
+                              <span className="text-xs text-muted-foreground">
+                                Эхлээд "Ангилал" хэсгээс категори нэмнэ үү.
+                              </span>
+                            )}
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="image">Зураг (олон)</Label>
+                            <Input
+                              id="image"
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const files = Array.from(e.target.files || []);
+                                if (!files.length) return;
+                                const { convertImageFileToWebpDataUrl } =
+                                  await import("@/lib/image");
+                                const images = await Promise.all(
+                                  files.map((f) =>
+                                    convertImageFileToWebpDataUrl(f, 0.9),
+                                  ),
+                                );
+                                setForm({ ...form, images, image: images[0] });
+                              }}
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="badge">Тэмдэглэгээ (сонголттой)</Label>
+                            <Input
+                              id="badge"
+                              value={form.badge || ""}
+                              onChange={(e) =>
+                                setForm({ ...form, badge: e.target.value })
+                              }
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="desc">Тайлбар (сонголттой)</Label>
+                            <Textarea
+                              id="desc"
+                              value={form.description || ""}
+                              onChange={(e) =>
+                                setForm({ ...form, description: e.target.value })
+                              }
+                              placeholder="Богино тайлбар..."
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label>Өнгө (сонголт)</Label>
+                            <div className="grid grid-cols-8 gap-2">
+                              {[
+                                "#000000",
+                                "#FFFFFF",
+                                "#808080",
+                                "#FF0000",
+                                "#FFA500",
+                                "#FFFF00",
+                                "#008000",
+                                "#00FFFF",
+                                "#0000FF",
+                                "#4B0082",
+                                "#800080",
+                                "#FFC0CB",
+                                "#A0522D",
+                                "#F5DEB3",
+                                "#2F4F4F",
+                                "#FF69B4",
+                              ].map((c) => {
+                                const selected = (form.colors || []).includes(c);
+                                return (
+                                  <button
+                                    key={c}
+                                    type="button"
+                                    onClick={() => {
+                                      const set = new Set(form.colors || []);
+                                      if (set.has(c)) set.delete(c);
+                                      else set.add(c);
+                                      setForm({ ...form, colors: Array.from(set) });
+                                    }}
+                                    className={`relative h-8 w-8 rounded-full border transition ${
+                                      selected ? "ring-2 ring-primary" : ""
+                                    }`}
+                                    style={{ background: c }}
+                                    aria-pressed={selected}
+                                    aria-label={`Color ${c}`}
+                                    title={c}
+                                  >
+                                    {selected && (
+                                      <span className="absolute inset-0 flex items-center justify-center">
+                                        <Check className="h-3 w-3 text-primary-foreground" />
+                                      </span>
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {form.colors && form.colors.length === 0 && (
+                              <span className="text-xs text-muted-foreground">
+                                Сонголтгүй бол өнгө шүүлтгүй гэж үзнэ.
+                              </span>
+                            )}
+                          </div>
+                          <div className="grid gap-2">
+                            <Label>Хэмжээ (сонголт)</Label>
+                            <div className="flex flex-wrap gap-2">
+                              {[
+                                "XS",
+                                "S",
+                                "M",
+                                "L",
+                                "XL",
+                                "XXL",
+                                "35",
+                                "36",
+                                "37",
+                                "38",
+                                "39",
+                                "40",
+                                "41",
+                                "42",
+                                "43",
+                                "44",
+                              ].map((s) => {
+                                const selected = (form.sizes || []).includes(s);
+                                return (
+                                  <button
+                                    key={s}
+                                    type="button"
+                                    onClick={() => {
+                                      const set = new Set(form.sizes || []);
+                                      if (set.has(s)) set.delete(s);
+                                      else set.add(s);
+                                      setForm({ ...form, sizes: Array.from(set) });
+                                    }}
+                                    className={`h-8 rounded-md border bg-card px-2 text-xs transition ${
+                                      selected ? "ring-2 ring-primary" : ""
+                                    }`}
+                                    aria-pressed={selected}
+                                    aria-label={`Size ${s}`}
+                                    title={s}
+                                  >
+                                    {s}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {form.sizes && form.sizes.length === 0 && (
+                              <span className="text-xs text-muted-foreground">
+                                Сонголтгүй бол хэмжээ шүүлтгүй гэж үзнэ.
+                              </span>
+                            )}
+                          </div>
+                          {form.images && form.images.length > 0 ? (
+                            <div className="mt-2 grid grid-cols-3 gap-2">
+                              {form.images.map((src, idx) => (
+                                <img
+                                  key={idx}
+                                  src={src}
+                                  alt={`preview-${idx}`}
+                                  className="h-24 w-full object-cover rounded-md border"
+                                />
+                              ))}
+                            </div>
+                          ) : form.image ? (
+                            <img
+                              src={form.image}
+                              alt="preview"
+                              className="mt-2 h-32 w-full object-cover rounded-md border"
+                            />
+                          ) : null}
+                        </div>
+                        <DialogFooter>
+                          <Button onClick={submit}>
+                            {editing ? "Хадгалах" : "Нэмэх"}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="hidden md:block overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[64px]">Зураг</TableHead>
+                          <TableHead>Нэр</TableHead>
+                          <TableHead>Үнэ</TableHead>
+                          <TableHead>Ангилал</TableHead>
+                          <TableHead>Тэмдэглэгээ</TableHead>
+                          <TableHead className="w-[120px] text-right">
+                            Үйлдэл
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {products.map((p) => (
+                          <TableRow key={p.id}>
+                            <TableCell>
+                              <img
+                                src={p.image}
+                                alt={p.name}
+                                className="h-10 w-10 rounded object-cover"
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">{p.name}</TableCell>
+                            <TableCell>
+                              {new Intl.NumberFormat("ko-KR", {
+                                style: "currency",
+                                currency: "KRW",
+                                maximumFractionDigits: 0,
+                              }).format(p.price)}
+                            </TableCell>
+                            <TableCell>{p.category}</TableCell>
+                            <TableCell>{p.badge}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={() => startEdit(p)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={() => remove(p.id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      {products.length === 0 && (
+                        <TableCaption>
+                          Одоогоор бүртгэлгүй байна. "Нэмэх" дарж эхлүүлнэ үү.
+                        </TableCaption>
+                      )}
+                    </Table>
+                  </div>
+                  <div className="md:hidden grid gap-3">
                     {products.map((p) => (
-                      <TableRow key={p.id}>
-                        <TableCell>
+                      <div key={p.id} className="rounded-lg border bg-card p-3">
+                        <div className="flex items-center gap-3">
                           <img
                             src={p.image}
                             alt={p.name}
-                            className="h-10 w-10 rounded object-cover"
+                            className="h-12 w-12 rounded object-cover"
                           />
-                        </TableCell>
-                        <TableCell className="font-medium">{p.name}</TableCell>
-                        <TableCell>
-                          {new Intl.NumberFormat("ko-KR", {
-                            style: "currency",
-                            currency: "KRW",
-                            maximumFractionDigits: 0,
-                          }).format(p.price)}
-                        </TableCell>
-                        <TableCell>{p.category}</TableCell>
-                        <TableCell>{p.badge}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
+                          <div className="min-w-0 flex-1">
+                            <div className="font-medium truncate">{p.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {new Intl.NumberFormat("ko-KR", {
+                                style: "currency",
+                                currency: "KRW",
+                                maximumFractionDigits: 0,
+                              }).format(p.price)}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-0.5">
+                              {p.category || "-"}
+                              {p.badge ? ` • ${p.badge}` : ""}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -1055,54 +1320,47 @@ export default function Admin() {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
-                        </TableCell>
-                      </TableRow>
+                        </div>
+                      </div>
                     ))}
-                  </TableBody>
-                  {products.length === 0 && (
-                    <TableCaption>
-                      Одоогоор бүртгэлгүй байна. "Нэмэх" дарж эхлүүлнэ үү.
-                    </TableCaption>
-                  )}
-                </Table>
-              </div>
-              <div className="md:hidden grid gap-3">
-                {products.map((p) => (
-                  <div key={p.id} className="rounded-lg border bg-card p-3">
-                    <div className="flex items-center gap-3">
-                      <img src={p.image} alt={p.name} className="h-12 w-12 rounded object-cover" />
-                      <div className="min-w-0 flex-1">
-                        <div className="font-medium truncate">{p.name}</div>
-                        <div className="text-sm text-muted-foreground">{new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(p.price)}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{p.category || "-"}{p.badge ? ` • ${p.badge}` : ""}</div>
+                    {products.length === 0 && (
+                      <div className="text-sm text-muted-foreground">
+                        Одоогоор бүртгэлгүй байна. "Нэмэх" дарж эхлүүлнэ үү.
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Button variant="secondary" size="sm" onClick={() => startEdit(p)}>
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button variant="destructive" size="sm" onClick={() => remove(p.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+                    )}
                   </div>
-                ))}
-                {products.length === 0 && (
-                  <div className="text-sm text-muted-foreground">Одоогоор бүртгэлгүй байна. "Нэмэх" дарж эхлүүлнэ үү.</div>
-                )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Banners */}
+          {activeTab === "banners" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">Баннер</h1>
+                <p className="text-muted-foreground mt-1">
+                  Нүүр хуудасны баннер удирдах
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              <AdminBanners />
+            </div>
+          )}
 
-        <TabsContent value="banners">
-          <AdminBanners />
-        </TabsContent>
-
-        <TabsContent value="settings">
-          <SettingsPanel />
-        </TabsContent>
-      </Tabs>
+          {/* Settings */}
+          {activeTab === "settings" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">Тохиргоо</h1>
+                <p className="text-muted-foreground mt-1">
+                  Ерөнхий тохиргоо
+                </p>
+              </div>
+              <SettingsPanel />
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }
