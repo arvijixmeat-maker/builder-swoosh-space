@@ -18,7 +18,7 @@ import {
   type Order,
   getCurrentUserId,
   getCurrentUser,
-} from "@/data/store";
+} from "@/data/supabase-store";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Orders() {

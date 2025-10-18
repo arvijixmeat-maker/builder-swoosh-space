@@ -3,22 +3,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getBanners, setBanners, type Banner } from "@/data/store";
+import { getBanners, setBanners, type Banner } from "@/data/supabase-store";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, ArrowUp, ArrowDown, Plus } from "lucide-react";
-import { convertImageFileToWebpDataUrl } from "@/lib/image";
+import { uploadMultipleImages } from "@/lib/storage";
 
 export default function AdminBanners() {
   const { toast } = useToast();
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [items, setItems] = useState<Banner[]>(getBanners());
+  const [items, setItems] = useState<Banner[]>([]);
 
   useEffect(() => {
-    const reload = () => setItems(getBanners());
-    window.addEventListener("banners-updated", reload as EventListener);
-    return () =>
-      window.removeEventListener("banners-updated", reload as EventListener);
+    loadData();
   }, []);
+
+  const loadData = async () => {
+    const banners = await getBanners();
+    setItems(banners);
+  };
 
   const add = async () => {
     try {
@@ -29,30 +31,32 @@ export default function AdminBanners() {
         });
         return;
       }
-      const img = await convertImageFileToWebpDataUrl(imageFile, 0.9, {
-        targetWidth: 1200,
-        targetAspect: 3 / 4,
-      });
+      toast({ title: "Зураг байршуулж байна..." });
+      const urls = await uploadMultipleImages([imageFile], "banners");
+      if (urls.length === 0) {
+        toast({ title: "Алдаа", description: "Зураг байршуулахад алдаа гарлаа", variant: "destructive" });
+        return;
+      }
       const next: Banner = {
-        id: (crypto as any)?.randomUUID?.() || String(Date.now()),
-        image: img,
+        id: crypto.randomUUID(),
+        image: urls[0],
       };
       const all = [next, ...items];
-      setBanners(all);
-      setItems(all);
+      await setBanners(all);
+      await loadData();
       setImageFile(null);
       toast({ title: "Баннер нэмэгдлээ" });
     } catch (e) {
-      toast({ title: "Алдаа", description: "Зураг нэмэхэд алдаа гарлаа" });
+      toast({ title: "Алдаа", description: "Зураг нэмэхэд алдаа гарлаа", variant: "destructive" });
     }
   };
 
-  const remove = (id: string) => {
+  const remove = async (id: string) => {
     const all = items.filter((b) => b.id !== id);
-    setBanners(all);
-    setItems(all);
+    await setBanners(all);
+    await loadData();
   };
-  const move = (id: string, dir: -1 | 1) => {
+  const move = async (id: string, dir: -1 | 1) => {
     const idx = items.findIndex((b) => b.id === id);
     if (idx < 0) return;
     const to = Math.max(0, Math.min(items.length - 1, idx + dir));
@@ -60,8 +64,8 @@ export default function AdminBanners() {
     const draft = items.slice();
     const [it] = draft.splice(idx, 1);
     draft.splice(to, 0, it);
-    setBanners(draft);
-    setItems(draft);
+    await setBanners(draft);
+    await loadData();
   };
 
   return (

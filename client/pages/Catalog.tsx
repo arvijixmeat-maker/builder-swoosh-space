@@ -1,42 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import ProductCard, { type Product } from "@/components/site/ProductCard";
 import { products as seed } from "@/data/products";
-import { getCategories, getProductsLS, PRODUCTS_KEY } from "@/data/store";
+import { getCategories, getProducts } from "@/data/supabase-store";
 import { useLocation } from "react-router-dom";
 
 export default function Catalog() {
-  const [cats, setCats] = useState<string[]>(getCategories());
-  const [prods, setProds] = useState<Product[]>(
-    getProductsLS<Product>(PRODUCTS_KEY),
-  );
+  const [cats, setCats] = useState<string[]>([]);
+  const [prods, setProds] = useState<Product[]>([]);
   const location = useLocation();
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
-    const updateCats = () => setCats(getCategories());
-    window.addEventListener("storage", updateCats);
-    window.addEventListener("categories-updated", updateCats as EventListener);
-    return () => {
-      window.removeEventListener("storage", updateCats);
-      window.removeEventListener(
-        "categories-updated",
-        updateCats as EventListener,
-      );
-    };
+    loadData();
   }, []);
 
-  useEffect(() => {
-    const updateProds = () => setProds(getProductsLS<Product>(PRODUCTS_KEY));
-    window.addEventListener("storage", updateProds);
-    window.addEventListener("products-updated", updateProds as EventListener);
-    return () => {
-      window.removeEventListener("storage", updateProds);
-      window.removeEventListener(
-        "products-updated",
-        updateProds as EventListener,
-      );
-    };
-  }, []);
+  const loadData = async () => {
+    const [categories, products] = await Promise.all([
+      getCategories(),
+      getProducts(),
+    ]);
+    setCats(categories);
+    setProds(products);
+  };
 
   useEffect(() => {
     const h = location.hash || "";

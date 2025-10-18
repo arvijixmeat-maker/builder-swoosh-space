@@ -18,7 +18,7 @@ import {
   getCurrentUser,
   getCurrentUserId,
   getSettings,
-} from "@/data/store";
+} from "@/data/supabase-store";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

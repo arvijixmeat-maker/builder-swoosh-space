@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/data/store";
+import { getCurrentUser } from "@/data/supabase-store";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

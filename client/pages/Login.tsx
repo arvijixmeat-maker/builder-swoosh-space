@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { loginUser, getCurrentUser } from "@/data/store";
+import { loginUser, getCurrentUser } from "@/data/supabase-store";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {

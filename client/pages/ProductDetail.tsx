@@ -5,9 +5,8 @@ import {
   setCart,
   getCurrentUser,
   getSettings,
-  getProductsLS,
-  PRODUCTS_KEY,
-} from "@/data/store";
+  getProducts,
+} from "@/data/supabase-store";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";

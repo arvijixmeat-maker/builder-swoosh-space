@@ -9,64 +9,53 @@ import {
   setSettings,
   type BankAccount,
   type Settings,
-} from "@/data/store";
+} from "@/data/supabase-store";
 import { useToast } from "@/hooks/use-toast";
 
 export default function SettingsPanel() {
   const { toast } = useToast();
-  const [shippingFee, setShippingFee] = useState<number>(
-    getSettings().shippingFee,
-  );
+  const [shippingFee, setShippingFee] = useState<number>(0);
   const [bankName, setBankName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [holder, setHolder] = useState("");
   const [note, setNote] = useState("");
-  const [accounts, setAccounts] = useState<BankAccount[]>(
-    getSettings().bankAccounts,
-  );
-  const [detailsText, setDetailsText] = useState<string>(
-    getSettings().productDetailsText || "",
-  );
-  const [specsText, setSpecsText] = useState<string>(
-    getSettings().productSpecsText || "",
-  );
-  const [shippingText, setShippingText] = useState<string>(
-    getSettings().shippingReturnText || "",
-  );
+  const [accounts, setAccounts] = useState<BankAccount[]>([]);
+  const [detailsText, setDetailsText] = useState<string>("");
+  const [specsText, setSpecsText] = useState<string>("");
+  const [shippingText, setShippingText] = useState<string>("");
 
   useEffect(() => {
-    const reload = () => {
-      const s = getSettings();
-      setShippingFee(s.shippingFee);
-      setAccounts(s.bankAccounts);
-      setDetailsText(s.productDetailsText || "");
-      setSpecsText(s.productSpecsText || "");
-      setShippingText(s.shippingReturnText || "");
-    };
-    window.addEventListener("settings-updated", reload as EventListener);
-    return () =>
-      window.removeEventListener("settings-updated", reload as EventListener);
+    loadData();
   }, []);
 
-  const saveShipping = () => {
-    const s = getSettings();
+  const loadData = async () => {
+    const s = await getSettings();
+    setShippingFee(s.shippingFee);
+    setAccounts(s.bankAccounts);
+    setDetailsText(s.productDetailsText || "");
+    setSpecsText(s.productSpecsText || "");
+    setShippingText(s.shippingReturnText || "");
+  };
+
+  const saveShipping = async () => {
+    const s = await getSettings();
     const next: Settings = {
       ...s,
       shippingFee: Math.max(0, Number(shippingFee) || 0),
     };
-    setSettings(next);
+    await setSettings(next);
     toast({ title: "Хүргэлтийн төлбөр шинэчлэгдлээ" });
   };
 
-  const saveTexts = () => {
-    const s = getSettings();
+  const saveTexts = async () => {
+    const s = await getSettings();
     const next: Settings = {
       ...s,
       productDetailsText: detailsText,
       productSpecsText: specsText,
       shippingReturnText: shippingText,
     };
-    setSettings(next);
+    await setSettings(next);
     toast({ title: "Бүтээгдэхүүний мэдээллийн текстүүд шинэчлэгдлээ" });
   };
 

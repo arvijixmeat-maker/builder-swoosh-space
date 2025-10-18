@@ -16,16 +16,24 @@ import {
   type CartItem,
   getCurrentUser,
   getSettings,
-} from "@/data/store";
+} from "@/data/supabase-store";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Cart() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [items, setItems] = useState<CartItem[]>(getCart());
-  const [shippingFee, setShippingFee] = useState<number>(
-    getSettings().shippingFee,
-  );
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [shippingFee, setShippingFee] = useState<number>(0);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    const [cart, settings] = await Promise.all([getCart(), getSettings()]);
+    setItems(cart);
+    setShippingFee(settings.shippingFee);
+  };
 
   useEffect(() => {
     const update = () => {

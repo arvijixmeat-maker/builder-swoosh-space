@@ -20,7 +20,7 @@ import {
   getOrders,
   getCart,
   type User,
-} from "@/data/store";
+} from "@/data/supabase-store";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2, XCircle } from "lucide-react";
 

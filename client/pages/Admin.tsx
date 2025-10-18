@@ -36,21 +36,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  CATEGORIES_KEY,
   getCategories,
-  setCategories,
-  getProductsLS,
-  setProductsLS,
+  addCategory as addCategoryDB,
+  updateCategory as updateCategoryDB,
+  deleteCategory as deleteCategoryDB,
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
   getOrders,
-  setOrders,
   type Order,
   updateOrderStatus,
   getUsers,
   type User,
   getCurrentUser,
-} from "@/data/store";
-
-const STORAGE_KEY = "admin_products";
+} from "@/data/supabase-store";
+import { uploadMultipleImages } from "@/lib/storage";
 
 export default function Admin() {
   const { toast } = useToast();
@@ -92,13 +93,9 @@ export default function Admin() {
   }, [navigate]);
 
   useEffect(() => {
-    setProducts(getProductsLS<Product>(STORAGE_KEY));
-    setCategoriesState(getCategories());
-    setOrdersState(getOrders());
-    setUsersState(getUsers());
-
-    const reloadOrders = () => setOrdersState(getOrders());
-    const reloadUsers = () => setUsersState(getUsers());
+    loadData();
+    const reloadOrders = () => loadOrders();
+    const reloadUsers = () => loadUsers();
     window.addEventListener("orders-updated", reloadOrders as EventListener);
     window.addEventListener("users-updated", reloadUsers as EventListener);
     return () => {
@@ -110,20 +107,29 @@ export default function Admin() {
     };
   }, []);
 
-  useEffect(() => {
-    setProductsLS(STORAGE_KEY, products);
-  }, [products]);
+  const loadData = async () => {
+    const [prods, cats, ords, usrs] = await Promise.all([
+      getProducts(),
+      getCategories(),
+      getOrders(),
+      getUsers(),
+    ]);
+    setProducts(prods);
+    setCategoriesState(cats);
+    setOrdersState(ords);
+    setUsersState(usrs);
+  };
 
-  useEffect(() => {
-    try {
-      const current = getCategories();
-      if (JSON.stringify(current) !== JSON.stringify(categories)) {
-        setCategories(categories);
-      }
-    } catch {
-      setCategories(categories);
-    }
-  }, [categories]);
+  const loadOrders = async () => {
+    const ords = await getOrders();
+    setOrdersState(ords);
+  };
+
+  const loadUsers = async () => {
+    const usrs = await getUsers();
+    setUsersState(usrs);
+  };
+
 
   const stats = useMemo(
     () => ({
@@ -161,7 +167,7 @@ export default function Admin() {
     setOpen(true);
   };
 
-  const submit = () => {
+  const submit = async () => {
     const finalImage = form.image || (form.images && form.images[0]) || "";
     if (!form.name || !finalImage || !form.price) {
       toast({
@@ -170,30 +176,43 @@ export default function Admin() {
       });
       return;
     }
-    const payload: Product = { ...form, image: finalImage };
-    if (editing) {
-      setProducts((prev) =>
-        prev.map((p) =>
-          p.id === editing.id ? { ...payload, id: editing.id } : p,
-        ),
-      );
-      toast({ title: "Засвар хадгалагдлаа" });
-    } else {
-      const id = crypto.randomUUID();
-      setProducts((prev) => [{ ...payload, id }, ...prev]);
-      toast({ title: "Шинэ бүтээгдэхүүн нэмлээ" });
+    try {
+      const payload: Product = { ...form, image: finalImage };
+      if (editing) {
+        await updateProduct(editing.id, payload);
+        toast({ title: "Засвар хадгалагдлаа" });
+      } else {
+        await addProduct(payload);
+        toast({ title: "Шинэ бүтээгдэхүүн нэмлээ" });
+      }
+      await loadData();
+      setOpen(false);
+      setEditing(null);
+      resetForm();
+    } catch (error) {
+      toast({
+        title: "Алдаа",
+        description: "Өгөгдөл хадгалахад алдаа гарлаа",
+        variant: "destructive",
+      });
     }
-    setOpen(false);
-    setEditing(null);
-    resetForm();
   };
 
-  const remove = (id: string) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-    toast({ title: "Устгагдлаа" });
+  const remove = async (id: string) => {
+    try {
+      await deleteProduct(id);
+      await loadData();
+      toast({ title: "Устгагдлаа" });
+    } catch (error) {
+      toast({
+        title: "Алдаа",
+        description: "Устгахад алдаа гарлаа",
+        variant: "destructive",
+      });
+    }
   };
 
-  const addCategory = () => {
+  const addCategory = async () => {
     const name = newCat.trim();
     if (!name) {
       toast({ title: "Нэр хоосон байна" });
@@ -203,24 +222,36 @@ export default function Admin() {
       toast({ title: "Давхардсан ангилал" });
       return;
     }
-    const next = [name, ...categories];
-    setCategoriesState(next);
-    setCategories(next);
-    setNewCat("");
-    toast({ title: "Ангилал нэмэгдлээ" });
+    try {
+      await addCategoryDB(name);
+      await loadData();
+      setNewCat("");
+      toast({ title: "Ангилал нэмэгдлээ" });
+    } catch (error) {
+      toast({
+        title: "Алдаа",
+        description: "Ангилал нэмэхэд алдаа гарлаа",
+        variant: "destructive",
+      });
+    }
   };
 
-  const removeCategory = (name: string) => {
-    const next = categories.filter((c) => c !== name);
-    setCategoriesState(next);
-    setProducts((prev) =>
-      prev.map((p) => (p.category === name ? { ...p, category: "" } : p)),
-    );
-    if (editingCat === name) {
-      setEditingCat(null);
-      setEditCatValue("");
+  const removeCategory = async (name: string) => {
+    try {
+      await deleteCategoryDB(name);
+      await loadData();
+      if (editingCat === name) {
+        setEditingCat(null);
+        setEditCatValue("");
+      }
+      toast({ title: "Ангилал устгагдлаа" });
+    } catch (error) {
+      toast({
+        title: "Алдаа",
+        description: "Ангилал устгахад алдаа гарлаа",
+        variant: "destructive",
+      });
     }
-    toast({ title: "Ангилал устгагдлаа" });
   };
 
   const startEditCategory = (name: string) => {
@@ -228,7 +259,7 @@ export default function Admin() {
     setEditCatValue(name);
   };
 
-  const saveEditCategory = () => {
+  const saveEditCategory = async () => {
     const from = editingCat;
     const to = editCatValue.trim();
     if (!from) return;
@@ -240,14 +271,19 @@ export default function Admin() {
       toast({ title: "Давхардсан ангилал" });
       return;
     }
-    const next = categories.map((c) => (c === from ? to : c));
-    setCategoriesState(next);
-    setProducts((prev) =>
-      prev.map((p) => (p.category === from ? { ...p, category: to } : p)),
-    );
-    setEditingCat(null);
-    setEditCatValue("");
-    toast({ title: "Ангилал шинэчлэгдлээ" });
+    try {
+      await updateCategoryDB(from, to);
+      await loadData();
+      setEditingCat(null);
+      setEditCatValue("");
+      toast({ title: "Ангилал шинэчлэгдлээ" });
+    } catch (error) {
+      toast({
+        title: "Алдаа",
+        description: "Ангилал шинэчлэхэд алдаа гарлаа",
+        variant: "destructive",
+      });
+    }
   };
 
   const cancelEditCategory = () => {
@@ -719,14 +755,26 @@ export default function Admin() {
                           onChange={async (e) => {
                             const files = Array.from(e.target.files || []);
                             if (!files.length) return;
-                            const { convertImageFileToWebpDataUrl } =
-                              await import("@/lib/image");
-                            const images = await Promise.all(
-                              files.map((f) =>
-                                convertImageFileToWebpDataUrl(f, 0.9),
-                              ),
-                            );
-                            setForm({ ...form, images, image: images[0] });
+                            toast({ title: "Зураг байршуулж байна..." });
+                            try {
+                              const urls = await uploadMultipleImages(files, "products");
+                              if (urls.length > 0) {
+                                setForm({ ...form, images: urls, image: urls[0] });
+                                toast({ title: `${urls.length} зураг амжилттай байршлаа` });
+                              } else {
+                                toast({
+                                  title: "Алдаа",
+                                  description: "Зураг байршуулахад алдаа гарлаа",
+                                  variant: "destructive",
+                                });
+                              }
+                            } catch (error) {
+                              toast({
+                                title: "Алдаа",
+                                description: "Зураг байршуулахад алдаа гарлаа",
+                                variant: "destructive",
+                              });
+                            }
                           }}
                         />
                       </div>

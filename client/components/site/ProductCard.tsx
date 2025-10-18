@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { getCart, setCart } from "@/data/store";
+import { getCart, setCart } from "@/data/supabase-store";
 import { Link } from "react-router-dom";
 
 export interface Product {

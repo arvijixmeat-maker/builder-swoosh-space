@@ -15,7 +15,7 @@ import {
   logoutUser,
   getCategories,
   getCart,
-} from "@/data/store";
+} from "@/data/supabase-store";
 
 export default function Header() {
   const user = getCurrentUser();

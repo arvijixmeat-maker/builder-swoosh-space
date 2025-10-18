@@ -6,47 +6,42 @@ import ProductCard, { type Product } from "@/components/site/ProductCard";
 import { products as seedProducts } from "@/data/products";
 import {
   getCategories,
-  getProductsLS,
-  PRODUCTS_KEY,
+  getProducts,
   getBanners,
   type Banner,
-} from "@/data/store";
+} from "@/data/supabase-store";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Index() {
-  const [cats, setCats] = useState<string[]>(getCategories());
-  const [prods, setProds] = useState<Product[]>(
-    getProductsLS<Product>(PRODUCTS_KEY),
-  );
-  const [banners, setBanners] = useState<Banner[]>(getBanners());
+  const [cats, setCats] = useState<string[]>([]);
+  const [prods, setProds] = useState<Product[]>([]);
+  const [banners, setBanners] = useState<Banner[]>([]);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
-    const updateCats = () => setCats(getCategories());
-    window.addEventListener("storage", updateCats);
-    window.addEventListener("categories-updated", updateCats as EventListener);
-    return () => {
-      window.removeEventListener("storage", updateCats);
-      window.removeEventListener(
-        "categories-updated",
-        updateCats as EventListener,
-      );
-    };
+    loadData();
   }, []);
 
+  const loadData = async () => {
+    const [categories, products, bannerList] = await Promise.all([
+      getCategories(),
+      getProducts(),
+      getBanners(),
+    ]);
+    setCats(categories);
+    setProds(products);
+    setBanners(bannerList);
+  };
+
   useEffect(() => {
-    const updateProds = () => setProds(getProductsLS<Product>(PRODUCTS_KEY));
-    window.addEventListener("storage", updateProds);
-    window.addEventListener("products-updated", updateProds as EventListener);
-    const updateBanners = () => setBanners(getBanners());
-    window.addEventListener("banners-updated", updateBanners as EventListener);
+    window.addEventListener("banners-updated", loadData as EventListener);
     return () => {
-      window.removeEventListener("storage", updateProds);
+      window.removeEventListener("banners-updated", loadData as EventListener);
       window.removeEventListener(
         "products-updated",
         updateProds as EventListener,

@@ -22,7 +22,7 @@ import Orders from "./pages/Orders";
 import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { seedDefaultAdmin } from "@/data/store";
+import { seedDefaultAdmin } from "@/data/supabase-store";
 
 seedDefaultAdmin();
 
