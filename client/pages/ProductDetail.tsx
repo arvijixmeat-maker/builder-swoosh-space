@@ -263,28 +263,35 @@ export default function ProductDetail() {
             </div>
           )}
 
-          <div className="mt-5 flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-3">
-            <div className="flex items-center justify-center rounded-md border bg-card w-32 md:w-auto mx-auto md:mx-0">
+          <div className="mt-5 flex flex-col gap-3">
+            <div className="flex items-center justify-center rounded-lg border bg-white w-32 mx-auto">
               <button
                 aria-label="Хасах"
-                className="px-3 py-3 md:py-2 text-lg"
+                className="px-4 py-3 text-lg font-medium hover:bg-gray-50 transition-colors"
                 onClick={dec}
               >
                 −
               </button>
-              <span className="min-w-10 text-center font-medium">{qty}</span>
+              <span className="min-w-12 text-center font-semibold text-base">{qty}</span>
               <button
                 aria-label="Нэмэх"
-                className="px-3 py-3 md:py-2 text-lg"
+                className="px-4 py-3 text-lg font-medium hover:bg-gray-50 transition-colors"
                 onClick={inc}
               >
                 +
               </button>
             </div>
-            <Button className="w-full md:w-auto md:px-6 py-6 md:py-2 text-base md:text-sm" onClick={addToCart}>
+            <Button
+              variant="outline"
+              className="w-full py-6 text-base font-semibold border-2 hover:bg-gray-50"
+              onClick={addToCart}
+            >
               Сагсанд нэмэх
             </Button>
-            <Button className="w-full md:w-auto md:px-6 py-6 md:py-2 text-base md:text-sm" onClick={buyNow}>
+            <Button
+              className="w-full py-6 text-base font-semibold bg-[#EF4444] hover:bg-[#DC2626] text-white"
+              onClick={buyNow}
+            >
               Одоо худалдаж авах
             </Button>
           </div>
