@@ -23,10 +23,14 @@ import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { seedDefaultAdmin } from "@/data/store";
+import { useEffect } from "react";
 
-seedDefaultAdmin();
+const App = () => {
+  useEffect(() => {
+    seedDefaultAdmin();
+  }, []);
 
-const App = () => (
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -53,7 +57,8 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 const container = document.getElementById("root")!;
 // Reuse root across HMR reloads to avoid calling createRoot twice on same container
