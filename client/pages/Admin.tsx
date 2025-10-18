@@ -41,7 +41,9 @@ import {
   Settings,
   Store,
   ExternalLink,
+  Menu,
 } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SettingsPanel from "./_AdminSettings";
 import AdminBanners from "./_AdminBanners";
 import {
@@ -96,6 +98,7 @@ export default function Admin() {
   const [users, setUsersState] = useState<User[]>([]);
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -301,62 +304,94 @@ export default function Admin() {
     { id: "settings", label: "Тохиргоо", icon: Settings },
   ];
 
+  const sidebarContent = (
+    <>
+      {/* Logo */}
+      <div className="p-6 border-b">
+        <Link to="/" className="flex items-center gap-2 font-bold text-xl">
+          <Store className="h-6 w-6 text-primary" />
+          <span>Талын Маркет</span>
+        </Link>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4 overflow-y-auto">
+        <div className="space-y-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setMobileMenuOpen(false);
+                }}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  activeTab === item.id
+                    ? "bg-primary text-primary-foreground"
+                    : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                <Icon className="h-5 w-5" />
+                <span className="flex-1 text-left">{item.label}</span>
+                {item.badge && item.badge > 0 && (
+                  <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Store Link */}
+      <div className="p-4 border-t">
+        <Link
+          to="/"
+          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100"
+        >
+          <ExternalLink className="h-4 w-4" />
+          <span>Дэлгүүр рүү очих</span>
+        </Link>
+      </div>
+    </>
+  );
+
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r flex flex-col">
-        {/* Logo */}
-        <div className="p-6 border-b">
-          <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-            <Store className="h-6 w-6 text-primary" />
-            <span>Талын Маркет</span>
-          </Link>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-4 overflow-y-auto">
-          <div className="space-y-1">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                    activeTab === item.id
-                      ? "bg-primary text-primary-foreground"
-                      : "text-gray-700 hover:bg-gray-100"
-                  )}
-                >
-                  <Icon className="h-5 w-5" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && item.badge > 0 && (
-                    <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
-
-        {/* Store Link */}
-        <div className="p-4 border-t">
-          <Link
-            to="/"
-            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100"
-          >
-            <ExternalLink className="h-4 w-4" />
-            <span>Дэлгүүр рүү очих</span>
-          </Link>
-        </div>
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-64 bg-white border-r flex-col">
+        {sidebarContent}
       </aside>
+
+      {/* Mobile Sidebar */}
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <SheetContent side="left" className="w-64 p-0">
+          {sidebarContent}
+        </SheetContent>
+      </Sheet>
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
-        <div className="p-8">
+        {/* Mobile Header */}
+        <div className="md:hidden sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center justify-between">
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="sm" className="px-2">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+          </Sheet>
+          <div className="flex items-center gap-2 font-bold text-lg">
+            <Store className="h-5 w-5 text-primary" />
+            <span>Талын Маркет</span>
+          </div>
+          <div className="w-10" />
+        </div>
+
+        <div className="p-4 md:p-8">
           {/* Dashboard */}
           {activeTab === "dashboard" && (
             <div>
