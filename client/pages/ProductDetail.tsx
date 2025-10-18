@@ -263,28 +263,28 @@ export default function ProductDetail() {
             </div>
           )}
 
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <div className="flex items-center rounded-md border bg-card">
+          <div className="mt-5 flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-3">
+            <div className="flex items-center rounded-md border bg-card w-full md:w-auto">
               <button
                 aria-label="Хасах"
-                className="px-3 py-2 text-lg"
+                className="flex-1 md:flex-none px-4 md:px-3 py-3 md:py-2 text-lg"
                 onClick={dec}
               >
                 −
               </button>
-              <span className="min-w-10 text-center">{qty}</span>
+              <span className="min-w-12 md:min-w-10 text-center font-medium">{qty}</span>
               <button
                 aria-label="Нэмэх"
-                className="px-3 py-2 text-lg"
+                className="flex-1 md:flex-none px-4 md:px-3 py-3 md:py-2 text-lg"
                 onClick={inc}
               >
                 +
               </button>
             </div>
-            <Button className="px-6" onClick={addToCart}>
+            <Button className="w-full md:w-auto md:px-6 py-6 md:py-2 text-base md:text-sm" onClick={addToCart}>
               Сагсанд нэмэх
             </Button>
-            <Button className="px-6" onClick={buyNow}>
+            <Button className="w-full md:w-auto md:px-6 py-6 md:py-2 text-base md:text-sm" onClick={buyNow}>
               Одоо худалдаж авах
             </Button>
           </div>
@@ -359,9 +359,9 @@ export default function ProductDetail() {
               Бүгдийг харах
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
             {related.slice(0, 10).map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} compact />
             ))}
             {related.length === 0 && (
               <div className="col-span-full text-sm text-muted-foreground">
