@@ -264,7 +264,7 @@ export default function ProductDetail() {
           )}
 
           <div className="mt-5 flex flex-col gap-3">
-            <div className="flex items-center justify-center rounded-lg border bg-white w-32 mx-auto">
+            <div className="flex items-center rounded-lg border bg-white w-32">
               <button
                 aria-label="Хасах"
                 className="px-4 py-3 text-lg font-medium hover:bg-gray-50 transition-colors"
