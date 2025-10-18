@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import {
   Dialog,
   DialogContent,
@@ -25,7 +26,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/components/site/ProductCard";
-import { Plus, Pencil, Trash2, Download, X, Check } from "lucide-react";
+import { Plus, Pencil, Trash2, Download, X, Check, ChevronDown } from "lucide-react";
 import SettingsPanel from "./_AdminSettings";
 import AdminBanners from "./_AdminBanners";
 import {
@@ -77,6 +78,7 @@ export default function Admin() {
   const [editCatValue, setEditCatValue] = useState("");
   const [orders, setOrdersState] = useState<Order[]>([]);
   const [users, setUsersState] = useState<User[]>([]);
+  const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -447,6 +449,7 @@ export default function Admin() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-[40px]"></TableHead>
                       <TableHead>Огноо</TableHead>
                       <TableHead>Захиалга №</TableHead>
                       <TableHead>Тоо</TableHead>
@@ -455,60 +458,121 @@ export default function Admin() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {orders.map((o) => (
-                      <TableRow key={o.id}>
-                        <TableCell>
-                          {new Date(o.createdAt).toLocaleString("ko-KR", {
-                            year: "numeric",
-                            month: "numeric",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            hour12: false,
-                          })}
-                        </TableCell>
-                        <TableCell className="font-mono text-xs">
-                          {o.id}
-                        </TableCell>
-                        <TableCell>
-                          {o.items.reduce((s, i) => s + i.qty, 0)}
-                        </TableCell>
-                        <TableCell>
-                          {new Intl.NumberFormat("ko-KR", {
-                            style: "currency",
-                            currency: "KRW",
-                            maximumFractionDigits: 0,
-                          }).format(o.total)}
-                        </TableCell>
-                        <TableCell>
-                          <Select
-                            value={o.status}
-                            onValueChange={(v) =>
-                              updateOrderStatus(o.id, v as Order["status"])
-                            }
-                          >
-                            <SelectTrigger className="h-9 w-[220px]">
-                              <SelectValue placeholder="Төлөв сонгох" />
-                            </SelectTrigger>
-                            <SelectContent align="end">
-                              <SelectItem value="unpaid">
-                                Төлбөр төлөгдөөгүй
-                              </SelectItem>
-                              <SelectItem value="paid">
-                                Төлбөр төлөгдсөн
-                              </SelectItem>
-                              <SelectItem value="shipping">
-                                Хүргэлт хийгдэж байна
-                              </SelectItem>
-                              <SelectItem value="delivered">
-                                Хүргэгдсэн
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {orders.map((o) => {
+                      const isExpanded = expandedOrders.has(o.id);
+                      return (
+                        <>
+                          <TableRow key={o.id} className="cursor-pointer hover:bg-muted/50" onClick={() => {
+                            const next = new Set(expandedOrders);
+                            if (next.has(o.id)) next.delete(o.id);
+                            else next.add(o.id);
+                            setExpandedOrders(next);
+                          }}>
+                            <TableCell>
+                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                                <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </Button>
+                            </TableCell>
+                            <TableCell>
+                              {new Date(o.createdAt).toLocaleString("ko-KR", {
+                                year: "numeric",
+                                month: "numeric",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                second: "2-digit",
+                                hour12: false,
+                              })}
+                            </TableCell>
+                            <TableCell className="font-mono text-xs">
+                              {o.id}
+                            </TableCell>
+                            <TableCell>
+                              {o.items.reduce((s, i) => s + i.qty, 0)}
+                            </TableCell>
+                            <TableCell>
+                              {new Intl.NumberFormat("ko-KR", {
+                                style: "currency",
+                                currency: "KRW",
+                                maximumFractionDigits: 0,
+                              }).format(o.total)}
+                            </TableCell>
+                            <TableCell onClick={(e) => e.stopPropagation()}>
+                              <Select
+                                value={o.status}
+                                onValueChange={(v) =>
+                                  updateOrderStatus(o.id, v as Order["status"])
+                                }
+                              >
+                                <SelectTrigger className="h-9 w-[220px]">
+                                  <SelectValue placeholder="Төлөв сонгох" />
+                                </SelectTrigger>
+                                <SelectContent align="end">
+                                  <SelectItem value="unpaid">
+                                    Төлбөр төлөгдөөгүй
+                                  </SelectItem>
+                                  <SelectItem value="paid">
+                                    Төлбөр төлөгдсөн
+                                  </SelectItem>
+                                  <SelectItem value="shipping">
+                                    Хүргэлт хийгдэж байна
+                                  </SelectItem>
+                                  <SelectItem value="delivered">
+                                    Хүргэгдсэн
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                          </TableRow>
+                          {isExpanded && (
+                            <TableRow key={`${o.id}-details`}>
+                              <TableCell colSpan={6} className="bg-muted/30">
+                                <div className="p-4">
+                                  <div className="font-semibold mb-2">Захиалгын дэлгэрэнгүй:</div>
+                                  <div className="space-y-2">
+                                    {o.items.map((item, idx) => (
+                                      <div key={idx} className="flex items-start gap-3 p-2 bg-background rounded">
+                                        <img src={item.image} alt={item.name} className="h-12 w-12 rounded object-cover" />
+                                        <div className="flex-1">
+                                          <div className="font-medium">{item.name}</div>
+                                          <div className="text-sm text-muted-foreground">
+                                            {new Intl.NumberFormat("ko-KR", {
+                                              style: "currency",
+                                              currency: "KRW",
+                                              maximumFractionDigits: 0,
+                                            }).format(item.price)} × {item.qty}
+                                          </div>
+                                          {(item.color || item.size) && (
+                                            <div className="flex gap-2 mt-1">
+                                              {item.color && (
+                                                <span className="inline-flex items-center gap-1 text-xs bg-muted px-2 py-0.5 rounded">
+                                                  <span className="h-3 w-3 rounded-full border" style={{background: item.color}} />
+                                                  {item.color}
+                                                </span>
+                                              )}
+                                              {item.size && (
+                                                <span className="text-xs bg-muted px-2 py-0.5 rounded">
+                                                  사이즈: {item.size}
+                                                </span>
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  <div className="mt-3 pt-3 border-t">
+                                    <div className="text-sm"><strong>고객:</strong> {o.customer.name}</div>
+                                    <div className="text-sm"><strong>전화:</strong> {o.customer.phone}</div>
+                                    <div className="text-sm"><strong>주소:</strong> {o.customer.address}</div>
+                                  </div>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </>
+                      );
+                    })}
                   </TableBody>
                   {orders.length === 0 && (
                     <TableCaption>Одоогоор захиалга алга.</TableCaption>
@@ -516,31 +580,86 @@ export default function Admin() {
                 </Table>
               </div>
               <div className="md:hidden grid gap-3">
-                {orders.map((o) => (
-                  <div key={o.id} className="rounded-lg border bg-card p-3">
-                    <div className="flex items-center justify-between">
-                      <div className="font-mono text-xs">#{o.id}</div>
-                      <div className="text-xs text-muted-foreground">{new Date(o.createdAt).toLocaleDateString()}</div>
+                {orders.map((o) => {
+                  const isExpanded = expandedOrders.has(o.id);
+                  return (
+                    <div key={o.id} className="rounded-lg border bg-card">
+                      <div className="p-3" onClick={() => {
+                        const next = new Set(expandedOrders);
+                        if (next.has(o.id)) next.delete(o.id);
+                        else next.add(o.id);
+                        setExpandedOrders(next);
+                      }}>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            <div className="font-mono text-xs">#{o.id}</div>
+                          </div>
+                          <div className="text-xs text-muted-foreground">{new Date(o.createdAt).toLocaleDateString()}</div>
+                        </div>
+                        <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                          <div>Тоо</div><div className="text-right">{o.items.reduce((s, i) => s + i.qty, 0)}</div>
+                          <div>Нийт</div><div className="text-right">{new Intl.NumberFormat("ko-KR", {style: "currency", currency: "KRW", maximumFractionDigits: 0}).format(o.total)}</div>
+                        </div>
+                        <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                          <Select value={o.status} onValueChange={(v) => updateOrderStatus(o.id, v as any)}>
+                            <SelectTrigger className="h-9 w-full">
+                              <SelectValue placeholder="Төлөв сонгох" />
+                            </SelectTrigger>
+                            <SelectContent align="end">
+                              <SelectItem value="unpaid">Төлбөр төлөгдөөгүй</SelectItem>
+                              <SelectItem value="paid">Төлбөр төлөгдсөн</SelectItem>
+                              <SelectItem value="shipping">Хүргэлт хийгдэж байна</SelectItem>
+                              <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      {isExpanded && (
+                        <div className="border-t p-3 bg-muted/30">
+                          <div className="font-semibold mb-2 text-sm">Захиалгын дэлгэрэнгүй:</div>
+                          <div className="space-y-2">
+                            {o.items.map((item, idx) => (
+                              <div key={idx} className="flex items-start gap-2 p-2 bg-background rounded">
+                                <img src={item.image} alt={item.name} className="h-10 w-10 rounded object-cover" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-sm font-medium truncate">{item.name}</div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {new Intl.NumberFormat("ko-KR", {
+                                      style: "currency",
+                                      currency: "KRW",
+                                      maximumFractionDigits: 0,
+                                    }).format(item.price)} × {item.qty}
+                                  </div>
+                                  {(item.color || item.size) && (
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                      {item.color && (
+                                        <span className="inline-flex items-center gap-1 text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                                          <span className="h-2 w-2 rounded-full border" style={{background: item.color}} />
+                                          {item.color}
+                                        </span>
+                                      )}
+                                      {item.size && (
+                                        <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                                          {item.size}
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-2 pt-2 border-t text-xs space-y-1">
+                            <div><strong>고객:</strong> {o.customer.name}</div>
+                            <div><strong>전화:</strong> {o.customer.phone}</div>
+                            <div><strong>주소:</strong> {o.customer.address}</div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                      <div>Тоо</div><div className="text-right">{o.items.reduce((s, i) => s + i.qty, 0)}</div>
-                      <div>Нийт</div><div className="text-right">{new Intl.NumberFormat("ko-KR", {style: "currency", currency: "KRW", maximumFractionDigits: 0}).format(o.total)}</div>
-                    </div>
-                    <div className="mt-2">
-                      <Select value={o.status} onValueChange={(v) => updateOrderStatus(o.id, v as any)}>
-                        <SelectTrigger className="h-9 w-full">
-                          <SelectValue placeholder="Төлөв сонгох" />
-                        </SelectTrigger>
-                        <SelectContent align="end">
-                          <SelectItem value="unpaid">Төлбөр төлөгдөөгүй</SelectItem>
-                          <SelectItem value="paid">Төлбөр төлөгдсөн</SelectItem>
-                          <SelectItem value="shipping">Хүргэлт хийгдэж байна</SelectItem>
-                          <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {orders.length === 0 && (
                   <div className="text-sm text-muted-foreground">Одоогоор захиалга алга.</div>
                 )}
