@@ -40,16 +40,10 @@ export default function Index() {
 
   useEffect(() => {
     window.addEventListener("banners-updated", loadData as EventListener);
+    window.addEventListener("products-updated", loadData as EventListener);
     return () => {
       window.removeEventListener("banners-updated", loadData as EventListener);
-      window.removeEventListener(
-        "products-updated",
-        updateProds as EventListener,
-      );
-      window.removeEventListener(
-        "banners-updated",
-        updateBanners as EventListener,
-      );
+      window.removeEventListener("products-updated", loadData as EventListener);
     };
   }, []);
 
