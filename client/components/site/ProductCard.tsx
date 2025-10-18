@@ -61,12 +61,12 @@ export default function ProductCard({
 
   const renderPrice = () => {
     return (
-      <div className="flex items-baseline gap-2 whitespace-nowrap">
-        <span className="text-sm md:text-base font-extrabold text-red-600">
+      <div className={`flex ${compact ? "flex-col gap-0" : "items-baseline gap-2"} whitespace-nowrap`}>
+        <span className={`${compact ? "text-[11px]" : "text-sm md:text-base"} font-extrabold text-red-600`}>
           {fmt(product.price)}
         </span>
         {hasCompare && (
-          <span className="text-[11px] text-muted-foreground line-through">
+          <span className={`${compact ? "text-[9px]" : "text-[11px]"} text-muted-foreground line-through`}>
             {fmt(product.compareAtPrice as number)}
           </span>
         )}
@@ -77,7 +77,7 @@ export default function ProductCard({
   const badgeText = product.badge === "шинэ" ? "신상" : product.badge || "";
 
   return (
-    <Card className={`overflow-hidden group h-full flex flex-col`}>
+    <Card className={`overflow-hidden group h-full flex flex-col ${compact ? "rounded-lg" : ""}`}>
       <div className="relative">
         <Link
           to={`/product/${product.id}`}
@@ -93,8 +93,8 @@ export default function ProductCard({
 
         {/* Discount pill (left) */}
         {hasCompare && (
-          <div className="absolute top-2 left-2">
-            <span className="inline-flex items-center justify-center rounded-full bg-red-600 text-white h-7 px-2 text-[11px] font-bold">
+          <div className={`absolute ${compact ? "top-1 left-1" : "top-2 left-2"}`}>
+            <span className={`inline-flex items-center justify-center rounded-full bg-red-600 text-white font-bold ${compact ? "h-5 px-1.5 text-[9px]" : "h-7 px-2 text-[11px]"}`}>
               -
               {Math.max(
                 0,
@@ -110,8 +110,8 @@ export default function ProductCard({
 
         {/* Optional badge (right) */}
         {badgeText && (
-          <div className="absolute top-2 right-2">
-            <span className="rounded bg-black/80 text-white px-1.5 py-0.5 text-[10px]">
+          <div className={`absolute ${compact ? "top-1 right-1" : "top-2 right-2"}`}>
+            <span className={`rounded bg-black/80 text-white ${compact ? "px-1 py-0.5 text-[8px]" : "px-1.5 py-0.5 text-[10px]"}`}>
               {badgeText}
             </span>
           </div>
@@ -119,29 +119,29 @@ export default function ProductCard({
       </div>
 
       <CardContent
-        className={`${compact ? "p-2" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}
+        className={`${compact ? "p-2 space-y-1" : "p-3 md:p-4"} flex flex-col gap-2 flex-1`}
       >
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <Link to={`/product/${product.id}`} className="block min-w-0">
             <h3
-              className={`${compact ? "text-[12px]" : "text-sm md:text-base"} font-medium leading-snug line-clamp-2`}
+              className={`${compact ? "text-[11px] leading-tight" : "text-sm md:text-base"} font-medium leading-snug line-clamp-2 min-h-[2em]`}
             >
               {product.name}
             </h3>
           </Link>
-          {product.description && (
+          {!compact && product.description && (
             <p className="mt-1 text-[11px] text-muted-foreground line-clamp-2">
               {product.description}
             </p>
           )}
-          <div className="mt-1">{renderPrice()}</div>
+          <div className={compact ? "mt-0.5" : "mt-1"}>{renderPrice()}</div>
         </div>
 
-        {/* Mobile quick add to cart */}
-        <div className="mt-1 md:hidden">
+        {/* Mobile quick add to cart - Smaller button for compact mode */}
+        <div className={`${compact ? "mt-0.5" : "mt-1"} md:hidden`}>
           <Button
             size={compact ? "sm" : "default"}
-            className="w-full"
+            className={`w-full ${compact ? "h-7 text-[10px] px-2" : ""}`}
             onClick={addToCart}
           >
             Сагслах

@@ -96,9 +96,9 @@ export default function Catalog() {
                 <a href="#top" className="text-sm text-primary underline underline-offset-4">Дээш очих</a>
               </div>
               {list.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-6">
                   {list.map((p) => (
-                    <ProductCard key={p.id} product={p} />
+                    <ProductCard key={p.id} product={p} compact={true} />
                   ))}
                 </div>
               ) : (
@@ -118,9 +118,9 @@ export default function Catalog() {
                   <h2 className="text-xl md:text-2xl font-bold">{c}</h2>
                   <a href="#top" className="text-sm text-primary underline underline-offset-4">Дээш очих</a>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-6">
                   {list.map((p) => (
-                    <ProductCard key={p.id} product={p} />
+                    <ProductCard key={p.id} product={p} compact={true} />
                   ))}
                 </div>
               </section>

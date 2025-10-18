@@ -235,7 +235,7 @@ export default function Index() {
           </div>
         </div>
         {/* Mobile: 3 columns, 2 rows (show 6), vertical scroll; compact cards */}
-        <div className="md:hidden grid grid-cols-3 gap-3">
+        <div className="md:hidden grid grid-cols-3 gap-2">
           {allProducts.slice(0, 6).map((p) => (
             <ProductCard key={p.id} product={p} compact />
           ))}
@@ -266,7 +266,7 @@ export default function Index() {
                     Бүгдийг харах
                   </Link>
                 </div>
-                <div className="grid grid-cols-2 gap-3 md:hidden">
+                <div className="grid grid-cols-2 gap-2 md:hidden">
                   {list.map((p) => (
                     <ProductCard key={p.id} product={p} compact />
                   ))}
